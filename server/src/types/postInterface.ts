@@ -1,0 +1,15 @@
+export interface PostDataInterface {
+    userId?: string,
+    description?: string,
+    hashtags?: string,
+    hashtagsArray?: string[],
+    image?: string[],
+    video?: string,
+    likes: string[],
+    reports: string[],
+    saved?: string[],
+    name: string,
+    username?: string,
+    email: string,
+    dp?: string,
+}

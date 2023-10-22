@@ -1,0 +1,297 @@
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Avatar, Card, Typography } from "@material-tailwind/react";
+import { ReactComponent as Loader } from "../../assets/Loader.svg";
+
+//components
+import AsideTwo from "./Aside_2";
+import AsideOne from "./Aside_1";
+import PostBox from "./Post/PostBox";
+import PostCard from "./Post/PostCard";
+import PostDialogBox from "./Post/PostDialogBox";
+import { getUserInfo } from "../../API/Profile";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../Redux/AuthSlice";
+import { getPosts } from "../../API/Post";
+import AccountVerificationPopup from "../AccountVerificationPopup";
+
+//importing types
+import { User } from "../../Types/loginUser";
+import store from "../../Redux/Store";
+import { PostDataInterface } from "../../Types/post";
+import UsernameInputPopup from "../UsernameInputPopup";
+import { useNavigate } from "react-router-dom";
+
+const HomeLarge = ({ user }: { user: User }) => {
+  const dispatch = useDispatch();
+  const [posts, setPosts] = useState<PostDataInterface[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [isLastPage, setIsLastPage] = useState<boolean>(false);
+  const [deletedPostId, setDeletedPostId] = useState<string | null>(null);
+  const [reportedPostId, setReportedPostId] = useState<string | null>(null);
+  const [postCreated, setPostCreated] = useState<PostDataInterface | null>(
+    null
+  );
+  const [postEdited, setPostEdited] = useState<PostDataInterface | null>(null);
+  const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
+  const [accountVerifyPopupOpen, setAccountVerifyPopupOpen] =
+    useState<boolean>(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] =
+    useState<boolean>(false);
+  const [usernameInputPopupOpen, setUsernameInputPopupOpen] =
+    useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      setIsAccountVerified(user.isAccountVerified);
+      setIsUsernameAvailable(user.username ? true : false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!isAccountVerified) {
+      setAccountVerifyPopupOpen(true);
+    } else {
+      setAccountVerifyPopupOpen(false);
+    }
+  }, [isAccountVerified]);
+
+  useEffect(() => {
+    if (!isUsernameAvailable) {
+      setUsernameInputPopupOpen(true);
+    } else {
+      setUsernameInputPopupOpen(false);
+    }
+  }, [isUsernameAvailable]);
+
+  const handleAccountVerifyPopup = () => {
+    setAccountVerifyPopupOpen((prev) => !prev);
+  };
+
+  const handleUsernameInputPopup = () => {
+    setUsernameInputPopupOpen((prev) => !prev);
+  };
+
+  const loadInitialPosts = async () => {
+    // Fetch initial posts from the backend
+    const initialPosts = await getPosts(page);
+    setPosts(initialPosts.posts);
+    setPage(page + 1);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadInitialPosts();
+  }, []);
+
+  useEffect(() => {
+    const sentinel = document.getElementById("sentinel");
+
+    const observer = new IntersectionObserver(async (entries) => {
+      if (entries[0].isIntersecting && !isLoading && !isLastPage) {
+        setIsLoading(true);
+        // Fetch more posts from the backend
+        const newPosts = await getPosts(page);
+        if (newPosts.posts.length === 0) {
+          setIsLastPage(true);
+          setIsLoading(false);
+          return;
+        } else {
+          setIsLastPage(false);
+        }
+        setPosts([...posts, ...newPosts.posts]);
+        setPage(page + 1);
+        setIsLoading(false);
+      }
+    });
+
+    observer.observe(sentinel as HTMLElement);
+
+    return () => {
+      observer.unobserve(sentinel as HTMLElement);
+    };
+  }, [isLoading, posts, page, isLastPage]);
+
+  useEffect(() => {
+    if (!user) {
+      getUserInfo().then((res) => {
+        dispatch(
+          setCredentials({
+            user: res.user,
+            accessToken: store.getState().auth.accessToken,
+          })
+        );
+      });
+    }
+  }, [dispatch, user]);
+  const [open, setOpen] = useState<boolean>(false);
+  const handleOpen = () => setOpen(!open);
+  const handlePostBox = () => {
+    setOpen(true);
+  };
+  const [newFollowing, setNewFollowing] = useState<boolean>(false);
+  const [removeFollowing, setRemoveFollowing] = useState<boolean>(false);
+  const handleFollowingAdd = (boolValue: boolean) => {
+    setNewFollowing(boolValue);
+  };
+  const handleFollowingRemove = (boolValue: boolean) => {
+    setRemoveFollowing(boolValue);
+  };
+
+  if (deletedPostId) {
+    setPosts(posts.filter((post) => post._id !== deletedPostId));
+    setDeletedPostId(null);
+  }
+
+  useEffect(() => {
+    if (reportedPostId) {
+      setPosts(posts.filter((post) => post._id !== reportedPostId));
+      setReportedPostId(null);
+    }
+  }, [posts, reportedPostId]);
+
+  useEffect(() => {
+    if (postCreated) {
+      setPosts([{ ...postCreated, newPostCreated: true }, ...posts]);
+      setPostCreated(null);
+    }
+  }, [postCreated, posts]);
+
+  useEffect(() => {
+    if (postEdited) {
+      setPosts(
+        posts.map((post) => {
+          if (post._id === postEdited._id) {
+            return postEdited;
+          }
+          return post;
+        })
+      );
+      setPostEdited(null);
+    }
+  }, [postEdited, posts]);
+
+  return (
+    <>
+      <div className="hidden lg:flex gap-3 items-start justify-between h-[85vh]">
+        <aside className="w-3/12 px-3 sticky top-28 overflow-y-auto h-[80vh] no-scrollbar">
+          <AsideOne
+            newFollowing={newFollowing}
+            handleFollowingAdd={handleFollowingAdd}
+            removeFollowing={removeFollowing}
+            handleFollowingRemove={handleFollowingRemove}
+          />
+        </aside>
+        <main className="w-6/12 px-6 overflow-y-auto h-[85vh] no-scrollbar flex flex-col items-center p-2">
+          <div className="flex items-center justify-between w-full p-2 mb-8 gap-5 sticky top-0 z-40">
+            {/* <img
+              className="inline-block h-12 w-12 rounded-full border border-gray-50"
+              src={user && user.dp}
+              alt="user image"
+            /> */}
+            <Avatar
+              variant="circular"
+              alt="user dp"
+              className="border h-14 w-14 border-gray-500 p-0.5 cursor-pointer"
+              src={
+                user && user.dp
+                  ? user.dp
+                  : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+              } 
+              onClick={() => navigate(`/profile/${user && user._id}`)}
+            />
+            <div className="w-full" onClick={handlePostBox}>
+              <PostBox />
+            </div>
+          </div>
+          {/* <hr className="border-t-2 border-gray-900 my-4"></hr> */}
+          <div className="px-20 overflow-y-auto h-[85vh] no-scrollbar flex flex-col items-center">
+            <div className="mb-10">
+              {posts.map((post, index) => (
+                <div className="mb-10" key={index}>
+                  <PostCard
+                    postData={post}
+                    setDeletedPostId={setDeletedPostId}
+                    setReportedPostId={setReportedPostId}
+                    setPostEdited={setPostEdited}
+                  />
+                </div>
+              ))}
+              <PostDialogBox
+                open={open}
+                handleOpen={handleOpen}
+                setIsLastPage={setIsLastPage}
+                setPostCreated={setPostCreated}
+              />
+            </div>
+            {isLastPage && <div> No posts...</div>}
+            <div id="sentinel" style={{ height: "1px" }} className="mt-10">
+              {!isLastPage && <Loader className="w-20 h-20 animate-spin" />}
+            </div>
+          </div>
+        </main>
+        <aside className="w-3/12 px-3 pb-5 sticky top-28 overflow-hidden">
+          <AsideTwo
+            handleFollowingAdd={handleFollowingAdd}
+            handleFollowingRemove={handleFollowingRemove}
+          />
+        </aside>
+      </div>
+      <AccountVerificationPopup
+        handleAccountVerifyPopup={handleAccountVerifyPopup}
+        accountVerifyPopupOpen={accountVerifyPopupOpen}
+        setIsAccountVerified={setIsAccountVerified}
+      />
+      <UsernameInputPopup
+        handleUsernameInputPopup={handleUsernameInputPopup}
+        usernameInputPopupOpen={usernameInputPopupOpen}
+        setIsUsernameAvailable={setIsUsernameAvailable}
+      />
+    </>
+  );
+};
+
+export default HomeLarge;
+
+{
+  /* <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.6, opacity: 0 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              >
+                <Card className="mb-12 overflow-hidden">
+                  <img
+                    alt="nature"
+                    className="h-[32rem] w-full object-cover object-center"
+                    src="https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2717&q=80"
+                  />
+                </Card>
+                <Typography variant="h2" color="blue-gray" className="mb-2">
+                  What is Material Tailwind
+                </Typography>
+                <Typography color="gray" className="font-normal">
+                  Can you help me out? you will get a lot of free exposure doing
+                  this can my website be in english?. There is too much white
+                  space do less with more, so that will be a conversation piece
+                  can you rework to make the pizza look more delicious other
+                  agencies charge much lesser can you make the blue bluer?. I
+                  think we need to start from scratch can my website be in
+                  english?, yet make it sexy i&apos;ll pay you in a week we
+                  don&apos;t need to pay upfront i hope you understand can you
+                  make it stand out more?. Make the font bigger can you help me
+                  out? you will get a lot of free exposure doing this
+                  that&apos;s going to be a chunk of change other agencies
+                  charge much lesser. Are you busy this weekend? I have a new
+                  project with a tight deadline that&apos;s going to be a chunk
+                  of change. There are more projects lined up charge extra the
+                  next time.
+                </Typography>
+              </motion.div>
+            </AnimatePresence> */
+}

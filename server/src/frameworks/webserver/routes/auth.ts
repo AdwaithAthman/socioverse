@@ -11,7 +11,7 @@ import { mailSenderServiceInterface } from "../../../application/services/mailSe
 import checkUsernameAvailabilityMiddleware from "../middlewares/redisCheckUsernameAvailability";
 
 //middleware
-import loginLimiter from "../middlewares/loginLimiter";
+import requestLimiter from "../middlewares/requestLimiter";
 import authMiddleware from "../middlewares/authMiddleware";
 
 const authRouter = () => {
@@ -30,7 +30,7 @@ const authRouter = () => {
 
    //routes
    router.post('/signup', controller.registerUser);
-   router.post('/login', loginLimiter, controller.loginUser);
+   router.post('/login', requestLimiter, controller.loginUser);
    router.post('/google_auth', controller.loginUsingGoogle);
    router.get('/refresh', controller.refreshAccessToken);
    router.delete('/logout', authMiddleware, controller.logoutUser)

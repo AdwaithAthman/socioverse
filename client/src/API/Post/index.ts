@@ -1,4 +1,4 @@
-import axiosUserInstance from "../axiosInstance";
+import axiosUserInstance from "../AxiosInstance/axiosUserInstance";
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types

@@ -31,3 +31,22 @@ export const handleAdminLogin = async (
         throw new AppError("Invalid email or password!", HttpStatus.UNAUTHORIZED);
     }
 }
+
+export const handleRefreshAdminAccessToken = async (
+    cookies: { adminRefreshToken: string },
+    authService: ReturnType<AuthServiceInterface>
+) => {
+    try {
+        const { adminRefreshToken } = cookies;
+        if (!adminRefreshToken) {
+            throw new AppError("No refresh token found!", HttpStatus.UNAUTHORIZED);
+        }
+        const payload = authService.verifyRefreshToken(adminRefreshToken);
+        const accessToken = authService.generateAccessToken(payload);
+        return accessToken;
+    }
+    catch (err) {
+        console.log(err)
+        throw new AppError("Invalid refresh token!", HttpStatus.UNAUTHORIZED);
+    }
+}

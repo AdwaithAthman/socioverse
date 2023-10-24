@@ -17,6 +17,7 @@ const adminRouter = () => {
 
     //routes
     router.post('/login', requestLimiter, controller.adminLogin);
+    router.get('/refresh', controller.refreshAdminAccessToken)
 
     return router;
 }

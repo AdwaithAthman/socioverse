@@ -1,4 +1,4 @@
-import axiosUserInstance, { axiosRefreshInstance } from "../axiosInstance";
+import axiosUserInstance, { axiosRefreshInstance } from "../AxiosInstance/axiosUserInstance";
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types

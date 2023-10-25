@@ -1,4 +1,5 @@
 import Post from "../models/postModel";
+import mongoose from "mongoose";
 
 //importing types
 import { PostDataInterface } from "../../../../types/postInterface";
@@ -6,7 +7,6 @@ import { PostDataInterface } from "../../../../types/postInterface";
 export const postRepositoryMongoDB = () => {
   const createPost = async (postData: PostDataInterface) => {
     try {
-      console.log("postDataAtRepository: ", postData);
       const post = new Post(postData);
       const savedPost = await post.save();
       return savedPost;
@@ -37,9 +37,29 @@ export const postRepositoryMongoDB = () => {
           },
         },
         {
+          $unwind: "$user",
+        },
+        {
           $match: {
             $or: [{ userId: userId }, { "user._id": { $in: following } }],
             reports: { $not: { $elemMatch: { userId: userId } } },
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: { _id: 1, name: 1, username: 1, email: 1, dp: 1 },
           },
         },
         {
@@ -60,16 +80,105 @@ export const postRepositoryMongoDB = () => {
 
   const getPostById = async (postId: string) => {
     try {
-      const post = await Post.findById(postId);
-      return post;
+      const postObjId = new mongoose.Types.ObjectId(postId);
+      console.log(postObjId);
+      const post = await Post.aggregate([
+        {
+          $match: { _id: postObjId },
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: { _id: 1, name: 1, username: 1, email: 1, dp: 1 },
+          },
+        },
+      ]);
+      return post[0];
     } catch (err) {
       console.log(err);
     }
   };
 
-  const getPostsByUserId = async (userId: string, skip: number, limit: number) => {
+  const getPostsByUserId = async (
+    userId: string,
+    skip: number,
+    limit: number
+  ) => {
     try {
-      const posts = await Post.find({ userId }).sort({createdAt: -1}).skip(skip).limit(limit);
+      const posts = await Post.aggregate([
+        {
+          $match: { userId: userId },
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: { _id: 1, name: 1, username: 1, email: 1, dp: 1 },
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
       return posts;
     } catch (err) {
       console.log(err);
@@ -156,7 +265,12 @@ export const postRepositoryMongoDB = () => {
       console.log(err);
     }
   };
-const searchPostsByTextSearch = async (searchQuery: string, following: string[], skip: number, limit: number) => {
+  const searchPostsByTextSearch = async (
+    searchQuery: string,
+    following: string[],
+    skip: number,
+    limit: number
+  ) => {
     try {
       const posts = await Post.find(
         {
@@ -169,53 +283,211 @@ const searchPostsByTextSearch = async (searchQuery: string, following: string[],
       )
         .sort({ score: { $meta: "textScore" } })
         .skip(skip)
-        .limit(limit)
+        .limit(limit);
       return posts;
     } catch (err) {
       console.log(err);
       throw new Error("Error searching posts");
     }
   };
-  
 
-  const searchPostsByRegexSearch = async (searchQuery: string, following: string[], skip: number, limit: number) => {
+  const searchPostsByRegexSearch = async (
+    searchQuery: string,
+    following: string[],
+    skip: number,
+    limit: number
+  ) => {
     try {
-      const posts = await Post.find(
+      console.log(following)
+      const posts = await Post.aggregate([
         {
-          $and: [
-            { userId: { $in: following } },
-            {
-              $or: [
-                { hashtags: { $regex: searchQuery, $options: "i" } },
-                { description: { $regex: searchQuery, $options: "i" } },
-              ],
+          $match:
+            { $and: [
+              { userId: { $in: following } },
+              {hashtags: { $regex: searchQuery, $options: "i" }},
+            ] }
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" },
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: {
+              _id: "$user._id",
+              name: "$user.name",
+              username: "$user.username",
+              email: "$user.email",
+              dp: "$user.dp",
             },
-          ],
-        }
-      )
-      .skip(skip)
-      .limit(limit)
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: limit,
+        },
+      ])
       return posts;
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       throw new Error("Error searching posts");
     }
-  }
+  };
 
-  const getUserLikedPosts = async (userId: string, skip: number, limit: number) => {
-    try{
-      const posts = await Post.find({ likes: userId }).skip(skip).limit(limit);
+  const getUserLikedPosts = async (
+    userId: string,
+    skip: number,
+    limit: number
+  ) => {
+    try {
+      const posts = await Post.aggregate([
+        {
+          $match: { likes: userId },
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: { _id: 1, name: 1, username: 1, email: 1, dp: 1 },
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
       return posts;
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
-      throw new Error ("Error getting user liked posts")
+      throw new Error("Error getting user liked posts");
     }
-  }
+  };
 
-  const countOfsearchPostsByRegexSearch = async (searchQuery: string, following: string[]) => {
-    try{
+  const getSavedPosts = async (
+    savedPostsId: string[],
+    skip: number,
+    limit: number
+  ) => {
+    try {
+      const posts = await Post.aggregate([
+        {
+          $match: { _id: { $in: savedPostsId } },
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: { _id: 1, name: 1, username: 1, email: 1, dp: 1 },
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
+      return posts;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error getting saved posts");
+    }
+  };
+
+  const countOfsearchPostsByRegexSearch = async (
+    searchQuery: string,
+    following: string[]
+  ) => {
+    try {
       const count = await Post.countDocuments({
         $and: [
           { userId: { $in: following } },
@@ -227,13 +499,12 @@ const searchPostsByTextSearch = async (searchQuery: string, following: string[],
           },
         ],
       });
-      return count
+      return count;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error getting search result count of posts");
     }
-    catch (err){
-      console.log(err)
-      throw new Error("Error getting search result count of posts")
-    }
-  }
+  };
 
   return {
     createPost,
@@ -252,6 +523,7 @@ const searchPostsByTextSearch = async (searchQuery: string, following: string[],
     searchPostsByTextSearch,
     searchPostsByRegexSearch,
     getUserLikedPosts,
+    getSavedPosts,
     countOfsearchPostsByRegexSearch,
   };
 };

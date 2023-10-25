@@ -12,6 +12,7 @@ import ReactQuillComponent from "./ReactQuill";
 import { TOAST_ACTION } from "../../../Constants/common";
 import { toast, ToastContainer } from "react-toastify";
 import { editPost } from "../../../API/Post";
+import { Link } from "react-router-dom";
 
 //importing types
 import { PostDataInterface } from "../../../Types/post";
@@ -83,24 +84,25 @@ const EditPostDialogBox = ({
         <ToastContainer />
         <DialogHeader>
           <div className="flex justify-between items-center w-full">
+          <Link to={`/profile/${post.userId}`}>
             <div className="flex items-center justify-between gap-5 transition-transform duration-300 mx-1 px-2 pb-3 rounded-lg cursor-pointer hover:bg-gray-200 hover:scale-105">
               <div className="mt-3 flex items-center space-x-2">
-               {post.dp ? (
+               {post.user.dp ? (
                  <img
                  className="inline-block h-12 w-12 rounded-full"
-                 src={post.dp}
+                 src={post.user.dp}
                  alt="Profile Picture"
                />
                ) : (
                 <img
                 className="inline-block h-12 w-12 rounded-full"
-                src="https://overreacted.io/static/profile-pic-c715447ce38098828758e525a1128b87.jpg"
+                src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
                 alt="Profile Picture"
               />
                )}
                 <span className="flex flex-col">
                   <span className="text-[14px] font-bold text-gray-900">
-                   {post.name}
+                   {post.user.name}
                   </span>
                   <span className="text-[11px] font-bold text-green-500">
                     Post to Connections
@@ -108,6 +110,7 @@ const EditPostDialogBox = ({
                 </span>
               </div>
             </div>
+            </Link>
             <div>
               <AiOutlineCloseCircle
                 className="text-3xl cursor-pointer"

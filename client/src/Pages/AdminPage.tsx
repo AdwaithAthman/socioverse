@@ -7,14 +7,7 @@ import {
   ListItemSuffix,
   Chip,
 } from "@material-tailwind/react";
-import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
-} from "@heroicons/react/24/solid";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, Outlet } from "react-router-dom";
 import { FaUsersGear } from "react-icons/fa6";
@@ -23,11 +16,13 @@ import { FaPowerOff } from "react-icons/fa";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiPresentationChartBar } from "react-icons/hi";
 import { BiSolidCommentError } from "react-icons/bi";
+import { ToastContainer } from "react-toastify";
 
-const AdminDashBoard = () => {
+const AdminPage = () => {
   return (
     <>
-      <div className="flex gap-3 items-start justify-between overflow-y-hidden">
+    <ToastContainer />
+      <div className="flex items-between overflow-y-hidden">
         <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
           <div className="mb-2 p-4">
             {/* <Typography variant="h5" color="blue-gray">
@@ -96,12 +91,10 @@ const AdminDashBoard = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.6, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="flex items-center justify-center lg:h-full"
+            className="flex items-center justify-center lg:h-full w-full"
           >
-            <div className="flex items-center justify-center lg:h-screen">
-              <>
-                <Outlet />
-              </>
+            <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 lg:px-20">
+              <Outlet />
             </div>
           </motion.div>
         </AnimatePresence>
@@ -110,4 +103,4 @@ const AdminDashBoard = () => {
   );
 };
 
-export default AdminDashBoard;
+export default AdminPage;

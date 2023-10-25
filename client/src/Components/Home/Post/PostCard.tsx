@@ -218,18 +218,18 @@ function PostCard({
               <img
                 className="inline-block h-10 w-10 rounded-full"
                 src={
-                  post.dp
-                    ? post.dp
+                  post.user?.dp
+                    ? post.user?.dp
                     : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
                 }
                 alt="Profile Picture"
               />
               <span className="flex flex-col">
                 <span className="text-[14px] font-medium text-gray-900">
-                  {post.name}
+                  {post.user.name}
                 </span>
                 <span className="text-[11px] font-medium text-gray-500">
-                  @{post.username}
+                  @{post.user.username}
                 </span>
               </span>
             </div>

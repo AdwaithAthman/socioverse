@@ -5,9 +5,6 @@ interface PostInterface extends Document {
     description?: string;
     hashtags?: string;
     hashtagsArray?: string[];
-    name: string;
-    username?: string;
-    dp?: string;
     likes?: string[];
     comments?: string[];
     saved?: string[];
@@ -29,15 +26,6 @@ const postSchema = new Schema<PostInterface>(
             type: String,
         },
         hashtagsArray: [],
-        name: {
-            type: String,
-        },
-        username: {
-            type: String,
-        },
-        dp: {
-            type: String,
-        },
         likes: [],
         comments: [],
         saved: [],

@@ -388,6 +388,7 @@ const postController = (
       skip,
       limit,
       dbUserRepository,
+      postDbRepository,
     )
     res.json({
       status: "success",

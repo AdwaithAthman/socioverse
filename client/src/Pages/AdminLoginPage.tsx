@@ -2,21 +2,42 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as AdminLoginSvg } from "../assets/AdminLoginSvg.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import { TOAST_ACTION } from "../Constants/common";
 import { isAxiosError } from "axios";
-import { adminLogin } from "../API/Admin";
+import { adminLogin, refreshAdminAccessToken } from "../API/Admin";
+import { useEffect } from "react";
+import { setAdminCredentials } from "../Redux/AdminSlice";
 
 //importing types
 import { AxiosErrorData } from "../Types/axiosErrorData";
-import { setAdminCredentials } from "../Redux/AdminSlice";
+import store, { StoreType } from "../Redux/Store";
 
 const AdminLoginPage = () => {
+  const isAuthenticated = useSelector(
+    (state: StoreType) => state.admin.isAuthenticated
+  );
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin");
+    } else {
+      generateAccessToken();
+    }
+  }, [isAuthenticated, navigate]);
+
+  const generateAccessToken = async () => {
+    const { accessToken } = await refreshAdminAccessToken();
+    if(accessToken){
+      store.dispatch(setAdminCredentials({ accessToken }));
+    }
+  }
 
   const validationSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -35,7 +56,7 @@ const AdminLoginPage = () => {
         if (result) {
           toast.success("Successfully logged in...!", TOAST_ACTION);
           dispatch(setAdminCredentials(result));
-          // navigate("/admin/dashboard");
+          navigate("/admin");
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -68,7 +89,7 @@ const AdminLoginPage = () => {
             </h1>
           </div>
           <div className="md:w-[30rem] md:h-[30rem]">
-          <AdminLoginSvg path />
+            <AdminLoginSvg path />
           </div>
         </div>
         <AnimatePresence mode="wait">
@@ -95,7 +116,7 @@ const AdminLoginPage = () => {
                     color="gray"
                     className="mt-1 text-center font-normal"
                   >
-                    Login into Admin Panel  
+                    Login into Admin Panel
                   </Typography>
                 </div>
                 <form

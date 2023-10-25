@@ -304,37 +304,6 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
-  const getSavedPosts = async (userId: string, skip: number, limit: number) => {
-    try{
-      console.log("skip and limit: ", skip, limit);
-      const userObjId = new mongoose.Types.ObjectId(userId);
-      const posts = await User.aggregate([
-        {
-          $match: { _id: userObjId}
-        },
-        {
-          $lookup: {
-            from: "posts",
-            localField: "savedPosts",
-            foreignField: "_id",
-            as: "savedPosts"
-          }
-        },
-        {
-          $project: {
-            savedPosts: { $slice: ["$savedPosts", skip, limit]}
-          }
-        }
-      ])
-      console.log("savedPosts are here: ", posts[0].savedPosts)
-      return posts[0].savedPosts;
-    }
-    catch(error){
-      console.log(error);
-      throw new Error("Error getting saved posts!");
-    }
-  }
-
   const changeIsAccountVerified = async (email: string) => {
     try {
       await User.updateOne({ email }, {
@@ -365,6 +334,26 @@ export const userRepositoryMongoDB = () => {
     }
   }
 
+  const blockUser = async (userId: string) => {
+    try{
+      await User.updateOne({ _id: userId }, { $set: { isBlock: true } });
+    }
+    catch(error){
+      console.log(error);
+      throw new Error("Error blocking user")
+    }
+  }
+
+  const unblockUser = async (userId: string) => {
+    try{
+      await User.updateOne({ _id: userId }, { $set: { isBlock: false } });
+    }
+    catch(error){
+      console.log(error);
+      throw new Error("Error blocking user")
+    }
+  }
+
   return {
     addUser,
     getAllUsers,
@@ -392,9 +381,10 @@ export const userRepositoryMongoDB = () => {
     savePost,
     unsavePost,
     searchUsers,
-    getSavedPosts,
     changeIsAccountVerified,
     changeIsAccountUnverified,
+    blockUser,
+    unblockUser,
   };
 };
 

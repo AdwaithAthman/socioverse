@@ -46,7 +46,10 @@ const END_POINTS = {
     GET_FOLLOWERS: `api/user/getFollowers`,
     GET_FOLLOWING: `api/user/getFollowing`,
     ADMIN_LOGIN: 'api/admin/login',
-    REFRESH_ADMIN_TOKEN: 'api/admin/refresh'
+    REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
+    GET_USERS: 'api/admin/getUsers',
+    BLOCK_USER: 'api/admin/blockUser',
+    UNBLOCK_USER: 'api/admin/unblockUser',
 }
 
 export default END_POINTS

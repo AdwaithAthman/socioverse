@@ -185,18 +185,18 @@ const CommentPopup = ({
                 {postDetails && (
                   <Link to={`/profile/${postDetails.userId}`}>
                     <div className="mt-3 flex items-center space-x-2">
-                      {postDetails?.dp ? (
+                      {postDetails?.user.dp ? (
                         <img
                           className="inline-block h-12 w-12 rounded-full"
-                          src={postDetails?.dp}
+                          src={postDetails?.user.dp}
                           alt="Profile Picture"
                         />
                       ) : (
                         <img
                           className="inline-block h-12 w-12 rounded-full"
                           src={
-                            postDetails?.dp
-                              ? postDetails?.dp
+                            postDetails?.user.dp
+                              ? postDetails?.user.dp
                               : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
                           }
                           alt="Profile Picture"
@@ -204,10 +204,10 @@ const CommentPopup = ({
                       )}
                       <span className="flex flex-col">
                         <span className="text-[14px] font-bold text-gray-900">
-                          {postDetails?.name}
+                          {postDetails.user.name}
                         </span>
                         <span className="text-[11px] font-bold text-green-500">
-                          @{postDetails?.username}
+                          @{postDetails.user.username}
                         </span>
                       </span>
                     </div>

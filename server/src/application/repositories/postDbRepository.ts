@@ -37,6 +37,8 @@ export const postDbRepository = (repository: ReturnType<PostRepositoryMongoDB>) 
 
     const getUserLikedPosts = async(userId: string, skip: number, limit: number) => await repository.getUserLikedPosts(userId, skip, limit);
 
+    const getSavedPosts = async(savedPostsId: string[], skip: number, limit: number) => await repository.getSavedPosts(savedPostsId, skip, limit);
+
     const countOfsearchPostsByRegexSearch = async(searchQuery: string, following: string[]) => await repository.countOfsearchPostsByRegexSearch(searchQuery, following);
 
     return {
@@ -56,6 +58,7 @@ export const postDbRepository = (repository: ReturnType<PostRepositoryMongoDB>) 
         searchPostsByTextSearch,
         searchPostsByRegexSearch,
         getUserLikedPosts,
+        getSavedPosts,
         countOfsearchPostsByRegexSearch
     }
 }

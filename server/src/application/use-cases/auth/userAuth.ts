@@ -47,6 +47,9 @@ export const userLogin = async (
   if (!user) {
     throw new AppError("Invalid email or password!", HttpStatus.UNAUTHORIZED);
   }
+  if (user.isBlock){
+    throw new AppError("Your account has been blocked!", HttpStatus.UNAUTHORIZED);
+  }
   const isPasswordCorrect = await authService.comparePassword(
     password,
     user?.password?.toString() || ""
@@ -68,6 +71,7 @@ export const userLogin = async (
     followers: user?.followers,
     following: user?.following,
     isAccountVerified: user.isAccountVerified,
+    isBlock: user.isBlock,
   };
   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
   const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
@@ -83,6 +87,9 @@ export const userLoginUsingGoogle = async (
   console.log("user google info= ", user)
   const isExistingEmail = await dbUserRepository.getUserByEmail(user.email);
   if (isExistingEmail) {
+    if(isExistingEmail.isBlock){
+      throw new AppError("Your account has been blocked!", HttpStatus.UNAUTHORIZED);
+    }
     const refreshToken = authService.generateRefreshToken(
       { userId: isExistingEmail._id.toString(), role: "client" }
     );
@@ -104,6 +111,7 @@ export const userLoginUsingGoogle = async (
       following: isExistingEmail?.following,
       isAccountVerified: isExistingEmail.isAccountVerified,
       isGoogleSignIn: isExistingEmail.isGoogleSignIn,
+      isBlock: isExistingEmail.isBlock,
     };
     await dbUserRepository.addRefreshTokenAndExpiry(user.email, refreshToken);
     return { userDetails, refreshToken, accessToken };
@@ -138,6 +146,7 @@ export const userLoginUsingGoogle = async (
       following: newUserData?.following,
       isAccountVerified: newUserData.isAccountVerified,
       isGoogleSignIn: true,
+      isBlock: newUserData.isBlock,
     };
     await dbUserRepository.addRefreshTokenAndExpiry(
       newUserData.email,

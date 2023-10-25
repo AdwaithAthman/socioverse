@@ -4,7 +4,7 @@ import axiosAdminInstance, {
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types
-import { AdminLoginInterface, AdminLoginResponse } from "../../Types/admin";
+import { AdminLoginInterface, AdminLoginResponse, GetUsersResponse } from "../../Types/admin";
 
 export const adminLogin = async (
   payload: AdminLoginInterface
@@ -25,3 +25,24 @@ export const refreshAdminAccessToken = async (): Promise<{
   );
   return response.data;
 };
+
+export const getAllUsers = async (): Promise<GetUsersResponse> => {
+  const response = await axiosAdminInstance.get<GetUsersResponse>(
+    END_POINTS.GET_USERS
+  );
+  return response.data;
+};
+
+export const blockUser = async (userId: string): Promise<{status: string, message: string}> => {
+  const response = await axiosAdminInstance.post<{status: string, message: string}>(
+    `${END_POINTS.BLOCK_USER}/${userId}`
+  );
+  return response.data;
+}
+
+export const unblockUser = async (userId: string): Promise<{status: string, message: string}> => {
+  const response = await axiosAdminInstance.post<{status: string, message: string}>(
+    `${END_POINTS.UNBLOCK_USER}/${userId}`
+  );
+  return response.data;
+}

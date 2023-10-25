@@ -7,12 +7,12 @@ import MainPage from "./Pages/MainPage";
 import ProfilePage from "./Pages/ProfilePage";
 import ErrorPage from "./Pages/ErrorPage";
 import AdminLoginPage from "./Pages/AdminLoginPage";
-import AdminDashBoard from "./Pages/AdminDashBoard";
+import AdminPage from "./Pages/AdminPage";
 
 //imports from Components
 import Settings from "./Components/Profile/SubSections/Settings";
 import EditProfile from "./Components/Profile/SubSections/EditProfile";
-
+import UsersList from "./Components/Admin/UsersList";
 
 export const appRouter = createBrowserRouter([
   {
@@ -65,7 +65,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminDashBoard />,
+    element: <AdminPage />,
     children: [
       {
         path: "/admin",
@@ -76,6 +76,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "users-list",
+        element: <UsersList />,
       },
       {
         path: "posts-list",

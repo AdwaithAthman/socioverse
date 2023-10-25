@@ -11,13 +11,16 @@ export interface PostDataInterface {
     reports?: string[],
     image?: string[] ,
     video?: string,
-    name: string,
-    username?: string,
-    email: string,
-    dp?: string,
     newPostCreated?: boolean,
     updatedAt: string,
     createdAt: string,
+    user: {
+        _id: string,
+        name: string,
+        username: string,
+        email: string,
+        dp?: string,
+    }
 }
 
 export interface PostInterface {

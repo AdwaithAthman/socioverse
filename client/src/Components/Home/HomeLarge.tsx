@@ -208,10 +208,10 @@ const HomeLarge = ({ user }: { user: User }) => {
             </div>
           </div>
           {/* <hr className="border-t-2 border-gray-900 my-4"></hr> */}
-          <div className="px-20 overflow-y-auto h-[85vh] no-scrollbar flex flex-col items-center">
-            <div className="mb-10">
+          <div className="px-20 overflow-y-auto h-[85vh] w-full no-scrollbar flex flex-col items-center">
+            <div className="mb-10 w-full">
               {posts.map((post, index) => (
-                <div className="mb-10" key={index}>
+                <div className="mb-10 w-full" key={index}>
                   <PostCard
                     postData={post}
                     setDeletedPostId={setDeletedPostId}

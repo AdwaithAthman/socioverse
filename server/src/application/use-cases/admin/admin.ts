@@ -2,6 +2,7 @@ import AppError from "../../../utils/appError";
 import { AuthServiceInterface } from "../../services/authServiceInterface";
 import configKeys from "../../../config";
 import { HttpStatus } from "../../../types/httpStatus";
+import { UserDbInterface } from "../../repositories/userDbRepository";
 
 export const handleAdminLogin = async (
     email: string,
@@ -41,12 +42,51 @@ export const handleRefreshAdminAccessToken = async (
         if (!adminRefreshToken) {
             throw new AppError("No refresh token found!", HttpStatus.UNAUTHORIZED);
         }
-        const payload = authService.verifyRefreshToken(adminRefreshToken);
-        const accessToken = authService.generateAccessToken(payload);
+        const {userId, role} = authService.verifyRefreshToken(adminRefreshToken);
+        const accessToken = authService.generateAccessToken({userId, role});
         return accessToken;
     }
     catch (err) {
         console.log(err)
         throw new AppError("Invalid refresh token!", HttpStatus.UNAUTHORIZED);
+    }
+}
+
+export const handleGetUsers = async (
+    dbUserRepository: ReturnType<UserDbInterface>
+) => {
+    try {
+        const users = await dbUserRepository.getAllUsers();
+        return users;
+    }
+    catch (err) {
+        console.log(err)
+        throw new AppError("Error while fetching users!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
+export const handleBlockUser = async (
+    userId: string,
+    dbUserRepository: ReturnType<UserDbInterface>
+) => {
+    try{
+        await dbUserRepository.blockUser(userId);
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while blocking user", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleUnblockUser = async (
+    userId: string,
+    dbUserRepository: ReturnType<UserDbInterface>
+) => {
+    try{
+        await dbUserRepository.unblockUser(userId);
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while blocking user", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

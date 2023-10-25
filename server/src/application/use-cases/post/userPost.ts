@@ -1,6 +1,6 @@
 import AppError from "../../../utils/appError";
 import { CloudinaryServiceInterface } from "../../services/cloudinaryServiceInterface";
-import { PostDbInterface } from "../../repositories/postDbRepository";
+import { PostDbInterface, postDbRepository } from "../../repositories/postDbRepository";
 import { UserDbInterface } from "../../repositories/userDbRepository";
 import {
   CommentDbInterface,
@@ -33,13 +33,6 @@ export const handleCreatePost = async (
     } else {
       postData.hashtags = "";
     }
-    // if (buffer && mimetype) {
-    //   const b64 = Buffer.from(buffer).toString("base64");
-    //   let dataURI = "data:" + mimetype + ";base64," + b64;
-    //   const cldRes = await cloudinaryService.handleUpload(dataURI);
-    //   console.log("cldRes: ", cldRes);
-    //   postData = { ...postData, image: cldRes.secure_url };
-    // }
     if (files && files.length > 0) {
       const uploadPromises = files.map((file) => {
         const b64 = Buffer.from(file.buffer).toString("base64");
@@ -53,24 +46,18 @@ export const handleCreatePost = async (
       });
       const cldRes = await Promise.all(uploadPromises);
       const images: string[] = cldRes.map((res: any) => res.secure_url);
-      console.log("images: ", images)
+      console.log("images: ", images);
       postData = { ...postData, image: images };
     }
-    const user = await dbUserRepository.getUserById(postData.userId as string);
-    if (user) {
-      postData = {
-        ...postData,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        dp: user.dp,
-      };
+    const createdPost = await postDbRepository.createPost(postData);
+    if (createdPost) {
+      const post = await postDbRepository.getPostById(createdPost._id);
+      await dbUserRepository.updatePosts(
+        postData.userId as string,
+        createdPost._id
+      );
+      return post;
     }
-    const post = await postDbRepository.createPost(postData);
-    if (post) {
-      await dbUserRepository.updatePosts(postData.userId as string, post._id);
-    }
-    return post;
   } catch (err) {
     console.log("Error creating post: ", err);
     throw new AppError(
@@ -310,7 +297,8 @@ export const handleEditPost = async (
     } else {
       postData.hashtags = "";
     }
-    const editedPost = await postDbRepository.editPost(postId, postData);
+    await postDbRepository.editPost(postId, postData);
+    const editedPost = await postDbRepository.getPostById(postId);
     return editedPost;
   } catch (err) {
     console.log("Error editing post: ", err);
@@ -368,8 +356,9 @@ export const handleSearchPosts = async (
 ) => {
   try {
     const user = await dbUserRepository.getUserById(userId);
-    const following = user?.following as string[];
-    following.push(userId);
+    const followingIds = user?.following as string[];
+    followingIds.push(userId);
+    const following = followingIds.map((id) => id.toString());
     // const textResults = await postDbRepository.searchPostsByTextSearch(searchQuery, user?.following as string[], skip, limit);
     // if(!textResults.length){
     const count = await postDbRepository.countOfsearchPostsByRegexSearch(
@@ -379,8 +368,8 @@ export const handleSearchPosts = async (
     const regexResults = await postDbRepository.searchPostsByRegexSearch(
       searchQuery,
       following,
-      skip,
-      limit
+      Number(skip),
+      Number(limit)
     );
     return { count, regexResults };
     // }
@@ -445,7 +434,11 @@ export const handleGetUserPosts = async (
   postDbRepository: ReturnType<PostDbInterface>
 ) => {
   try {
-    const posts = await postDbRepository.getPostsByUserId(userId, skip, limit);
+    const posts = await postDbRepository.getPostsByUserId(
+      userId,
+      Number(skip),
+      Number(limit)
+    );
     return posts;
   } catch (err) {
     console.log("Error getting user posts: ", err);
@@ -462,7 +455,11 @@ export const handleGetOtherUserPosts = async (
   postDbRepository: ReturnType<PostDbInterface>
 ) => {
   try {
-    const posts = await postDbRepository.getPostsByUserId(userId, skip, limit);
+    const posts = await postDbRepository.getPostsByUserId(
+      userId,
+      Number(skip),
+      Number(limit)
+    );
     return posts;
   } catch (err) {
     console.log("Error getting user posts: ", err);
@@ -482,28 +479,6 @@ export const handleGetUserLikedPosts = async (
   try {
     const posts = await postDbRepository.getUserLikedPosts(
       userId,
-      skip,
-      limit
-    );
-    return posts;
-  } catch (err) {
-    console.log("Error getting user liked posts: ", err);
-    throw new AppError(
-      "Error getting user liked posts!",
-      HttpStatus.INTERNAL_SERVER_ERROR
-    );
-  }
-}
-
-export const handleGetUserSavedPosts = async (
-  userId: string,
-  skip: string,
-  limit: string,
-  dbUserRepository: ReturnType<UserDbInterface>
-) => {
-  try {
-    const posts = await dbUserRepository.getSavedPosts(
-      userId,
       Number(skip),
       Number(limit)
     );
@@ -515,7 +490,33 @@ export const handleGetUserSavedPosts = async (
       HttpStatus.INTERNAL_SERVER_ERROR
     );
   }
-}
+};
 
-
-
+export const handleGetUserSavedPosts = async (
+  userId: string,
+  skip: string,
+  limit: string,
+  dbUserRepository: ReturnType<UserDbInterface>,
+  postDbRepository: ReturnType<PostDbInterface>
+) => {
+  try {
+    const user = await dbUserRepository.getUserById(userId);
+    if(user?.savedPosts.length === 0){
+      return [];
+    }
+    else{
+      const posts =  await postDbRepository.getSavedPosts(
+        user?.savedPosts as string[],
+        Number(skip),
+        Number(limit)
+      );
+      return posts;
+    }
+  } catch (err) {
+    console.log("Error getting user liked posts: ", err);
+    throw new AppError(
+      "Error getting user liked posts!",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+};

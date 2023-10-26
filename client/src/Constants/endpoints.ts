@@ -50,6 +50,10 @@ const END_POINTS = {
     GET_USERS: 'api/admin/getUsers',
     BLOCK_USER: 'api/admin/blockUser',
     UNBLOCK_USER: 'api/admin/unblockUser',
+    GET_ALL_POSTS: 'api/admin/getAllPosts',
+    BLOCK_POST: 'api/admin/blockPost',
+    UNBLOCK_POST: 'api/admin/unblockPost',
+    GET_REPORT_INFO: 'api/admin/getReportInfo', 
 }
 
 export default END_POINTS

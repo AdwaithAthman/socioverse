@@ -13,6 +13,7 @@ import AdminPage from "./Pages/AdminPage";
 import Settings from "./Components/Profile/SubSections/Settings";
 import EditProfile from "./Components/Profile/SubSections/EditProfile";
 import UsersList from "./Components/Admin/UsersList";
+import PostList from "./Components/Admin/PostsList";
 
 export const appRouter = createBrowserRouter([
   {
@@ -80,6 +81,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "posts-list",
+        element: <PostList />
       },
       {
         path: "reported-posts",

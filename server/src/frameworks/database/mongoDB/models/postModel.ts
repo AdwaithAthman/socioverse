@@ -11,6 +11,7 @@ interface PostInterface extends Document {
     reports: string[];
     image?: string[];
     video?: string;
+    isBlock: boolean;
 }
 
 const postSchema = new Schema<PostInterface>(
@@ -35,7 +36,11 @@ const postSchema = new Schema<PostInterface>(
         }],
         video: {
             type: String,
-        }
+        },
+        isBlock: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

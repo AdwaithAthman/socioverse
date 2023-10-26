@@ -506,6 +506,110 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
+  const getAllPosts = async() => {
+    try{
+      const posts = await Post.aggregate([
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" },
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            hashtags: 1,
+            hashtagsArray: 1,
+            description: 1,
+            likes: 1,
+            comments: 1,
+            saved: 1,
+            reports: 1,
+            image: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: {
+              _id: "$user._id",
+              name: "$user.name",
+              username: "$user.username",
+              email: "$user.email",
+              dp: "$user.dp",
+            },
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        }
+      ])
+      return posts;
+    }
+    catch(err){
+      console.log(err)
+      throw new Error("Error getting all posts")
+    }
+  }
+
+  const getReportInfo = async (postId: string) => {
+    const postObjId = new mongoose.Types.ObjectId(postId);
+    const reportInfo = await Post.aggregate([
+      {
+        $match: { _id: postObjId },
+      },
+      {
+        $unwind: "$reports" 
+      },
+      {
+        $addFields: {
+          "reports.userObjId": { 
+            $toObjectId: "$reports.userId"
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "reports.userObjId", 
+          foreignField: "_id",
+          as: "reports.user"
+        }
+      },
+      {
+        $unwind: "$reports.user"
+      },
+      {
+        $project: {
+          reports: {
+            _id: 1,
+            userId: 1,
+            label: 1,
+            user: {
+              _id: 1,
+              name: 1,
+              username: 1,
+              email: 1,
+              dp: 1
+            }
+          },
+        },
+      },
+    ]);
+    console.log("Report Info: ", reportInfo)
+    return reportInfo;
+  }
+
+
+
   return {
     createPost,
     getPosts,
@@ -525,6 +629,8 @@ export const postRepositoryMongoDB = () => {
     getUserLikedPosts,
     getSavedPosts,
     countOfsearchPostsByRegexSearch,
+    getAllPosts,
+    getReportInfo,
   };
 };
 

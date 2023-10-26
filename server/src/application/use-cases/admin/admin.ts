@@ -3,6 +3,7 @@ import { AuthServiceInterface } from "../../services/authServiceInterface";
 import configKeys from "../../../config";
 import { HttpStatus } from "../../../types/httpStatus";
 import { UserDbInterface } from "../../repositories/userDbRepository";
+import { PostDbInterface } from "../../repositories/postDbRepository";
 
 export const handleAdminLogin = async (
     email: string,
@@ -88,5 +89,32 @@ export const handleUnblockUser = async (
     catch(err){
         console.log(err)
         throw new AppError ("Error while blocking user", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetAllPosts = async (
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        const posts = await postDbRepository.getAllPosts();
+        return posts;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while fetching posts", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetReportInfo = async (
+    postId: string,
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        const reportInfo = await postDbRepository.getReportInfo(postId);
+        return reportInfo;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while fetching report info", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

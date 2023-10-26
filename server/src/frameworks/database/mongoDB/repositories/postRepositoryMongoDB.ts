@@ -302,10 +302,12 @@ export const postRepositoryMongoDB = () => {
       const posts = await Post.aggregate([
         {
           $match:
-            { $and: [
+          {
+            $and: [
               { userId: { $in: following } },
-              {hashtags: { $regex: searchQuery, $options: "i" }},
-            ] }
+              { hashtags: { $regex: searchQuery, $options: "i" } },
+            ]
+          }
         },
         {
           $addFields: {
@@ -506,8 +508,8 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  const getAllPosts = async() => {
-    try{
+  const getAllPosts = async () => {
+    try {
       const posts = await Post.aggregate([
         {
           $addFields: {
@@ -537,6 +539,7 @@ export const postRepositoryMongoDB = () => {
             saved: 1,
             reports: 1,
             image: 1,
+            isBlock: 1,
             createdAt: 1,
             updatedAt: 1,
             user: {
@@ -554,7 +557,7 @@ export const postRepositoryMongoDB = () => {
       ])
       return posts;
     }
-    catch(err){
+    catch (err) {
       console.log(err)
       throw new Error("Error getting all posts")
     }
@@ -567,11 +570,11 @@ export const postRepositoryMongoDB = () => {
         $match: { _id: postObjId },
       },
       {
-        $unwind: "$reports" 
+        $unwind: "$reports"
       },
       {
         $addFields: {
-          "reports.userObjId": { 
+          "reports.userObjId": {
             $toObjectId: "$reports.userId"
           }
         }
@@ -579,7 +582,7 @@ export const postRepositoryMongoDB = () => {
       {
         $lookup: {
           from: "users",
-          localField: "reports.userObjId", 
+          localField: "reports.userObjId",
           foreignField: "_id",
           as: "reports.user"
         }
@@ -604,11 +607,36 @@ export const postRepositoryMongoDB = () => {
         },
       },
     ]);
-    console.log("Report Info: ", reportInfo)
     return reportInfo;
   }
 
+  const blockPost = async (postId: string) => {
+    try{
+      await Post.updateOne({_id: postId}, {
+        $set: {
+          isBlock: true
+        }
+      })
+    }
+    catch(err){
+      console.log(err)
+      throw new Error("Error blocking post")
+    }
+  }
 
+  const unblockPost = async (postId: string) => {
+    try{
+      await Post.updateOne({_id: postId}, {
+        $set: {
+          isBlock: false
+        }
+      })
+    }
+    catch(err){
+      console.log(err)
+      throw new Error("Error blocking post")
+    }
+  }
 
   return {
     createPost,
@@ -631,6 +659,8 @@ export const postRepositoryMongoDB = () => {
     countOfsearchPostsByRegexSearch,
     getAllPosts,
     getReportInfo,
+    blockPost,
+    unblockPost,
   };
 };
 

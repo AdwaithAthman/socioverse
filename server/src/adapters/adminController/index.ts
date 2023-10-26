@@ -14,7 +14,9 @@ import {
   handleBlockUser,
   handleUnblockUser,
   handleGetAllPosts,
-  handleGetReportInfo
+  handleGetReportInfo,
+  handleBlockPost,
+  handleUnblockPost,
 } from "../../application/use-cases/admin/admin";
 
 const adminController = (
@@ -104,7 +106,25 @@ const adminController = (
       message: "report info fetched",
       reportInfo
     })
-  })
+  });
+
+  const blockPost = asyncHandler(async (req: Request, res: Response) => {
+    const { postId } = req.params as unknown as {postId : string}
+    await handleBlockPost(postId, postDbRepository);
+    res.json({
+      status: "success",
+      message: "blocked the user",
+    });
+  });
+
+  const unblockPost = asyncHandler(async (req: Request, res: Response) => {
+    const { postId } = req.params as unknown as {postId : string}
+    await handleUnblockPost(postId, postDbRepository);
+    res.json({
+      status: "success",
+      message: "unblocked the user",
+    });
+  });
 
   return {
     adminLogin,
@@ -114,6 +134,8 @@ const adminController = (
     unblockUser,
     getAllPosts,
     getReportInfo,
+    blockPost,
+    unblockPost,
   };
 };
 

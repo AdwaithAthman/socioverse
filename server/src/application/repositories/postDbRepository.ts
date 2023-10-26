@@ -45,6 +45,10 @@ export const postDbRepository = (repository: ReturnType<PostRepositoryMongoDB>) 
 
     const getReportInfo = async(postId: string) => await repository.getReportInfo(postId);
 
+    const blockPost = async(postId: string) => await repository.blockPost(postId);
+
+    const unblockPost = async(postId: string) => await repository.unblockPost(postId);
+
     return {
         createPost,
         getPosts,
@@ -66,6 +70,8 @@ export const postDbRepository = (repository: ReturnType<PostRepositoryMongoDB>) 
         countOfsearchPostsByRegexSearch,
         getAllPosts,
         getReportInfo,
+        blockPost,
+        unblockPost,
     }
 }
 

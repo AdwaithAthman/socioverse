@@ -118,3 +118,29 @@ export const handleGetReportInfo = async (
         throw new AppError ("Error while fetching report info", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
+
+export const handleBlockPost = async (
+    postId: string,
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        await postDbRepository.blockPost(postId);
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while blocking post", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleUnblockPost = async (
+    postId: string,
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        await postDbRepository.unblockPost(postId);
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while unblocking post", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}

@@ -21,7 +21,7 @@ import { ToastContainer } from "react-toastify";
 const AdminPage = () => {
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div className="flex items-between overflow-y-hidden">
         <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
           <div className="mb-2 p-4">
@@ -58,14 +58,6 @@ const AdminPage = () => {
                   <BsFillPostcardFill className="h-5 w-5" />
                 </ListItemPrefix>
                 Posts List
-              </ListItem>
-            </Link>
-            <Link to="/admin/reported-posts">
-              <ListItem>
-                <ListItemPrefix>
-                  <MdReport className="h-5 w-5" />
-                </ListItemPrefix>
-                Reported Posts
               </ListItem>
             </Link>
             <Link to="/admin/reported-comments">

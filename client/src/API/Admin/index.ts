@@ -4,7 +4,7 @@ import axiosAdminInstance, {
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types
-import { AdminLoginInterface, AdminLoginResponse, GetUsersResponse } from "../../Types/admin";
+import { AdminLoginInterface, AdminLoginResponse, GetUsersResponse, GetAllPostsResponse, GetReportInfoResponse } from "../../Types/admin";
 
 export const adminLogin = async (
   payload: AdminLoginInterface
@@ -43,6 +43,34 @@ export const blockUser = async (userId: string): Promise<{status: string, messag
 export const unblockUser = async (userId: string): Promise<{status: string, message: string}> => {
   const response = await axiosAdminInstance.post<{status: string, message: string}>(
     `${END_POINTS.UNBLOCK_USER}/${userId}`
+  );
+  return response.data;
+}
+
+export const getAllPosts = async (): Promise<GetAllPostsResponse> => {
+  const response = await axiosAdminInstance.get<GetAllPostsResponse>(
+    END_POINTS.GET_ALL_POSTS
+  );
+  return response.data;
+}
+
+export const blockPost = async (postId: string): Promise<{status: string, message: string}> => {
+  const response = await axiosAdminInstance.post<{status: string, message: string}>(
+    `${END_POINTS.BLOCK_POST}/${postId}`
+  );
+  return response.data;
+}
+
+export const unblockPost = async (postId: string): Promise<{status: string, message: string}> => {
+  const response = await axiosAdminInstance.post<{status: string, message: string}>(
+    `${END_POINTS.UNBLOCK_POST}/${postId}`
+  );
+  return response.data;
+}
+
+export const getReportInfo = async (postId: string): Promise<GetReportInfoResponse> => {
+  const response = await axiosAdminInstance.get<GetReportInfoResponse>(
+    `${END_POINTS.GET_REPORT_INFO}/${postId}`
   );
   return response.data;
 }

@@ -4,6 +4,8 @@ import { AuthService } from "../../frameworks/services/authService";
 import { AuthServiceInterface } from "../../application/services/authServiceInterface";
 import { UserDbInterface } from "../../application/repositories/userDbRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/userRepositoryMongoDB";
+import { PostDbInterface } from "../../application/repositories/postDbRepository";
+import { PostRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/postRepositoryMongoDB";
 
 import {
   handleAdminLogin,
@@ -11,16 +13,21 @@ import {
   handleGetUsers,
   handleBlockUser,
   handleUnblockUser,
+  handleGetAllPosts,
+  handleGetReportInfo
 } from "../../application/use-cases/admin/admin";
 
 const adminController = (
   authServiceImpl: AuthService,
   authServiceInterface: AuthServiceInterface,
   userDbRepositoryImpl: UserRepositoryMongoDB,
-  userDbRepositoryInterface: UserDbInterface
+  userDbRepositoryInterface: UserDbInterface,
+  postDbRepositoryImpl: PostRepositoryMongoDB,
+  postDbRepositoryInterface: PostDbInterface
 ) => {
   const authService = authServiceInterface(authServiceImpl());
   const dbUserRepository = userDbRepositoryInterface(userDbRepositoryImpl());
+  const postDbRepository = postDbRepositoryInterface(postDbRepositoryImpl());
 
   const adminLogin = asyncHandler(async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
@@ -80,12 +87,33 @@ const adminController = (
     });
   });
 
+  const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
+    const posts = await handleGetAllPosts(postDbRepository);
+    res.json({
+      status: "success",
+      message: "posts fetched",
+      posts
+    });
+  });
+
+  const getReportInfo = asyncHandler(async (req: Request, res: Response) => {
+    const { postId } = req.params as unknown as {postId : string}
+    const reportInfo = await handleGetReportInfo(postId, postDbRepository);
+    res.json({
+      status: "success",
+      message: "report info fetched",
+      reportInfo
+    })
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
     getUsers,
     blockUser,
     unblockUser,
+    getAllPosts,
+    getReportInfo,
   };
 };
 

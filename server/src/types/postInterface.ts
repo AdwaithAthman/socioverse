@@ -12,4 +12,5 @@ export interface PostDataInterface {
     username?: string,
     email: string,
     dp?: string,
+    isBlock: boolean,
 }

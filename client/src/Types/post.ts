@@ -12,6 +12,7 @@ export interface PostDataInterface {
     image?: string[] ,
     video?: string,
     newPostCreated?: boolean,
+    isBlock: boolean,
     updatedAt: string,
     createdAt: string,
     user: {

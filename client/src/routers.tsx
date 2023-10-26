@@ -84,9 +84,6 @@ export const appRouter = createBrowserRouter([
         element: <PostList />
       },
       {
-        path: "reported-posts",
-      },
-      {
         path: "reported-comments",
       }
     ],

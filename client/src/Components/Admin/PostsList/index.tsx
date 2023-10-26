@@ -116,8 +116,6 @@ const PostList = () => {
     }
   };
 
-  console.log("reportInfo: ", reportInfo);
-
   return (
     <>
       <Card className=" w-full">
@@ -167,7 +165,6 @@ const PostList = () => {
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
-
                 return (
                   <tr key={post._id}>
                     <td className={classes}>

@@ -43,6 +43,7 @@ import {
   deleteComment,
   likeComment,
   likeReply,
+  deleteReply,
 } from "../../../API/Post";
 import ConfirmDeleteToast from "../../../utils/customToasts/confirmDeleteToast";
 import { useDispatch } from "react-redux";
@@ -591,6 +592,9 @@ function Comment({
   const [editCommentId, setEditCommentId] = useState<string | null>(null);
   const [fromId, setFromId] = useState<string | null>(null);
   const [replyForReply, setReplyForReply] = useState<boolean>(false);
+  const [deleteReplyId, setDeleteReplyId] = useState<string | null>(null);
+
+
   // const [isEditButtonClicked, setIsEditButtonClicked] = useState<boolean>(false);
 
   const toggleMenuVisibility = () => {
@@ -629,6 +633,21 @@ function Comment({
       setEditCommentId(null);
     }
   }, [editCommentMode]);
+
+  //deleting reply
+  useEffect(() => {
+    if (deleteReplyId) {
+      const index = replies.findIndex(
+        (reply) => reply._id === deleteReplyId
+      );
+      if (index !== -1) {
+        const updatedReplies = [...replies];
+        updatedReplies.splice(index, 1);
+        setReplies(updatedReplies);
+      }
+      setDeleteCommentId(null);
+    }
+  }, [replies, deleteReplyId, setDeleteCommentId]);
 
   async function fetchReplies() {
     const replies = await getReplies(commentData._id);
@@ -865,6 +884,7 @@ function Comment({
                 handleOnReply={handleOnReply}
                 onReply={onReply}
                 fromId={fromId}
+                setDeleteReplyId={setDeleteReplyId}
               />
             ))}
           </div>
@@ -881,6 +901,7 @@ const Reply = ({
   handleOnReply,
   onReply,
   fromId,
+  setDeleteReplyId,
 }: {
   userId: string;
   reply: ReplyInterface;
@@ -890,13 +911,19 @@ const Reply = ({
     commentUser: string | null,
     replyUser: string,
     fromId: string,
-    replyForReply: boolean
+    replyForReply: boolean,
   ) => void;
   onReply: boolean;
   fromId: string | null;
+  setDeleteReplyId: React.Dispatch<React.SetStateAction<string | null>>
 }) => {
   const [replyLikes, setReplyLikes] = useState<string[]>(reply.likes);
   const [replyIsLiked, setReplyIsLiked] = useState<boolean>(false);
+  const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
+
+  const toggleMenuVisibility = () => {
+    setMenuVisible(!isMenuVisible);
+  };
 
   useEffect(() => {
     if (reply) {
@@ -929,6 +956,29 @@ const Reply = ({
       }
     }
   };
+
+  const handleDeleteComment = () => {
+    toast.dismiss();
+    toast(
+      <ConfirmDeleteToast
+        onDelete={confirmDeleteComment}
+        message={"Are you sure you want to delete this reply comment?"}
+      />,
+      { ...TOAST_ACTION, closeButton: false }
+    );
+  };
+
+  const confirmDeleteComment = async () => {
+    const response = deleteReply(reply._id, commentId);
+    toast.promise(response, {
+      pending: "Deleting Reply...",
+      success: "Reply deleted successfully!",
+      error: "Error deleting reply!",
+    });
+    (await response).status === "success" &&
+      setDeleteReplyId(reply._id);
+  };
+
   return (
     <>
       <div className=" pl-10 pr-2">
@@ -957,6 +1007,7 @@ const Reply = ({
             </Link>
           )}
           <div className="w-full">
+          <div className="flex justify-between items-center">
             {reply && (
               <Link to={`/profile/${reply.userId}`}>
                 <span className="text-sm font-bold text-gray-900">
@@ -964,7 +1015,55 @@ const Reply = ({
                 </span>
               </Link>
             )}
-            <span className="flex-1 pl-3">
+            <div className="group inline-block relative">
+                <Button
+                  color="blue-gray"
+                  size="sm"
+                  variant="text"
+                  className="focus:outline-none"
+                  onClick={toggleMenuVisibility}
+                >
+                  <SlOptions className="text-sm transition duration-150 ease-in-out hover:scale-105" />
+                </Button>
+                {isMenuVisible && (
+                  <div
+                    className={`${
+                      isMenuVisible ? "block" : "hidden"
+                    } absolute right-0 w-36 rounded-md z-10`}
+                  >
+                    <div
+                      className={`${
+                        isMenuVisible ? "block" : "hidden"
+                      } absolute right-0 mt-1 w-full bg-white border border-blue-gray-300/20 shadow-lg rounded-md z-10`}
+                    >
+                      {reply.user?._id === userId ? (
+                          <button
+                            className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
+                            onClick={() => {
+                              handleDeleteComment();
+                              setMenuVisible(false);
+                            }}
+                          >
+                            <RiDeleteBin6Line className="mr-2 text-md" />
+                            <p className="text-sm">Delete</p>
+                          </button>
+                      ) : (
+                        <button
+                          className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
+                          onClick={() => {
+                            setMenuVisible(false);
+                          }}
+                        >
+                          <MdOutlineReportGmailerrorred className="mr-2 text-lg" />
+                          <p className="text-sm">Report</p>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              </div>
+            <span className="flex-1">
               <p className="text-sm text-gray-600">{reply.reply}</p>
               <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
                 <div className="flex gap-5">

@@ -35,6 +35,7 @@ const END_POINTS = {
     GET_COMMENTS: 'api/post/getComments',
     EDIT_COMMENT: 'api/post/editComment',
     DELETE_COMMENT: 'api/post/deleteComment',
+    DELETE_REPLY: 'api/post/deleteReply',
     LIKE_COMMENT: 'api/post/likeComment',
     LIKE_REPLY: 'api/post/likeReply',
     ADD_REPLY: 'api/post/addReply',
@@ -54,6 +55,8 @@ const END_POINTS = {
     BLOCK_POST: 'api/admin/blockPost',
     UNBLOCK_POST: 'api/admin/unblockPost',
     GET_REPORT_INFO: 'api/admin/getReportInfo', 
+    GET_ALL_COMMENTS: 'api/admin/getAllComments',
+    GET_ALL_REPLIES: 'api/admin/getAllReplies'
 }
 
 export default END_POINTS

@@ -42,6 +42,7 @@ const postRouter = () => {
     router.patch('/editPost/:postId',uploadToMulter.none() ,authMiddleware, controller.editPost)
     router.put('/editComment/:commentId', authMiddleware, controller.editComment)
     router.delete('/deleteComment/:commentId', authMiddleware, controller.deleteComment)
+    router.delete('/deleteReply', authMiddleware, controller.deleteReply)
     router.get('/searchPosts', authMiddleware, controller.searchPosts)
     router.post('/likeComment', authMiddleware, controller.likeComment)
     router.post('/likeReply', authMiddleware, controller.likeReply)

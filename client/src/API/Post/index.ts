@@ -160,6 +160,13 @@ export const deleteComment = async(commentId: string): Promise<DeleteCommentResp
   return response.data;
 }
 
+export const deleteReply = async(replyId: string, commentId: string): Promise<DeleteCommentResponse> => {
+  const response = await axiosUserInstance.delete<DeleteCommentResponse>(
+    `${END_POINTS.DELETE_REPLY}?replyId=${replyId}&commentId=${commentId}`
+  );
+  return response.data;
+}
+
 export const searchPosts = async(searchQuery: string, page: number): Promise<GetSearchPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;

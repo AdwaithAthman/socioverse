@@ -58,9 +58,6 @@ const profileMenuItems = [
 
 function ProfileMenu() {
   const userInfo = useSelector((state: StoreType) => state.auth.user);
-  const userIsAuthenticated = useSelector(
-    (state: StoreType) => state.auth.isAuthenticated
-  );
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const dispatch = useDispatch();
@@ -68,8 +65,10 @@ function ProfileMenu() {
   const closeMenu = () => setIsMenuOpen(false);
 
   useEffect(() => {
-    if (!userIsAuthenticated) userIsBlocked();
-  }, [userIsAuthenticated]);
+    if (userInfo && userInfo.isBlock) {
+      userIsBlocked();
+    }
+  }, [userInfo]);
 
   const userIsBlocked = async () => {
     toast.dismiss();

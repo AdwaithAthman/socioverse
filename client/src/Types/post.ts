@@ -67,6 +67,7 @@ export interface CommentInterface {
     likes: string[],
     createdAt: Date,
     updatedAt: Date,
+    isBlock: boolean,
     user?: {
         _id: string,
         name: string,
@@ -83,6 +84,7 @@ export interface ReplyInterface {
     likes: string[],
     createdAt: Date,
     updatedAt: Date,
+    isBlock: boolean,
     user?: {
         _id: string,
         name: string,

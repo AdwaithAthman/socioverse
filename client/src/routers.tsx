@@ -14,6 +14,9 @@ import Settings from "./Components/Profile/SubSections/Settings";
 import EditProfile from "./Components/Profile/SubSections/EditProfile";
 import UsersList from "./Components/Admin/UsersList";
 import PostList from "./Components/Admin/PostsList";
+import ReportedList from "./Components/Admin/ReportedList";
+import ReportedCommentsList from "./Components/Admin/ReportedList/ReportedCommentsList";
+import ReportedRepliesList from "./Components/Admin/ReportedList/ReportedRepliesList";
 
 export const appRouter = createBrowserRouter([
   {
@@ -84,12 +87,27 @@ export const appRouter = createBrowserRouter([
         element: <PostList />
       },
       {
-        path: "reported-comments",
+        path: "reported-list",
+        element: <ReportedList />,
+        children: [
+          {
+            path: "",
+            element:  <Navigate to="/admin/reported-list/comments" />
+          },
+          {
+            path:"comments",
+            element: <ReportedCommentsList />
+          },
+          {
+            path: "replies",
+            element: <ReportedRepliesList />
+          }
+        ]
       }
     ],
   },
-  {
-    path: "*",
-    element: <Navigate to="/error" />,
-  }
+  // {
+  //   path: "*",
+  //   element: <Navigate to="/error" />,
+  // }
 ]);

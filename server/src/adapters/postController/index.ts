@@ -19,6 +19,7 @@ import {
   handleEditPost,
   handleEditComment,
   handleDeleteComment,
+  handleDeleteReply,
   handleSearchPosts,
   handleLikeComment,
   handleLikeReply,
@@ -257,6 +258,18 @@ const postController = (
     });
   });
 
+  const deleteReply = asyncHandler(async (req: Request, res: Response) => {
+    const { replyId, commentId } = req.query as unknown as {
+      replyId: string;
+      commentId: string;
+    };
+    await handleDeleteReply(replyId, commentId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reply deleted",
+    });
+  })
+
   const searchPosts = asyncHandler(async (req: Request, res: Response) => {
     const { searchQuery, skip, limit } = req.query as unknown as {
       searchQuery: string;
@@ -412,6 +425,7 @@ const postController = (
     editPost,
     editComment,
     deleteComment,
+    deleteReply,
     searchPosts,
     likeComment,
     likeReply,

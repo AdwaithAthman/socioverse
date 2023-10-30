@@ -19,6 +19,8 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
 
     const deleteComment = async(commentId: string) => await repository.deleteComment(commentId);
 
+    const deleteReply = async(replyId: string, commentId: string) => await repository.deleteReply(replyId, commentId);
+
     const likeComment = async(commentId: string, userId: string) => await repository.likeComment(commentId, userId);
 
     const unlikeComment = async(commentId: string, userId: string) => await repository.unlikeComment(commentId, userId);
@@ -35,6 +37,7 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
         editComment,
         getCommentById,
         deleteComment,
+        deleteReply,
         likeComment,
         unlikeComment,
         likeReply, 

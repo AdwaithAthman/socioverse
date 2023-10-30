@@ -7,6 +7,7 @@ interface CommentInterface extends Document {
   replies: string[];
   report: string[];
   likes: string[];
+  isBlock: boolean,
 }
 
 interface ReplyCommentInterface extends Document {
@@ -15,6 +16,7 @@ interface ReplyCommentInterface extends Document {
   reply: string;
   report: string[];
   likes: string[];
+  isBlock: boolean,
 }
 
 const replyCommentSchema = new Schema<ReplyCommentInterface>(
@@ -31,11 +33,11 @@ const replyCommentSchema = new Schema<ReplyCommentInterface>(
       type: String,
       required: true,
     },
-    report: [
-      {
-        type: String,
-      },
-    ],
+    isBlock: {
+      type: Boolean,
+      default: false,
+    },
+    report: [],
     likes: [
       {
         type: String,
@@ -62,16 +64,16 @@ const commentSchema = new Schema<CommentInterface>(
       required: true,
     },
     replies: [replyCommentSchema],
-    report: [
-      {
-        type: String,
-      },
-    ],
+    report: [],
     likes: [
       {
         type: String,
       },
     ],
+    isBlock: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

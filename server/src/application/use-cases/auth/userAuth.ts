@@ -167,7 +167,7 @@ export const accessTokenRefresh = async (
   authService: ReturnType<AuthServiceInterface>
 ) => {
   if (!cookies?.refreshToken) {
-    throw new AppError("Invalid token!", HttpStatus.UNAUTHORIZED);
+    throw new AppError("Invalid token1", HttpStatus.UNAUTHORIZED);
   }
   const refreshToken = cookies.refreshToken;
   const { userId, role } = authService.verifyRefreshToken(refreshToken.toString());

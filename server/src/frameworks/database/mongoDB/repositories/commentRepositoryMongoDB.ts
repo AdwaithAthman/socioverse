@@ -22,7 +22,7 @@ export const commentRepositoryMongoDB = () => {
     try {
       const comments = await Comment.aggregate([
         {
-          $match: { postId },
+          $match: { postId, isBlock: false },
         },
         {
           $addFields: {
@@ -86,6 +86,9 @@ export const commentRepositoryMongoDB = () => {
       },
       {
         $unwind: "$replies",
+      },
+      {
+        $match: { "replies.isBlock": false },
       },
       {
         $addFields: {
@@ -185,11 +188,28 @@ export const commentRepositoryMongoDB = () => {
 
   const deleteComment = async (commentId: string) => {
     try {
-      await Comment.findByIdAndDelete(commentId)
+      await Comment.updateOne({
+        _id: commentId
+      }, {
+        $set: { isBlock: true }
+      })
     }
     catch (err) {
       console.log(err)
       throw new Error("Error deleting comment");
+    }
+  }
+
+  const deleteReply = async (replyId: string, commentId: string) => {
+    try {
+      await Comment.updateOne(
+        { _id: commentId, "replies._id": replyId },
+        { $set: { "replies.$.isBlock": true } }
+      );
+    }
+    catch (err) {
+      console.log(err)
+      throw new Error("Error deleting reply");
     }
   }
 
@@ -254,6 +274,7 @@ export const commentRepositoryMongoDB = () => {
     editComment,
     getCommentById,
     deleteComment,
+    deleteReply,
     likeComment,
     unlikeComment,
     likeReply,

@@ -346,6 +346,22 @@ export const handleDeleteComment = async (
   }
 };
 
+export const handleDeleteReply = async (
+  replyId: string,
+  commentId: string,
+  commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+  try {
+    await commentDbRepository.deleteReply(replyId, commentId);
+  } catch (err) {
+    console.log("Error deleting reply: ", err);
+    throw new AppError(
+      "Error deleting reply!",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 export const handleSearchPosts = async (
   searchQuery: string,
   userId: string,

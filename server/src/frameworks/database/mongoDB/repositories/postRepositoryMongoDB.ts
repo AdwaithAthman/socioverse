@@ -43,6 +43,7 @@ export const postRepositoryMongoDB = () => {
           $match: {
             $or: [{ userId: userId }, { "user._id": { $in: following } }],
             reports: { $not: { $elemMatch: { userId: userId } } },
+            isBlock: false,
           },
         },
         {
@@ -56,6 +57,7 @@ export const postRepositoryMongoDB = () => {
             comments: 1,
             saved: 1,
             reports: 1,
+            isBlock: 1,
             image: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -84,7 +86,7 @@ export const postRepositoryMongoDB = () => {
       console.log(postObjId);
       const post = await Post.aggregate([
         {
-          $match: { _id: postObjId },
+          $match: { _id: postObjId, isBlock: false },
         },
         {
           $addFields: {
@@ -113,6 +115,7 @@ export const postRepositoryMongoDB = () => {
             comments: 1,
             saved: 1,
             reports: 1,
+            isBlock: 1,
             image: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -134,7 +137,7 @@ export const postRepositoryMongoDB = () => {
     try {
       const posts = await Post.aggregate([
         {
-          $match: { userId: userId },
+          $match: { userId: userId, isBlock: false },
         },
         {
           $addFields: {
@@ -163,6 +166,7 @@ export const postRepositoryMongoDB = () => {
             comments: 1,
             saved: 1,
             reports: 1,
+            isBlock: 1,
             image: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -306,6 +310,7 @@ export const postRepositoryMongoDB = () => {
             $and: [
               { userId: { $in: following } },
               { hashtags: { $regex: searchQuery, $options: "i" } },
+              { isBlock: false}
             ]
           }
         },
@@ -336,6 +341,7 @@ export const postRepositoryMongoDB = () => {
             comments: 1,
             saved: 1,
             reports: 1,
+            isBlock: 1,
             image: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -373,7 +379,7 @@ export const postRepositoryMongoDB = () => {
     try {
       const posts = await Post.aggregate([
         {
-          $match: { likes: userId },
+          $match: { likes: userId, isBlock: false },
         },
         {
           $addFields: {
@@ -402,6 +408,7 @@ export const postRepositoryMongoDB = () => {
             comments: 1,
             saved: 1,
             reports: 1,
+            isBlock: 1,
             image: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -433,7 +440,7 @@ export const postRepositoryMongoDB = () => {
     try {
       const posts = await Post.aggregate([
         {
-          $match: { _id: { $in: savedPostsId } },
+          $match: { _id: { $in: savedPostsId }, isBlock: false },
         },
         {
           $addFields: {
@@ -462,6 +469,7 @@ export const postRepositoryMongoDB = () => {
             comments: 1,
             saved: 1,
             reports: 1,
+            isBlock: 1,
             image: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -493,6 +501,7 @@ export const postRepositoryMongoDB = () => {
       const count = await Post.countDocuments({
         $and: [
           { userId: { $in: following } },
+          { isBlock: false},
           {
             $or: [
               { hashtags: { $regex: searchQuery, $options: "i" } },

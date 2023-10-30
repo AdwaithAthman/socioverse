@@ -1,6 +1,6 @@
 //importing types
 import { User } from "./loginUser";
-import { PostDataInterface } from "./post";
+import { CommentInterface, PostDataInterface, ReplyInterface } from "./post";
 
 export interface AdminLoginInterface {
     email: string;
@@ -43,4 +43,16 @@ export interface GetReportInfoResponse {
     status: string,
     message: string,
     reportInfo: ReportInfoInterface[],
+}
+
+export interface GetAllCommentsResponse {
+    status: string,
+    message: string,
+    comments: CommentInterface
+}
+
+export interface GetAllRepliesResponse {
+    status: string,
+    message: string,
+    replies: ReplyInterface
 }

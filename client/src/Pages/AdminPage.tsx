@@ -9,7 +9,7 @@ import {
 } from "@material-tailwind/react";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { FaUsersGear } from "react-icons/fa6";
 import { MdReport } from "react-icons/md";
 import { FaPowerOff } from "react-icons/fa";
@@ -17,8 +17,18 @@ import { BsFillPostcardFill } from "react-icons/bs";
 import { HiPresentationChartBar } from "react-icons/hi";
 import { BiSolidCommentError } from "react-icons/bi";
 import { ToastContainer } from "react-toastify";
+import { StoreType } from "../Redux/Store";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const AdminPage = () => {
+  const navigate = useNavigate();
+  const isAdminAuthenticated: boolean = useSelector((store: StoreType) => store.admin.isAuthenticated);
+  useEffect(() => {
+    if (!isAdminAuthenticated) {
+     navigate("/admin-login");
+    }
+  }, [isAdminAuthenticated, navigate])
   return (
     <>
       <ToastContainer />
@@ -60,12 +70,12 @@ const AdminPage = () => {
                 Posts List
               </ListItem>
             </Link>
-            <Link to="/admin/reported-comments">
+            <Link to="/admin/reported-list/comments">
               <ListItem>
                 <ListItemPrefix>
                   <BiSolidCommentError className="h-5 w-5" />
                 </ListItemPrefix>
-                Reported Comments
+                Reports List
               </ListItem>
             </Link>
             <ListItem>

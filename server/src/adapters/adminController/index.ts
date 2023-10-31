@@ -17,7 +17,13 @@ import {
   handleGetReportInfo,
   handleBlockPost,
   handleUnblockPost,
+  handleGetAllReportedComments,
+  handleGetCommentReportedUsers,
+  handleBlockComment,
+  handleUnblockComment,
 } from "../../application/use-cases/admin/admin";
+import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
+import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
 
 const adminController = (
   authServiceImpl: AuthService,
@@ -25,11 +31,16 @@ const adminController = (
   userDbRepositoryImpl: UserRepositoryMongoDB,
   userDbRepositoryInterface: UserDbInterface,
   postDbRepositoryImpl: PostRepositoryMongoDB,
-  postDbRepositoryInterface: PostDbInterface
+  postDbRepositoryInterface: PostDbInterface,
+  commentDbRepositoryImpl: CommentRepositoryMongoDB,
+  commentDbRepositoryInterface: CommentDbInterface
 ) => {
   const authService = authServiceInterface(authServiceImpl());
   const dbUserRepository = userDbRepositoryInterface(userDbRepositoryImpl());
   const postDbRepository = postDbRepositoryInterface(postDbRepositoryImpl());
+  const commentDbRepository = commentDbRepositoryInterface(
+    commentDbRepositoryImpl()
+  );
 
   const adminLogin = asyncHandler(async (req: Request, res: Response) => {
     const { email, password }: { email: string; password: string } = req.body;
@@ -126,6 +137,43 @@ const adminController = (
     });
   });
 
+  const getAllReportedComments = asyncHandler(async (req: Request, res: Response) => {
+    const reportedComments = await handleGetAllReportedComments(commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported comments fetched",
+      reportedComments
+    })
+  })
+
+  const getCommentReportedUsers = asyncHandler(async (req: Request, res: Response) => {
+    const { commentId } = req.params as unknown as {commentId : string}
+    const reportedUsers = await handleGetCommentReportedUsers(commentId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported users fetched",
+      reportedUsers
+    })
+  })
+
+  const blockComment = asyncHandler(async (req: Request, res: Response) => {
+    const { commentId } = req.params as unknown as {commentId : string}
+    await handleBlockComment(commentId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "comment blocked"
+    })
+  })
+
+  const unblockComment = asyncHandler(async (req: Request, res: Response) => {
+    const { commentId } = req.params as unknown as {commentId : string}
+    await handleUnblockComment(commentId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "comment unblocked"
+    })
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
@@ -136,6 +184,10 @@ const adminController = (
     getReportInfo,
     blockPost,
     unblockPost,
+    getAllReportedComments,
+    getCommentReportedUsers,
+    blockComment,
+    unblockComment,
   };
 };
 

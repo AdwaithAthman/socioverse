@@ -6,6 +6,8 @@ import { userRepositoryMongoDB } from "../../database/mongoDB/repositories/userR
 import { userDbRepository } from "../../../application/repositories/userDbRepository";
 import { postDbRepository } from "../../../application/repositories/postDbRepository";
 import { postRepositoryMongoDB } from "../../database/mongoDB/repositories/postRepositoryMongoDB";
+import { commentDbRepository } from "../../../application/repositories/commentDbRepository";
+import { commentRepositoryMongoDB } from "../../database/mongoDB/repositories/commentRepositoryMongoDB";
 
 //middlewares
 import requireAdmin from "../middlewares/requireAdmin";
@@ -21,6 +23,8 @@ const adminRouter = () => {
         userDbRepository,
         postRepositoryMongoDB,
         postDbRepository,
+        commentRepositoryMongoDB,
+        commentDbRepository,
     )
 
     //routes
@@ -33,6 +37,10 @@ const adminRouter = () => {
     router.get('/getReportInfo/:postId', requireAdmin, controller.getReportInfo)
     router.post('/blockPost/:postId', requireAdmin, controller.blockPost);
     router.post('/unblockPost/:postId', requireAdmin, controller.unblockPost);
+    router.get('/getAllReportedComments', requireAdmin, controller.getAllReportedComments);
+    router.get('/getCommentReportedUsers/:commentId', requireAdmin, controller.getCommentReportedUsers);
+    router.post('/blockComment/:commentId', requireAdmin, controller.blockComment);
+    router.post('/unblockComment/:commentId', requireAdmin, controller.unblockComment);
 
     return router;
 }

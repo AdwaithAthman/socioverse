@@ -43,6 +43,8 @@ const postRouter = () => {
     router.put('/editComment/:commentId', authMiddleware, controller.editComment)
     router.delete('/deleteComment/:commentId', authMiddleware, controller.deleteComment)
     router.delete('/deleteReply', authMiddleware, controller.deleteReply)
+    router.post('/reportComment/:commentId', authMiddleware, controller.reportComment)
+    router.post('/reportReply', authMiddleware, controller.reportReply)
     router.get('/searchPosts', authMiddleware, controller.searchPosts)
     router.post('/likeComment', authMiddleware, controller.likeComment)
     router.post('/likeReply', authMiddleware, controller.likeReply)

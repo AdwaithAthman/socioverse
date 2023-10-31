@@ -362,6 +362,39 @@ export const handleDeleteReply = async (
   }
 }
 
+export const handleReportComment = async (
+  commentId: string,
+  userId: string,
+  commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+  try {
+    await commentDbRepository.reportComment(commentId, userId);
+  } catch (err) {
+    console.log("Error reporting comment: ", err);
+    throw new AppError(
+      "Error reporting comment!",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
+export const handleReportReply = async (
+  replyId: string,
+  commentId: string,
+  userId: string,
+  commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+  try {
+    await commentDbRepository.reportReply(replyId, commentId, userId);
+  } catch (err) {
+    console.log("Error reporting reply: ", err);
+    throw new AppError(
+      "Error reporting reply!",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 export const handleSearchPosts = async (
   searchQuery: string,
   userId: string,

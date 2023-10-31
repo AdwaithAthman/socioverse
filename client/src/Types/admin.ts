@@ -56,3 +56,15 @@ export interface GetAllRepliesResponse {
     message: string,
     replies: ReplyInterface
 }
+
+export interface GetAllReportedCommentsResponse {
+    status: string,
+    message: string,
+    reportedComments: CommentInterface[],
+}
+
+export interface GetCommentReportedUsers {
+    status: string,
+    message: string,
+    reportedUsers: User[],
+}

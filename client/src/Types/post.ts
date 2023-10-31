@@ -63,7 +63,7 @@ export interface CommentInterface {
     userId: string,
     comment: string,
     replies: string[],
-    reports: string[],
+    report: string[],
     likes: string[],
     createdAt: Date,
     updatedAt: Date,

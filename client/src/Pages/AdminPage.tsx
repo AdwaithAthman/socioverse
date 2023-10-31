@@ -86,7 +86,7 @@ const AdminPage = () => {
             </ListItem>
           </List>
         </Card>
-        <AnimatePresence mode="wait">
+        {/* <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
             initial={{ scale: 0.6, opacity: 0 }}
@@ -94,12 +94,12 @@ const AdminPage = () => {
             exit={{ scale: 0.6, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="flex items-center justify-center lg:h-full w-full"
-          >
+          > */}
             <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 lg:px-20">
               <Outlet />
             </div>
-          </motion.div>
-        </AnimatePresence>
+          {/* </motion.div>
+        </AnimatePresence> */}
       </div>
     </>
   );

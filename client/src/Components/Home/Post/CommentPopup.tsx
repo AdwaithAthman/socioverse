@@ -44,6 +44,8 @@ import {
   likeComment,
   likeReply,
   deleteReply,
+  reportComment,
+  reportReply,
 } from "../../../API/Post";
 import ConfirmDeleteToast from "../../../utils/customToasts/confirmDeleteToast";
 import { useDispatch } from "react-redux";
@@ -698,6 +700,16 @@ function Comment({
       setDeleteCommentId(commentData._id);
   };
 
+  const handleReportComment = async() => {
+    toast.dismiss()
+    const response = reportComment(commentData._id);
+    toast.promise(response, {
+      pending: "Reporting Comment...",
+      success: "Comment reported successfully!",
+      error: "Error reporting comment!",
+    });
+  }
+
   const handleLikeComment = async () => {
     toast.dismiss();
     if (commentIsLiked) {
@@ -809,6 +821,7 @@ function Comment({
                         <button
                           className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
                           onClick={() => {
+                            handleReportComment()
                             setMenuVisible(false);
                           }}
                         >
@@ -979,6 +992,16 @@ const Reply = ({
       setDeleteReplyId(reply._id);
   };
 
+  const handleReportReply = () => {
+    toast.dismiss()
+    const response = reportReply(reply._id, commentId);
+    toast.promise(response, {
+      pending: "Reporting Reply...",
+      success: "Reply reported successfully!",
+      error: "Error reporting reply!",
+    });
+  }
+
   return (
     <>
       <div className=" pl-10 pr-2">
@@ -1051,6 +1074,7 @@ const Reply = ({
                         <button
                           className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
                           onClick={() => {
+                            handleReportReply()
                             setMenuVisible(false);
                           }}
                         >

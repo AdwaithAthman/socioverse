@@ -1,18 +1,9 @@
 import {
   Card,
   CardHeader,
-  Input,
   Typography,
-  Button,
   CardBody,
-  Chip,
-  CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
   Avatar,
-  IconButton,
-  Tooltip,
 } from "@material-tailwind/react";
 import { ReportInfoInterface } from "../../../Types/admin";
 import { useEffect, useState } from "react";

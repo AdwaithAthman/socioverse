@@ -235,6 +235,14 @@ const adminController = (
     });
   })
 
+  const logoutAdmin = asyncHandler(async (req: Request, res: Response) => {
+    res.clearCookie("adminRefreshToken");
+    res.json({
+      status: "success",
+      message: "admin logged out",
+    });
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
@@ -255,6 +263,7 @@ const adminController = (
     unblockReply,
     getMonthlyUserSignups,
     getMonthlyPosts,
+    logoutAdmin,
   };
 };
 

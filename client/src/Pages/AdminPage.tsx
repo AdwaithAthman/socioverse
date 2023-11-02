@@ -16,19 +16,34 @@ import { FaPowerOff } from "react-icons/fa";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiPresentationChartBar } from "react-icons/hi";
 import { BiSolidCommentError } from "react-icons/bi";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../Redux/Store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { adminLogout } from "../Redux/AdminSlice";
+import { TOAST_ACTION } from "../Constants/common";
+import { logoutAdmin } from "../API/Admin";
 
 const AdminPage = () => {
   const navigate = useNavigate();
-  const isAdminAuthenticated: boolean = useSelector((store: StoreType) => store.admin.isAuthenticated);
+  const dispatch = useDispatch();
+  const isAdminAuthenticated: boolean = useSelector(
+    (store: StoreType) => store.admin.isAuthenticated
+  );
   useEffect(() => {
     if (!isAdminAuthenticated) {
-     navigate("/admin-login");
+      navigate("/admin-login");
     }
-  }, [isAdminAuthenticated, navigate])
+  }, [isAdminAuthenticated, navigate]);
+
+  const handleLogout = async () => {
+    const response = await logoutAdmin();
+    console.log("response of admin logout: ",response)
+    if (response.status === "success") {
+      dispatch(adminLogout());
+      navigate("/admin-login");
+    }
+  };
   return (
     <>
       <ToastContainer />
@@ -78,7 +93,7 @@ const AdminPage = () => {
                 Reports List
               </ListItem>
             </Link>
-            <ListItem>
+            <ListItem onClick={handleLogout}>
               <ListItemPrefix>
                 <FaPowerOff className="h-4 w-4" />
               </ListItemPrefix>
@@ -95,10 +110,10 @@ const AdminPage = () => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="flex items-center justify-center lg:h-full w-full"
           > */}
-            <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 lg:px-20">
-              <Outlet />
-            </div>
-          {/* </motion.div>
+        <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 lg:px-20">
+          <Outlet />
+        </div>
+        {/* </motion.div>
         </AnimatePresence> */}
       </div>
     </>

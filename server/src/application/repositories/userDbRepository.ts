@@ -66,6 +66,7 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
 
     const unblockUser = async(userId: string) => await repository.unblockUser(userId)
 
+    const getMonthlyUserSignups = async() => await repository.getMonthlyUserSignups();
 
     return {
         addUser,
@@ -98,6 +99,7 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
         getAllUsers,
         blockUser,
         unblockUser,
+        getMonthlyUserSignups,
     }
 }
 

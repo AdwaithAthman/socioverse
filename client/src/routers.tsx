@@ -17,6 +17,7 @@ import PostList from "./Components/Admin/PostsList";
 import ReportedList from "./Components/Admin/ReportedList";
 import ReportedCommentsList from "./Components/Admin/ReportedList/ReportedCommentsList";
 import ReportedRepliesList from "./Components/Admin/ReportedList/ReportedRepliesList";
+import Dashboard from "./Components/Admin/Dashboard";
 
 export const appRouter = createBrowserRouter([
   {
@@ -76,7 +77,8 @@ export const appRouter = createBrowserRouter([
         element: <Navigate to="/admin/dashboard" replace />,
       },
       {
-        path: "dashboard"
+        path: "dashboard",
+        element: <Dashboard />,
       },
       {
         path: "users-list",

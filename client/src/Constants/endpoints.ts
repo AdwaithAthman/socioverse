@@ -67,6 +67,8 @@ const END_POINTS = {
     GET_REPLY_REPORTED_USERS: 'api/admin/getReplyReportedUsers',
     BLOCK_REPLY: 'api/admin/blockReply',
     UNBLOCK_REPLY: 'api/admin/unblockReply',
+    GET_MONTHLY_USER_SIGNUPS: 'api/admin/getMonthlyUserSignups',
+    GET_MONTHLY_POSTS: 'api/admin/getMonthlyPosts',
 }
 
 export default END_POINTS

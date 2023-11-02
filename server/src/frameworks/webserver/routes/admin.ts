@@ -45,6 +45,8 @@ const adminRouter = () => {
     router.get('/getReplyReportedUsers', requireAdmin, controller.getReplyReportedUsers);
     router.post('/blockReply', requireAdmin, controller.blockReply);
     router.post('/unblockReply', requireAdmin, controller.unblockReply);
+    router.get('/getMonthlyUserSignups', requireAdmin, controller.getMonthlyUserSignups);
+    router.get('/getMonthlyPosts', requireAdmin, controller.getMonthlyPosts)
 
     return router;
 }

@@ -354,6 +354,37 @@ export const userRepositoryMongoDB = () => {
     }
   }
 
+  const getMonthlyUserSignups = async () => {
+    try{
+      const results = await User.aggregate([
+        {
+          $group: {
+            _id: { 
+              year: { $year: '$createdAt' },  
+              month: { $month: '$createdAt' }
+            },
+            count: { $sum: 1 }  
+          }
+        },
+        {
+          $sort: { '_id.year': 1, '_id.month': 1}  
+        },
+        {
+          $project: {
+            _id: 0,
+            month: '$_id.month',
+            year: '$_id.year',
+            count: 1
+          }
+        }
+      ]);
+      return results;
+    }
+    catch(err){
+      throw new Error ("Error getting monthly user signups")
+    }
+  }
+
   return {
     addUser,
     getAllUsers,
@@ -385,6 +416,7 @@ export const userRepositoryMongoDB = () => {
     changeIsAccountUnverified,
     blockUser,
     unblockUser,
+    getMonthlyUserSignups,
   };
 };
 

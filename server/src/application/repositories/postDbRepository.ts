@@ -49,6 +49,8 @@ export const postDbRepository = (repository: ReturnType<PostRepositoryMongoDB>) 
 
     const unblockPost = async(postId: string) => await repository.unblockPost(postId);
 
+    const getMonthlyPosts = async() => await repository.getMonthlyPosts();
+
     return {
         createPost,
         getPosts,
@@ -72,6 +74,7 @@ export const postDbRepository = (repository: ReturnType<PostRepositoryMongoDB>) 
         getReportInfo,
         blockPost,
         unblockPost,
+        getMonthlyPosts,
     }
 }
 

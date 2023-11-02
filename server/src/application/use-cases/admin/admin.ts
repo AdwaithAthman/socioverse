@@ -2,7 +2,7 @@ import AppError from "../../../utils/appError";
 import { AuthServiceInterface } from "../../services/authServiceInterface";
 import configKeys from "../../../config";
 import { HttpStatus } from "../../../types/httpStatus";
-import { UserDbInterface } from "../../repositories/userDbRepository";
+import { UserDbInterface, userDbRepository } from "../../repositories/userDbRepository";
 import { PostDbInterface, postDbRepository } from "../../repositories/postDbRepository";
 import { CommentDbInterface, commentDbRepository } from "../../repositories/commentDbRepository";
 
@@ -254,3 +254,29 @@ export const handleUnblockReply = async(
         throw new AppError ("Error while unblocking reply", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
+
+export const handleGetMonthlyUserSignups = async(
+    userDbRepository: ReturnType<UserDbInterface>
+) => {
+    try{
+        const monthlyUserSignups = await userDbRepository.getMonthlyUserSignups();
+        return monthlyUserSignups;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while fetching monthly user signups", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetMonthlyPosts = async (
+    postDbRepository: ReturnType<PostDbInterface>
+  ) => {
+    try{
+      const monthlyPosts = await postDbRepository.getMonthlyPosts();
+      return monthlyPosts;
+    }
+    catch(err){
+      console.log("Error getting monthly posts: ", err)
+      throw new AppError("Error getting monthly posts!", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }

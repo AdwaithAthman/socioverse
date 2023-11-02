@@ -86,3 +86,27 @@ export interface GetReplyReportedUsers {
     message: string,
     reportedUsers: User[],
 }
+
+export interface MonthlyUsersInterface {
+    month: number,
+    users: number,
+    count: number,
+}
+
+export interface GetMonthlyUsersResponse {
+    status: string,
+    message: string,
+    monthlyUserSignups: MonthlyUsersInterface[]
+}
+
+export interface MonthlyPostsInterface {
+    month: number,
+    users: number,
+    count: number,
+}
+
+export interface GetMonthlyPostsResponse {
+    status: string,
+    message: string,
+    monthlyPosts: MonthlyPostsInterface[],
+}

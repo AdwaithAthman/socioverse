@@ -28,7 +28,7 @@ import {
   handleGetUserPosts,
   handleGetUserLikedPosts,
   handleGetUserSavedPosts,
-  handleGetOtherUserPosts
+  handleGetOtherUserPosts,
 } from "../../application/use-cases/post/userPost";
 
 //importing types

@@ -41,6 +41,10 @@ const adminRouter = () => {
     router.get('/getCommentReportedUsers/:commentId', requireAdmin, controller.getCommentReportedUsers);
     router.post('/blockComment/:commentId', requireAdmin, controller.blockComment);
     router.post('/unblockComment/:commentId', requireAdmin, controller.unblockComment);
+    router.get('/getAllReportedReplies', requireAdmin, controller.getAllReportedReplies);
+    router.get('/getReplyReportedUsers', requireAdmin, controller.getReplyReportedUsers);
+    router.post('/blockReply', requireAdmin, controller.blockReply);
+    router.post('/unblockReply', requireAdmin, controller.unblockReply);
 
     return router;
 }

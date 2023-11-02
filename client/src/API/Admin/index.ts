@@ -13,7 +13,9 @@ import {
   GetAllCommentsResponse,
   GetAllRepliesResponse,
   GetAllReportedCommentsResponse,
-  GetCommentReportedUsers
+  GetAllReportedRepliesResponse,
+  GetCommentReportedUsers,
+  GetReplyReportedUsers
 } from "../../Types/admin";
 
 export const adminLogin = async (
@@ -137,6 +139,34 @@ export const blockComment = async(commentId: string): Promise<{status: string, m
 export const unblockComment = async(commentId: string): Promise<{status: string, message: string}> => {
   const response = await axiosAdminInstance.post<{status: string, message: string}>(
     `${END_POINTS.UNBLOCK_COMMENT}/${commentId}`
+  )
+  return response.data;
+}
+
+export const getAllReportedReplies = async (): Promise<GetAllReportedRepliesResponse> => {
+  const response = await axiosAdminInstance.get<GetAllReportedRepliesResponse>(
+    END_POINTS.GET_ALL_REPORTED_REPLIES
+  );
+  return response.data;
+}
+
+export const getReplyReportedUsers = async(replyId: string, commentId: string): Promise<GetReplyReportedUsers> => {
+  const response = await axiosAdminInstance.get<GetReplyReportedUsers>(
+    `${END_POINTS.GET_REPLY_REPORTED_USERS}?replyId=${replyId}&commentId=${commentId}`
+  );
+  return response.data;
+}
+
+export const blockReply = async(replyId: string, commentId: string): Promise<{status: string, message: string}> => {
+  const response = await axiosAdminInstance.post<{status: string, message: string}>(
+    `${END_POINTS.BLOCK_REPLY}?replyId=${replyId}&commentId=${commentId}`
+  )
+  return response.data;
+}
+
+export const unblockReply = async(replyId: string, commentId: string): Promise<{status: string, message: string}> => {
+  const response = await axiosAdminInstance.post<{status: string, message: string}>(
+    `${END_POINTS.UNBLOCK_REPLY}?replyId=${replyId}&commentId=${commentId}`
   )
   return response.data;
 }

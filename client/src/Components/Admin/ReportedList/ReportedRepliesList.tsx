@@ -8,15 +8,18 @@ import {
     Avatar,
     Tooltip,
     Switch,
+    Popover,
+    PopoverHandler,
+    PopoverContent,
   } from "@material-tailwind/react";
   import { useEffect, useState } from "react";
-  import { blockUser, getAllUsers, unblockUser } from "../../../API/Admin";
-  import moment from "moment";
+  import { blockReply, getReplyReportedUsers, getAllReportedReplies, unblockReply } from "../../../API/Admin";
   import { toast } from "react-toastify";
   
   //importing types
   import { User } from "../../../Types/loginUser";
   import { TOAST_ACTION } from "../../../Constants/common";
+import { ReplyInterface } from "../../../Types/post";
   
   
   const TABLE_HEAD = [
@@ -30,55 +33,59 @@ import {
   
   
   const ReportedRepliesList = () => {
-      const [usersList, setUsersList] = useState<User[]>([]);
+    const [reportedReplies, setReportedReplies] = useState<ReplyInterface[]>(
+      []
+    );
+    const [reportInfo, setReportInfo] = useState<User[]>([]);
     useEffect(() => {
-      const fetchUsers = async () => {
-        const response = await getAllUsers();
-        setUsersList(response.users);
+      const fetchReportedReplies = async () => {
+        const response = await getAllReportedReplies();
+        setReportedReplies(response.reportedReplies);
       };
-      fetchUsers();
+      fetchReportedReplies();
     }, []);
   
     const handleToggleChange = async (
       e: React.ChangeEvent<HTMLInputElement>,
-      userId: string
+      replyId: string,
+      commentId: string
     ) => {
       const isChecked = e.target.checked;
       if (isChecked) {
-        const response = await blockUser(userId);
+        const response = await blockReply(replyId, commentId);
         if (response.status === "success") {
           toast.dismiss();
-          toast.success("User blocked successfully...!", TOAST_ACTION);
-          setUsersList((prev) => {
+          toast.success("Reply blocked successfully...!", TOAST_ACTION);
+          setReportedReplies((prev) => {
             if (prev) {
-              return prev.map((user) => {
-                if (user._id === userId) {
+              return prev.map((reply) => {
+                if (reply._id === replyId) {
                   return {
-                    ...user,
+                    ...reply,
                     isBlock: true,
                   };
                 }
-                return user;
+                return reply;
               });
             }
             return [];
           });
         }
       } else {
-        const response = await unblockUser(userId);
+        const response = await unblockReply(replyId, commentId);
         if (response.status === "success") {
           toast.dismiss();
-          toast.success("User unblocked successfully...!", TOAST_ACTION);
-          setUsersList((prev) => {
+          toast.success("Reply unblocked successfully...!", TOAST_ACTION);
+          setReportedReplies((prev) => {
             if (prev) {
-              return prev.map((user) => {
-                if (user._id === userId) {
+              return prev.map((reply) => {
+                if (reply._id === replyId) {
                   return {
-                    ...user,
+                    ...reply,
                     isBlock: false,
                   };
                 }
-                return user;
+                return reply;
               });
             }
             return [];
@@ -87,9 +94,14 @@ import {
       }
     };
   
+    const handleGetReportInfo = async (replyId: string, commentId: string) => {
+      const users = await getReplyReportedUsers(replyId, commentId);
+      setReportInfo(users.reportedUsers);
+    };
+  
     return (
       <>
-      <CardBody className=" px-0 overflow-y-scroll h-[35rem]">
+        <CardBody className=" px-0 overflow-y-scroll h-[35rem]">
           <table className="mt-4 w-full min-w-max table-auto text-left">
             <thead>
               <tr>
@@ -110,21 +122,22 @@ import {
               </tr>
             </thead>
             <tbody>
-              {usersList.map(
+              {reportedReplies.map(
                 (
                   {
-                    dp,
-                    name,
-                    username,
-                    email,
-                    phoneNumber,
-                    createdAt,
-                    isBlock,
                     _id,
+                    userId,
+                    reply,
+                    report,
+                    isBlock,
+                    createdAt,
+                    updatedAt,
+                    user,
+                    commentId,
                   },
                   index
                 ) => {
-                  const isLast = index === usersList.length - 1;
+                  const isLast = index === reportedReplies.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-blue-gray-50";
@@ -133,12 +146,12 @@ import {
                     <tr key={_id}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          {dp ? (
-                            <Avatar src={dp} alt={name} size="sm" />
+                          {user?.dp ? (
+                            <Avatar src={user.dp} alt={user.name} size="sm" />
                           ) : (
                             <Avatar
                               src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
-                              alt={name}
+                              alt={user?.name}
                               size="sm"
                             />
                           )}
@@ -148,44 +161,106 @@ import {
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {name}
+                              {user?.name}
                             </Typography>
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal opacity-70"
                             >
-                              @{username}
+                              @{user?.username}
                             </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {email}
-                          </Typography>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
-                          >
-                            {phoneNumber ? phoneNumber : "N/A"}
-                          </Typography>
-                        </div>
+                        <Popover
+                          animate={{
+                            mount: { scale: 1, y: 0 },
+                            unmount: { scale: 0, y: 50 },
+                          }}
+                        >
+                          <PopoverHandler>
+                            <Button
+                              size="sm"
+                              variant="outlined"
+                              className="rounded-full text-black border-black"
+                            >
+                              View Reply
+                            </Button>
+                          </PopoverHandler>
+                          <PopoverContent className="z-[999] w-[28rem] overflow-hidden p-0">
+                            <div className="p-4 bg-black bg-opacity-20">
+                              <div className="p-6 bg-white w-full h-full rounded-lg">
+                                {reply}
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </td>
+                      <td
+                        className={classes}
+                        onClick={() => commentId && handleGetReportInfo(_id, commentId)}
+                      >
+                        <Popover
+                          animate={{
+                            mount: { scale: 1, y: 0 },
+                            unmount: { scale: 0, y: 50 },
+                          }}
+                        >
+                          <PopoverHandler>
+                            <Button
+                              size="sm"
+                              variant="outlined"
+                              className="rounded-full text-black border-black"
+                            >
+                              Reports
+                            </Button>
+                          </PopoverHandler>
+                            <PopoverContent className="z-[999] w-[20rem] max-h-[45rem] overflow-x-hidden overflow-y-scroll no-scrollbar p-0">
+                            <div className="p-4 bg-black bg-opacity-20">
+                              <div className="flex flex-col gap-2 p-6 bg-white">
+                                {reportInfo.map((user) => (
+                                  <div className="flex items-center gap-7">
+                                    <Avatar
+                                      src={
+                                        user?.dp
+                                          ? user?.dp
+                                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                                      }
+                                      alt={user?.name}
+                                      size="sm"
+                                    />
+                                    <div className="flex flex-col">
+                                      <Typography
+                                        variant="small"
+                                        color="blue-gray"
+                                        className="font-normal"
+                                      >
+                                        {user?.name}
+                                      </Typography>
+                                      <Typography
+                                        variant="small"
+                                        color="blue-gray"
+                                        className="font-normal opacity-70"
+                                      >
+                                        @{user?.username}
+                                      </Typography>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </td>
                       <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
+                        <span
+                          className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs 
+                          font-bold leading-none text-white bg-red-600 rounded-full"
                         >
-                          {moment(createdAt).format("L")}
-                        </Typography>
+                          {report && report.length}
+                        </span>
                       </td>
                       <td className={classes}>
                         <div className="w-max">
@@ -199,18 +274,18 @@ import {
                       </td>
                       <td className={classes}>
                         {!isBlock ? (
-                          <Tooltip content="Block user">
+                          <Tooltip content="Block Reply">
                             <Switch
                               color="red"
-                              onChange={(e) => _id && handleToggleChange(e, _id)}
+                              onChange={(e) => commentId && handleToggleChange(e, _id, commentId)}
                             />
                           </Tooltip>
                         ) : (
-                          <Tooltip content="Unblock user">
+                          <Tooltip content="Unblock Reply">
                             <Switch
                               checked
                               color="red"
-                              onChange={(e) => _id && handleToggleChange(e, _id)}
+                              onChange={(e) => commentId && handleToggleChange(e, _id, commentId)}
                             />
                           </Tooltip>
                         )}
@@ -236,7 +311,7 @@ import {
           </div>
         </CardFooter>
       </>
-    )
+    );
   }
   
   export default ReportedRepliesList

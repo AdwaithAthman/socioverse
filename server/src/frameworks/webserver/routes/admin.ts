@@ -46,7 +46,8 @@ const adminRouter = () => {
     router.post('/blockReply', requireAdmin, controller.blockReply);
     router.post('/unblockReply', requireAdmin, controller.unblockReply);
     router.get('/getMonthlyUserSignups', requireAdmin, controller.getMonthlyUserSignups);
-    router.get('/getMonthlyPosts', requireAdmin, controller.getMonthlyPosts)
+    router.get('/getMonthlyPosts', requireAdmin, controller.getMonthlyPosts);
+    router.delete('/logout', requireAdmin, controller.logoutAdmin)
 
     return router;
 }

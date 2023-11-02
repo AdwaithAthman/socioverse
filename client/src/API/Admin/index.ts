@@ -186,3 +186,10 @@ export const getMonthlyPosts = async (): Promise<GetMonthlyPostsResponse> => {
   );
   return response.data;
 }
+
+export const logoutAdmin = async (): Promise<{ status: string, message: string }> => {
+  const response = await axiosAdminInstance.delete<{ status: string, message: string }>(
+    END_POINTS.LOGOUT_ADMIN
+  );
+  return response.data;
+}

@@ -80,11 +80,12 @@ export interface ReplyInterface {
     _id: string,
     userId: string,
     reply: string,
-    reports: string[],
+    report: string[],
     likes: string[],
     createdAt: Date,
     updatedAt: Date,
     isBlock: boolean,
+    commentId?: string,
     user?: {
         _id: string,
         name: string,

@@ -63,7 +63,25 @@ export interface GetAllReportedCommentsResponse {
     reportedComments: CommentInterface[],
 }
 
+export interface GetAllReportedRepliesResponse {
+    status: string,
+    message: string,
+    reportedReplies: ReplyInterface[],
+}
+
 export interface GetCommentReportedUsers {
+    status: string,
+    message: string,
+    reportedUsers: User[],
+}
+
+export interface GetAllReportedRepliesResponse {
+    status: string,
+    message: string,
+    reportedReplies: ReplyInterface[],
+}
+
+export interface GetReplyReportedUsers {
     status: string,
     message: string,
     reportedUsers: User[],

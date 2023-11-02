@@ -218,7 +218,7 @@ const ReportedCommentsList = () => {
                             Reports
                           </Button>
                         </PopoverHandler>
-                        <PopoverContent className="z-[999] w-[20rem] overflow-hidden p-0">
+                        <PopoverContent className="z-[999] w-[20rem] max-h-[45rem] overflow-x-hidden overflow-y-scroll no-scrollbar p-0">
                           <div className="p-4 bg-black bg-opacity-20">
                             <div className="flex flex-col gap-2 p-6 bg-white">
                               {reportInfo.map((user) => (

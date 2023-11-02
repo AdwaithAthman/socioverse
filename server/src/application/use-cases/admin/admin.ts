@@ -4,7 +4,7 @@ import configKeys from "../../../config";
 import { HttpStatus } from "../../../types/httpStatus";
 import { UserDbInterface } from "../../repositories/userDbRepository";
 import { PostDbInterface, postDbRepository } from "../../repositories/postDbRepository";
-import { CommentDbInterface } from "../../repositories/commentDbRepository";
+import { CommentDbInterface, commentDbRepository } from "../../repositories/commentDbRepository";
 
 export const handleAdminLogin = async (
     email: string,
@@ -173,6 +173,21 @@ export const handleGetCommentReportedUsers = async (
     }
 }
 
+export const handleGetReplyReportedUsers = async (
+    replyId: string,
+    commentId: string,
+    commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+    try{
+        const reportedUsers = await commentDbRepository.getReplyReportedUsers(replyId, commentId);
+        return reportedUsers;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while fetching reported users", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 export const handleBlockComment = async(
     commentId: string,
     commentDbRepository: ReturnType<CommentDbInterface>
@@ -196,5 +211,46 @@ export const handleUnblockComment = async(
     catch(err){
         console.log(err)
         throw new AppError ("Error while unblocking comment", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetAllReportedReplies = async(
+    commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+    try{
+        const replies = await commentDbRepository.getAllReportedReplies();
+        return replies;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while fetching reported replies", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleBlockReply = async(
+    replyId: string,
+    commentId: string,
+    commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+    try{
+        await commentDbRepository.blockReply(replyId, commentId);
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while blocking reply", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleUnblockReply = async(
+    replyId: string,
+    commentId: string,
+    commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+    try{
+        await commentDbRepository.unblockReply(replyId, commentId);
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while unblocking reply", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

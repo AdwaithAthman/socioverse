@@ -60,9 +60,13 @@ const END_POINTS = {
     GET_ALL_COMMENTS: 'api/admin/getAllComments',
     GET_ALL_REPLIES: 'api/admin/getAllReplies',
     GET_ALL_REPORTED_COMMENTS: 'api/admin/getAllReportedComments',
+    GET_ALL_REPORTED_REPLIES: 'api/admin/getAllReportedReplies',
     GET_COMMENT_REPORTED_USERS: 'api/admin/getCommentReportedUsers',
     BLOCK_COMMENT: 'api/admin/blockComment',
     UNBLOCK_COMMENT: 'api/admin/unblockComment',
+    GET_REPLY_REPORTED_USERS: 'api/admin/getReplyReportedUsers',
+    BLOCK_REPLY: 'api/admin/blockReply',
+    UNBLOCK_REPLY: 'api/admin/unblockReply',
 }
 
 export default END_POINTS

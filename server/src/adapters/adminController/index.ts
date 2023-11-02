@@ -25,6 +25,8 @@ import {
   handleGetAllReportedReplies,
   handleBlockReply,
   handleUnblockReply,
+  handleGetMonthlyUserSignups,
+  handleGetMonthlyPosts,
 } from "../../application/use-cases/admin/admin";
 import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
 import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
@@ -215,6 +217,24 @@ const adminController = (
     })
   })
 
+  const getMonthlyUserSignups = asyncHandler(async (req: Request, res: Response) => {
+    const monthlyUserSignups = await handleGetMonthlyUserSignups(dbUserRepository);
+    res.json({
+      status: "success",
+      message: "monthly user signups fetched",
+      monthlyUserSignups
+    })
+  })
+
+  const getMonthlyPosts = asyncHandler(async (req: Request, res: Response) => {
+    const monthlyPosts = await handleGetMonthlyPosts(postDbRepository);
+    res.json({
+      status: "success",
+      message: "monthly posts fetched",
+      monthlyPosts,
+    });
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
@@ -233,6 +253,8 @@ const adminController = (
     getAllReportedReplies,
     blockReply,
     unblockReply,
+    getMonthlyUserSignups,
+    getMonthlyPosts,
   };
 };
 

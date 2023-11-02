@@ -647,6 +647,37 @@ export const postRepositoryMongoDB = () => {
     }
   }
 
+  const getMonthlyPosts = async () => {
+    try{
+      const results = await Post.aggregate([
+        {
+          $group: {
+              _id: { 
+                year: { $year: '$createdAt' },  
+                month: { $month: '$createdAt' }
+              },
+            count: {
+              $sum: 1
+            }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            month: '$_id.month',
+            year: '$_id.year',
+            count: 1
+          }
+        }
+      ]);
+      return results;
+    }
+    catch(err){
+      console.log(err)
+      throw new Error("Error getting monthly posts")
+    }
+  }
+
   return {
     createPost,
     getPosts,
@@ -670,6 +701,7 @@ export const postRepositoryMongoDB = () => {
     getReportInfo,
     blockPost,
     unblockPost,
+    getMonthlyPosts,
   };
 };
 

@@ -15,7 +15,9 @@ import {
   GetAllReportedCommentsResponse,
   GetAllReportedRepliesResponse,
   GetCommentReportedUsers,
-  GetReplyReportedUsers
+  GetReplyReportedUsers,
+  GetMonthlyUsersResponse,
+  GetMonthlyPostsResponse,
 } from "../../Types/admin";
 
 export const adminLogin = async (
@@ -168,5 +170,19 @@ export const unblockReply = async(replyId: string, commentId: string): Promise<{
   const response = await axiosAdminInstance.post<{status: string, message: string}>(
     `${END_POINTS.UNBLOCK_REPLY}?replyId=${replyId}&commentId=${commentId}`
   )
+  return response.data;
+}
+
+export const getMonthlyUserSignups = async (): Promise<GetMonthlyUsersResponse> => {
+  const response = await axiosAdminInstance.get<GetMonthlyUsersResponse>(
+    END_POINTS.GET_MONTHLY_USER_SIGNUPS
+  );
+  return response.data;
+}
+
+export const getMonthlyPosts = async (): Promise<GetMonthlyPostsResponse> => {
+  const response = await axiosAdminInstance.get<GetMonthlyPostsResponse>(
+    END_POINTS.GET_MONTHLY_POSTS
+  );
   return response.data;
 }

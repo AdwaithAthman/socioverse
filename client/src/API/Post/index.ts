@@ -1,4 +1,4 @@
-import axiosUserInstance from "../axiosInstance";
+import axiosUserInstance from "../AxiosInstance/axiosUserInstance";
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types
@@ -160,6 +160,27 @@ export const deleteComment = async(commentId: string): Promise<DeleteCommentResp
   return response.data;
 }
 
+export const deleteReply = async(replyId: string, commentId: string): Promise<DeleteCommentResponse> => {
+  const response = await axiosUserInstance.delete<DeleteCommentResponse>(
+    `${END_POINTS.DELETE_REPLY}?replyId=${replyId}&commentId=${commentId}`
+  );
+  return response.data;
+}
+
+export const reportComment = async(commentId: string): Promise<DeleteCommentResponse> => {
+  const response = await axiosUserInstance.post<DeleteCommentResponse>(
+    `${END_POINTS.REPORT_COMMENT}/${commentId}`
+  );
+  return response.data;
+}
+
+export const reportReply = async(replyId: string, commentId: string): Promise<DeleteCommentResponse> => {
+  const response = await axiosUserInstance.post<DeleteCommentResponse>(
+    `${END_POINTS.REPORT_REPLY}?replyId=${replyId}&commentId=${commentId}`
+  );
+  return response.data;
+}
+
 export const searchPosts = async(searchQuery: string, page: number): Promise<GetSearchPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;
@@ -219,3 +240,4 @@ export const getUserSavedPosts = async (page: number): Promise<GetUserPostsInter
   );
   return response.data;
 }
+

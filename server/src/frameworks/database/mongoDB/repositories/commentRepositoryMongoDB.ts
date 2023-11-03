@@ -22,7 +22,7 @@ export const commentRepositoryMongoDB = () => {
     try {
       const comments = await Comment.aggregate([
         {
-          $match: { postId },
+          $match: { postId, isBlock: false },
         },
         {
           $addFields: {
@@ -86,6 +86,9 @@ export const commentRepositoryMongoDB = () => {
       },
       {
         $unwind: "$replies",
+      },
+      {
+        $match: { "replies.isBlock": false },
       },
       {
         $addFields: {
@@ -185,11 +188,51 @@ export const commentRepositoryMongoDB = () => {
 
   const deleteComment = async (commentId: string) => {
     try {
-      await Comment.findByIdAndDelete(commentId)
+      await Comment.updateOne({
+        _id: commentId
+      }, {
+        $set: { isBlock: true }
+      })
     }
     catch (err) {
       console.log(err)
       throw new Error("Error deleting comment");
+    }
+  }
+
+  const deleteReply = async (replyId: string, commentId: string) => {
+    try {
+      await Comment.updateOne(
+        { _id: commentId, "replies._id": replyId },
+        { $set: { "replies.$.isBlock": true } }
+      );
+    }
+    catch (err) {
+      console.log(err)
+      throw new Error("Error deleting reply");
+    }
+  }
+
+  const reportComment = async (commentId: string, userId: string) => {
+    try{
+      await Comment.updateOne({_id: commentId} , {$addToSet: {report: userId}})
+    }
+    catch(err) {
+      console.log(err)
+      throw new Error("Error reporting comment");
+    }
+  }
+
+  const reportReply = async (replyId: string, commentId: string, userId: string) => {
+    try {
+      await Comment.updateOne(
+        { _id: commentId, "replies._id": replyId },
+        { $addToSet: { "replies.$.report": userId } }
+      );
+    }
+    catch (err) {
+      console.log(err)
+      throw new Error("Error deleting reply");
     }
   }
 
@@ -245,6 +288,250 @@ export const commentRepositoryMongoDB = () => {
     }
   }
 
+  const getAllReportedComments = async () => {
+    try{
+      const comments = await Comment.aggregate([
+        {
+          $match: { report: { $exists: true, $ne: []}}
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            comment: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            report: 1,
+            isBlock: 1,
+            user: {
+              _id: 1,
+              name: 1,
+              username: 1,
+              dp: 1,
+              email: 1
+            }
+          }
+        }
+      ])
+
+      return comments;
+    }
+    catch(err){
+      throw new Error("Error getting all reported comments")
+    }
+  }
+
+  const getAllReportedReplies = async () => {
+    try{
+      const replies = await Comment.aggregate([
+        {
+          $match: { replies: { $exists: true, $ne: []} }
+        },
+        {
+          $unwind: "$replies"
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$replies.userId" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $match: {
+            "replies.report": { $exists: true, $ne: []}
+          }
+        },
+        {
+          $project: {
+            "_id": "$replies._id",
+            "userId": "$replies.userId",
+            "commentId": "$_id",
+            "reply": "$replies.reply",
+            "createdAt": "$replies.createdAt",
+            "updatedAt": "$replies.updatedAt",
+            "report": "$replies.report",
+            "likes": "$replies.likes",
+            "isBlock": "$replies.isBlock",
+            "user.name": "$user.name",
+            "user.username": "$user.username",
+            "user.dp": "$user.dp",
+            "user.email": "$user.email"
+          }
+        }
+      ])
+      return replies;
+    }
+    catch(err){
+      console.log(err)
+      throw new Error("Error getting all reported replies")
+    }
+  }
+
+  const getCommentReportedUsers = async (commentId: string) => {
+    try{
+      const commentObjId = new mongoose.Types.ObjectId(commentId);
+      const reportedUsers = await Comment.aggregate([
+        {
+          $match: { _id: commentObjId }
+        },
+        {
+          $unwind: "$report"
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$report" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $project: {
+            "_id": "$user._id",
+            "name": "$user.name",
+            "username": "$user.username",
+            "dp": "$user.dp",
+            "email": "$user.email"
+          }
+        }
+      ])
+      return reportedUsers;
+    }
+    catch(err){
+      throw new Error("Error getting comment reported users")
+    }
+  }
+
+  const getReplyReportedUsers = async (replyId: string, commentId: string) => {
+    try{
+      const replyObjId = new mongoose.Types.ObjectId(replyId);
+      const commentObjId = new mongoose.Types.ObjectId(commentId);
+      const reportedUsers = await Comment.aggregate([
+        {
+          $match: {
+            _id: commentObjId,
+          }
+        },
+        {
+          $addFields: {
+            replies: {
+              $filter: {
+                input: "$replies",
+                as: "reply",
+                cond: { $eq: ["$$reply._id", replyObjId] },
+              },
+            },
+          },
+        },
+        {
+          $unwind: "$replies",
+        },
+        {
+          $unwind: "$replies.report",
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$replies.report" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: "$user._id",
+            name: "$user.name",
+            username: "$user.username",
+            dp: "$user.dp",
+            email: "$user.email",
+          },
+        }
+      ])
+      return reportedUsers;
+    }
+    catch(err){
+      throw new Error("Error getting reply reported users")
+    }
+  }
+
+  const blockComment = async (commentId: string) => {
+    try{
+      await Comment.updateOne({_id: commentId}, {$set: {isBlock: true}})
+    }
+    catch(err){
+      throw new Error("Error blocking comment")
+    }
+  }
+
+  const unblockComment = async (commentId: string) => {
+    try{
+      await Comment.updateOne({_id: commentId}, {$set: {isBlock: false}})
+    }
+    catch(err){
+      throw new Error("Error blocking comment")
+    }
+  }
+
+  const blockReply = async (replyId: string, commentId: string) => {
+    try{
+      await Comment.updateOne({_id: commentId, "replies._id": replyId}, {$set: {"replies.$.isBlock": true}})
+    }
+    catch(err){
+      throw new Error("Error blocking reply") 
+    }
+  }
+
+  const unblockReply = async (replyId: string, commentId: string) => {
+    try{
+      await Comment.updateOne({_id: commentId, "replies._id": replyId}, {$set: {"replies.$.isBlock": false}})
+    }
+    catch(err){
+      throw new Error("Error blocking reply")
+    }
+  }
+
 
   return {
     addComment,
@@ -254,10 +541,21 @@ export const commentRepositoryMongoDB = () => {
     editComment,
     getCommentById,
     deleteComment,
+    deleteReply,
+    reportComment,
+    reportReply,
     likeComment,
     unlikeComment,
     likeReply,
     unlikeReply,
+    getAllReportedComments,
+    getAllReportedReplies,
+    getCommentReportedUsers,
+    getReplyReportedUsers,
+    blockComment,
+    unblockComment,
+    blockReply,
+    unblockReply,
   };
 };
 

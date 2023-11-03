@@ -64,6 +64,22 @@ function ProfileMenu() {
 
   const closeMenu = () => setIsMenuOpen(false);
 
+  useEffect(() => {
+    if (userInfo && userInfo.isBlock) {
+      userIsBlocked();
+    }
+  }, [userInfo]);
+
+  const userIsBlocked = async () => {
+    toast.dismiss();
+    toast.error("You are blocked by admin!", TOAST_ACTION);
+    const response = await logoutUser();
+    if (response.status === "success") {
+      dispatch(logout());
+      navigate("/login");
+    }
+  };
+
   const navBarIcons = [
     {
       id: "home",
@@ -86,19 +102,23 @@ function ProfileMenu() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleProfileMenuItems = async(label: string) => {
+  const handleProfileMenuItems = async (label: string) => {
     if (label === "My Profile") {
       navigate(`/profile/${userInfo?._id}`);
     }
     if (label === "Sign Out") {
       console.log("signout is called");
       try {
-        const response =  logoutUser();
-        await toast.promise(response, {
-          pending: "Logging out...",
-          success: "Logged out successfully",
-          error: "Error logging out",
-        }, TOAST_ACTION);
+        const response = logoutUser();
+        await toast.promise(
+          response,
+          {
+            pending: "Logging out...",
+            success: "Logged out successfully",
+            error: "Error logging out",
+          },
+          TOAST_ACTION
+        );
         dispatch(logout());
         navigate("/login");
       } catch (err) {
@@ -149,7 +169,11 @@ function ProfileMenu() {
               size="sm"
               alt="user dp"
               className="border border-blue-500 p-0.5"
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+              src={
+                userInfo?.dp
+                  ? userInfo.dp
+                  : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+              }
             />
             <ChevronDownIcon
               strokeWidth={2.5}
@@ -195,63 +219,68 @@ function ProfileMenu() {
 
 export function InputWithButton() {
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const [showSearchDialog, setShowSearchDialog] = React.useState<boolean>(false);
-  const hashtagSearchOn: boolean = useSelector((state: StoreType) => state.post.hashtagSearchOn) || false;
+  const [showSearchDialog, setShowSearchDialog] =
+    React.useState<boolean>(false);
+  const hashtagSearchOn: boolean =
+    useSelector((state: StoreType) => state.post.hashtagSearchOn) || false;
 
   const dispatch = useDispatch();
   const onChange = (e: { target: { value: React.SetStateAction<string> } }) =>
     setSearchQuery(e.target.value);
 
-    useEffect(() => {
-      if(hashtagSearchOn){
-        setShowSearchDialog(true)
-      }
-    }, [hashtagSearchOn])
-
-    const handleSearchDialog = () => {
-      setShowSearchDialog((prev) => !prev)
+  useEffect(() => {
+    if (hashtagSearchOn) {
+      setShowSearchDialog(true);
     }
+  }, [hashtagSearchOn]);
 
-    useEffect(() => {
-      if(showSearchDialog){
-        dispatch(enableSearchMode())
-      }
-      else{
-        dispatch(disableSearchMode())
-      }
-    }, [dispatch, showSearchDialog])
+  const handleSearchDialog = () => {
+    setShowSearchDialog((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (showSearchDialog) {
+      dispatch(enableSearchMode());
+    } else {
+      dispatch(disableSearchMode());
+    }
+  }, [dispatch, showSearchDialog]);
 
   return (
     <>
-    <div className="hidden relative lg:flex w-full max-w-[24rem]">
-      <Input
-        type="text"
-        label="#SocioverseExplore"
-        value={searchQuery}
-        onChange={onChange}
-        className={classnames(
-          "pr-20",
-          { "text-white": searchQuery },
-          { "bg-blue-gray-500": !searchQuery }
-        )}
-        containerProps={{
-          className: "min-w-0",
-        }}
-        onClick={handleSearchDialog}
+      <div className="hidden relative lg:flex w-full max-w-[24rem]">
+        <Input
+          type="text"
+          label="#SocioverseExplore"
+          value={searchQuery}
+          onChange={onChange}
+          className={classnames(
+            "pr-20",
+            { "text-white": searchQuery },
+            { "bg-blue-gray-500": !searchQuery }
+          )}
+          containerProps={{
+            className: "min-w-0",
+          }}
+          onClick={handleSearchDialog}
+        />
+        <Button
+          size="sm"
+          disabled={!searchQuery}
+          className={classnames(
+            "!absolute right-1 top-1 rounded",
+            { "bg-socioverse-500": searchQuery },
+            { "bg-blue-gray-700": !searchQuery }
+          )}
+        >
+          Search
+        </Button>
+      </div>
+      <SearchInputDialog
+        handleSearchDialog={handleSearchDialog}
+        showSearchDialog={showSearchDialog}
+        hashtagSearchOn={hashtagSearchOn}
       />
-      <Button
-        size="sm"
-        disabled={!searchQuery}
-        className={classnames(
-          "!absolute right-1 top-1 rounded",
-          { "bg-socioverse-500": searchQuery },
-          { "bg-blue-gray-700": !searchQuery }
-        )}
-      >
-        Search
-      </Button>
-    </div>
-    <SearchInputDialog handleSearchDialog={handleSearchDialog} showSearchDialog={showSearchDialog} hashtagSearchOn={hashtagSearchOn} />
     </>
   );
 }

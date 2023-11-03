@@ -11,13 +11,17 @@ export interface PostDataInterface {
     reports?: string[],
     image?: string[] ,
     video?: string,
-    name: string,
-    username?: string,
-    email: string,
-    dp?: string,
     newPostCreated?: boolean,
+    isBlock: boolean,
     updatedAt: string,
     createdAt: string,
+    user: {
+        _id: string,
+        name: string,
+        username: string,
+        email: string,
+        dp?: string,
+    }
 }
 
 export interface PostInterface {
@@ -59,10 +63,11 @@ export interface CommentInterface {
     userId: string,
     comment: string,
     replies: string[],
-    reports: string[],
+    report: string[],
     likes: string[],
     createdAt: Date,
     updatedAt: Date,
+    isBlock: boolean,
     user?: {
         _id: string,
         name: string,
@@ -75,10 +80,12 @@ export interface ReplyInterface {
     _id: string,
     userId: string,
     reply: string,
-    reports: string[],
+    report: string[],
     likes: string[],
     createdAt: Date,
     updatedAt: Date,
+    isBlock: boolean,
+    commentId?: string,
     user?: {
         _id: string,
         name: string,

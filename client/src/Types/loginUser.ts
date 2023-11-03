@@ -19,6 +19,8 @@ export interface User {
     savedPosts?: string[];
     isAccountVerified: boolean;
     isGoogleSignIn: boolean;
+    isBlock: boolean;
+    createdAt?: string;
 }
 
 export interface LoginUserResponse {

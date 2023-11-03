@@ -33,9 +33,9 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
     
     const unlikeReply = async(replyId: string, commentId: string, userId: string) => await repository.unlikeReply(replyId, commentId, userId);
 
-    const getAllReportedComments = async() => await repository.getAllReportedComments();
+    const getAllReportedComments = async(skip: number, limit: number) => await repository.getAllReportedComments(skip, limit);
 
-    const getAllReportedReplies = async() => await repository.getAllReportedReplies();
+    const getAllReportedReplies = async(skip: number, limit: number) => await repository.getAllReportedReplies(skip, limit);
 
     const getCommentReportedUsers = async(commentId: string) => await repository.getCommentReportedUsers(commentId);
 
@@ -48,6 +48,10 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
     const blockReply = async(replyId: string, commentId: string) => await repository.blockReply(replyId, commentId);
 
     const unblockReply = async(replyId: string, commentId: string) => await repository.unblockReply(replyId, commentId);
+
+    const getAllReportedCommentsCount = async() => await repository.getAllReportedCommentsCount();
+
+    const getAllReportedRepliesCount = async() => await repository.getAllReportedRepliesCount();
 
     return {
         addComment,
@@ -72,6 +76,8 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
         unblockComment,
         blockReply,
         unblockReply,
+        getAllReportedCommentsCount,
+        getAllReportedRepliesCount,
     }
 }
 

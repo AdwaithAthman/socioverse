@@ -35,6 +35,8 @@ const adminRouter = () => {
     router.post('/unblockUser/:userId', requireAdmin, controller.unblockUser);
     router.get('/getAllPosts', requireAdmin, controller.getAllPosts);
     router.get('/getAllPostsCount', requireAdmin, controller.getAllPostsCount);
+    router.get('/getAllReportedCommentsCount', requireAdmin, controller.getAllReportedCommentsCount);
+    router.get('/getAllReportedRepliesCount', requireAdmin, controller.getAllReportedRepliesCount);
     router.get('/getReportInfo/:postId', requireAdmin, controller.getReportInfo);
     router.post('/blockPost/:postId', requireAdmin, controller.blockPost);
     router.post('/unblockPost/:postId', requireAdmin, controller.unblockPost);

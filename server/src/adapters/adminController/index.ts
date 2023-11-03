@@ -15,6 +15,8 @@ import {
   handleUnblockUser,
   handleGetAllPosts,
   handleGetAllPostsCount,
+  handleGetAllReportedCommentsCount,
+  handleGetAllReportedRepliesCount,
   handleGetReportInfo,
   handleBlockPost,
   handleUnblockPost,
@@ -126,6 +128,24 @@ const adminController = (
     });
   });
 
+  const getAllReportedCommentsCount = asyncHandler(async (req: Request, res: Response) => {
+    const count = await handleGetAllReportedCommentsCount(commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported comments count fetched",
+      count
+    });
+  });
+
+  const getAllReportedRepliesCount = asyncHandler(async (req: Request, res: Response) => {
+    const count = await handleGetAllReportedRepliesCount(commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported replies count fetched",
+      count
+    });
+  });
+
   const getReportInfo = asyncHandler(async (req: Request, res: Response) => {
     const { postId } = req.params as unknown as {postId : string}
     const reportInfo = await handleGetReportInfo(postId, postDbRepository);
@@ -155,7 +175,8 @@ const adminController = (
   });
 
   const getAllReportedComments = asyncHandler(async (req: Request, res: Response) => {
-    const reportedComments = await handleGetAllReportedComments(commentDbRepository);
+    const { skip, limit } = req.query as unknown as {skip : number, limit: number }
+    const reportedComments = await handleGetAllReportedComments(commentDbRepository, skip, limit);
     res.json({
       status: "success",
       message: "reported comments fetched",
@@ -202,7 +223,8 @@ const adminController = (
   })
 
   const getAllReportedReplies = asyncHandler(async (req: Request, res: Response) => {
-    const reportedReplies = await handleGetAllReportedReplies(commentDbRepository);
+    const { skip, limit } = req.query as unknown as {skip : number, limit: number }
+    const reportedReplies = await handleGetAllReportedReplies(commentDbRepository, skip, limit);
     res.json({
       status: "success",
       message: "reported replies fetched",
@@ -262,6 +284,8 @@ const adminController = (
     unblockUser,
     getAllPosts,
     getAllPostsCount,
+    getAllReportedCommentsCount,
+    getAllReportedRepliesCount,
     getReportInfo,
     blockPost,
     unblockPost,

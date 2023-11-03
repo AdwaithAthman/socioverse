@@ -9,7 +9,7 @@ import {
   AdminLoginResponse,
   GetUsersResponse,
   GetAllPostsResponse,
-  GetAllPostsCountResponse,
+  GetCountResponse,
   GetReportInfoResponse,
   GetAllCommentsResponse,
   GetAllRepliesResponse,
@@ -77,8 +77,8 @@ export const getAllPosts = async (page: number): Promise<GetAllPostsResponse> =>
   return response.data;
 };
 
-export const getAllPostsCount = async (): Promise<GetAllPostsCountResponse> => {
-  const response = await axiosAdminInstance.get<GetAllPostsCountResponse>(
+export const getAllPostsCount = async (): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
     END_POINTS.GET_ALL_POSTS_COUNT
   );
   return response.data;
@@ -114,19 +114,39 @@ export const getReportInfo = async (
   return response.data;
 };
 
-export const getAllComments = async (): Promise<GetAllCommentsResponse> => {
+export const getAllComments = async (page: number): Promise<GetAllCommentsResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetAllCommentsResponse>(
-    END_POINTS.GET_ALL_COMMENTS
+    `${END_POINTS.GET_ALL_COMMENTS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 };
 
-export const getAllReplies = async (): Promise<GetAllRepliesResponse> => {
+export const getAllCommentsCount = async (): Promise<GetCountResponse> => {
+  const response = await  axiosAdminInstance.get<GetCountResponse>(
+    END_POINTS.GET_ALL_COMMENTS_COUNT
+  );
+  return response.data;
+
+}
+
+export const getAllReplies = async (page: number): Promise<GetAllRepliesResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetAllRepliesResponse>(
-    END_POINTS.GET_ALL_REPLIES
+    `${END_POINTS.GET_ALL_REPLIES}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 };
+
+export const getAllRepliesCount = async (): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
+    END_POINTS.GET_ALL_REPLIES_COUNT
+  );
+  return response.data;
+
+}
 
 export const getAllReportedComments = async (): Promise<GetAllReportedCommentsResponse> => {
   const response = await axiosAdminInstance.get<GetAllReportedCommentsResponse>(

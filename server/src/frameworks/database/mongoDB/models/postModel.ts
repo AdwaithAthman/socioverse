@@ -5,15 +5,13 @@ interface PostInterface extends Document {
     description?: string;
     hashtags?: string;
     hashtagsArray?: string[];
-    name: string;
-    username?: string;
-    dp?: string;
     likes?: string[];
     comments?: string[];
     saved?: string[];
     reports: string[];
     image?: string[];
     video?: string;
+    isBlock: boolean;
 }
 
 const postSchema = new Schema<PostInterface>(
@@ -29,15 +27,6 @@ const postSchema = new Schema<PostInterface>(
             type: String,
         },
         hashtagsArray: [],
-        name: {
-            type: String,
-        },
-        username: {
-            type: String,
-        },
-        dp: {
-            type: String,
-        },
         likes: [],
         comments: [],
         saved: [],
@@ -47,7 +36,11 @@ const postSchema = new Schema<PostInterface>(
         }],
         video: {
             type: String,
-        }
+        },
+        isBlock: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

@@ -13,6 +13,8 @@ MAIL_HOST: process.env.MAIL_HOST as string,
 MAIL_PORT: process.env.MAIL_PORT as string,
 MAIL_USERNAME: process.env.MAIL_USERNAME as string,
 MAIL_PASSWORD: process.env.MAIL_PASSWORD as string,
+ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
+ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
 }
 
 export default configKeys;

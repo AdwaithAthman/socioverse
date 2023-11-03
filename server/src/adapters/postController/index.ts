@@ -19,13 +19,16 @@ import {
   handleEditPost,
   handleEditComment,
   handleDeleteComment,
+  handleDeleteReply,
+  handleReportComment,
+  handleReportReply,
   handleSearchPosts,
   handleLikeComment,
   handleLikeReply,
   handleGetUserPosts,
   handleGetUserLikedPosts,
   handleGetUserSavedPosts,
-  handleGetOtherUserPosts
+  handleGetOtherUserPosts,
 } from "../../application/use-cases/post/userPost";
 
 //importing types
@@ -257,6 +260,41 @@ const postController = (
     });
   });
 
+  const deleteReply = asyncHandler(async (req: Request, res: Response) => {
+    const { replyId, commentId } = req.query as unknown as {
+      replyId: string;
+      commentId: string;
+    };
+    await handleDeleteReply(replyId, commentId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reply deleted",
+    });
+  })
+
+  const reportComment = asyncHandler(async (req: Request, res: Response) => {
+    const { commentId } = req.params as unknown as { commentId: string };
+    const { userId }: { userId: string } = req.body;
+    await handleReportComment(commentId, userId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "comment reported",
+    });
+  });
+
+  const reportReply = asyncHandler(async (req: Request, res: Response) => {
+    const { replyId, commentId } = req.query as unknown as {
+      replyId: string;
+      commentId: string;
+    };
+    const { userId }: {userId: string} = req.body;
+    await handleReportReply(replyId, commentId, userId, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reply reported",
+    });
+  })
+
   const searchPosts = asyncHandler(async (req: Request, res: Response) => {
     const { searchQuery, skip, limit } = req.query as unknown as {
       searchQuery: string;
@@ -388,6 +426,7 @@ const postController = (
       skip,
       limit,
       dbUserRepository,
+      postDbRepository,
     )
     res.json({
       status: "success",
@@ -411,6 +450,9 @@ const postController = (
     editPost,
     editComment,
     deleteComment,
+    deleteReply,
+    reportComment,
+    reportReply,
     searchPosts,
     likeComment,
     likeReply,

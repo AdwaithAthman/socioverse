@@ -1,10 +1,10 @@
 import rateLimit from 'express-rate-limit';
 
-const loginLimiter = rateLimit({
+const requestLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     max: 5, // Limit each IP to 5 login requests per `window` per minute
     message:
-        { message: 'Too many login attempts from this IP, please try again after a 60 second pause' },
+        { message: 'Too many requests from this IP, please try again after a 60 second pause' },
     handler: (_req, res, _next, options) => {
         res.status(options.statusCode).send(options.message)
     },
@@ -12,4 +12,4 @@ const loginLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
-export default loginLimiter;
+export default requestLimiter;

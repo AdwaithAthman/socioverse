@@ -41,12 +41,21 @@ export const refreshAdminAccessToken = async (): Promise<{
   return response.data;
 };
 
-export const getAllUsers = async (): Promise<GetUsersResponse> => {
+export const getAllUsers = async (page: number): Promise<GetUsersResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetUsersResponse>(
-    END_POINTS.GET_USERS
+    `${END_POINTS.GET_USERS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 };
+
+export const getAllUsersCount = async (): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
+    END_POINTS.GET_ALL_USERS_COUNT
+  );
+  return response.data;
+}
 
 export const blockUser = async (
   userId: string
@@ -114,16 +123,14 @@ export const getReportInfo = async (
   return response.data;
 };
 
-export const getAllComments = async (page: number): Promise<GetAllCommentsResponse> => {
-  const pageSize = 10;
-  const skip: number = (page - 1) * pageSize;
+export const getAllComments = async (): Promise<GetAllCommentsResponse> => {
   const response = await axiosAdminInstance.get<GetAllCommentsResponse>(
-    `${END_POINTS.GET_ALL_COMMENTS}?skip=${skip}&limit=${pageSize}`
+    END_POINTS.GET_ALL_COMMENTS
   );
   return response.data;
 };
 
-export const getAllCommentsCount = async (): Promise<GetCountResponse> => {
+export const getAllReportedCommentsCount = async (): Promise<GetCountResponse> => {
   const response = await  axiosAdminInstance.get<GetCountResponse>(
     END_POINTS.GET_ALL_COMMENTS_COUNT
   );
@@ -131,16 +138,14 @@ export const getAllCommentsCount = async (): Promise<GetCountResponse> => {
 
 }
 
-export const getAllReplies = async (page: number): Promise<GetAllRepliesResponse> => {
-  const pageSize = 10;
-  const skip: number = (page - 1) * pageSize;
+export const getAllReplies = async (): Promise<GetAllRepliesResponse> => {
   const response = await axiosAdminInstance.get<GetAllRepliesResponse>(
-    `${END_POINTS.GET_ALL_REPLIES}?skip=${skip}&limit=${pageSize}`
+    END_POINTS.GET_ALL_REPLIES
   );
   return response.data;
 };
 
-export const getAllRepliesCount = async (): Promise<GetCountResponse> => {
+export const getAllReportedRepliesCount = async (): Promise<GetCountResponse> => {
   const response = await axiosAdminInstance.get<GetCountResponse>(
     END_POINTS.GET_ALL_REPLIES_COUNT
   );
@@ -148,9 +153,11 @@ export const getAllRepliesCount = async (): Promise<GetCountResponse> => {
 
 }
 
-export const getAllReportedComments = async (): Promise<GetAllReportedCommentsResponse> => {
+export const getAllReportedComments = async (page: number): Promise<GetAllReportedCommentsResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetAllReportedCommentsResponse>(
-    END_POINTS.GET_ALL_REPORTED_COMMENTS
+    `${END_POINTS.GET_ALL_REPORTED_COMMENTS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 }
@@ -176,9 +183,11 @@ export const unblockComment = async(commentId: string): Promise<{status: string,
   return response.data;
 }
 
-export const getAllReportedReplies = async (): Promise<GetAllReportedRepliesResponse> => {
+export const getAllReportedReplies = async (page: number): Promise<GetAllReportedRepliesResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetAllReportedRepliesResponse>(
-    END_POINTS.GET_ALL_REPORTED_REPLIES
+    `${END_POINTS.GET_ALL_REPORTED_REPLIES}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 }

@@ -15,10 +15,10 @@ import { useEffect, useState } from "react";
 import {
   blockComment,
   getAllReportedComments,
+  getAllReportedCommentsCount,
   getCommentReportedUsers,
   unblockComment,
 } from "../../../API/Admin";
-import moment from "moment";
 import { toast } from "react-toastify";
 
 //importing types
@@ -35,18 +35,51 @@ const TABLE_HEAD = [
   "Block / Unblock",
 ];
 
+interface CommentListInterface {
+  page: number;
+  comments: CommentInterface[];
+}
+
 const ReportedCommentsList = () => {
   const [reportedComments, setReportedComments] = useState<CommentInterface[]>(
     []
   );
+  const [reportedCommentsPage, setReportedCommentsPage] = useState<
+    CommentListInterface[]
+  >([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [reportInfo, setReportInfo] = useState<User[]>([]);
+
   useEffect(() => {
-    const fetchReportedComments = async () => {
-      const response = await getAllReportedComments();
-      setReportedComments(response.reportedComments);
+    const fetchReportedCommentsCount = async () => {
+      const response = await getAllReportedCommentsCount();
+      if (response.status === "success") {
+        setTotalPages(Math.ceil(response.count / 10));
+      }
     };
-    fetchReportedComments();
+    fetchReportedCommentsCount();
   }, []);
+
+  useEffect(() => {
+    const isPageExist = reportedCommentsPage.find(
+      (page) => page.page === currentPage
+    );
+    if (isPageExist) {
+      setReportedComments(isPageExist.comments);
+    } else {
+      fetchReportedComments();
+    }
+  }, [currentPage]);
+
+  const fetchReportedComments = async () => {
+    const response = await getAllReportedComments(currentPage);
+    setReportedCommentsPage((prev) => [
+      ...prev,
+      { page: currentPage, comments: response.reportedComments },
+    ]);
+    setReportedComments(response.reportedComments);
+  };
 
   const handleToggleChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -99,6 +132,14 @@ const ReportedCommentsList = () => {
   const handleGetReportInfo = async (commentId: string) => {
     const users = await getCommentReportedUsers(commentId);
     setReportInfo(users.reportedUsers);
+  };
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => prev + 1);
   };
 
   return (
@@ -300,13 +341,23 @@ const ReportedCommentsList = () => {
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Page 1 of 10
+          Page {currentPage} of {totalPages}
         </Typography>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button
+            variant="outlined"
+            size="sm"
+            onClick={handlePrevious}
+            disabled={currentPage === 1}
+          >
             Previous
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button
+            variant="outlined"
+            size="sm"
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+          >
             Next
           </Button>
         </div>

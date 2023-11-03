@@ -52,6 +52,7 @@ const END_POINTS = {
     ADMIN_LOGIN: 'api/admin/login',
     REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
     GET_USERS: 'api/admin/getUsers',
+    GET_ALL_USERS_COUNT: 'api/admin/getAllUsersCount',
     BLOCK_USER: 'api/admin/blockUser',
     UNBLOCK_USER: 'api/admin/unblockUser',
     GET_ALL_POSTS: 'api/admin/getAllPosts',

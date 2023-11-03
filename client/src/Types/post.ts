@@ -1,3 +1,4 @@
+import { User } from "./loginUser"
 
 export interface PostDataInterface {
     _id: string,
@@ -160,4 +161,10 @@ export interface GetUserPostsInterface {
     status: string,
     message: string,
     posts: PostDataInterface[],
+}
+
+export interface GetLikedUsersInterface {
+    status: string,
+    message: string,
+    users: User[]
 }

@@ -9,13 +9,20 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import ConfirmDeleteToast from "../../../utils/customToasts/confirmDeleteToast";
 import { TOAST_ACTION } from "../../../Constants/common";
-import { deletePost, likePost, savePost, reportPost } from "../../../API/Post";
+import {
+  deletePost,
+  likePost,
+  savePost,
+  reportPost,
+  getLikedUsers,
+} from "../../../API/Post";
 import CommentPopup from "./CommentPopup";
 import { getPostDetails } from "../../../API/Post";
 import EditPostDialogBox from "./EditPostDialogBox";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setHashtagSearch } from "../../../Redux/PostSlice";
+import PostLikedUsers from "./PostLikedUsers";
 
 import {
   Menu,
@@ -25,13 +32,14 @@ import {
   Button,
   Carousel,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
 //importing types
 import { PostDataInterface } from "../../../Types/post";
 import store, { StoreType } from "../../../Redux/Store";
 import { LikePostId } from "../../Profile/PostTabs";
 import { SavePostId } from "../../Profile/PostTabs";
-import { Link } from "react-router-dom";
+import { User } from "../../../Types/loginUser";
 
 function PostCard({
   postData,
@@ -62,7 +70,11 @@ function PostCard({
     postData.saved as string[]
   );
   const searchMode = useSelector((state: StoreType) => state.post.searchModeOn);
-
+  const [likedUsers, setLikedUsers] = useState<User[]>([]);
+  const [openLikedUsersDialog, setOpenLikedUsersDialog] =
+    useState<boolean>(false);
+  const handleOpenLikedUsersDialog = () =>
+    setOpenLikedUsersDialog(!openLikedUsersDialog);
   // const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
   // const [reportSubMenuVisible, setReportSubMenuVisible] =
   //   useState<boolean>(false);
@@ -206,6 +218,11 @@ function PostCard({
 
   const handleHashtagClick = (hashtag: string) => {
     dispatch(setHashtagSearch(hashtag));
+  };
+
+  const handleGetLikedUsers = async (postId: string) => {
+    const response = await getLikedUsers(postId);
+    setLikedUsers(response.users);
   };
 
   return (
@@ -483,7 +500,13 @@ function PostCard({
             </div>
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center justify-start gap-4 px-2">
-                <span className="text-[12px] font-medium text-gray-500">
+                <span
+                  className="text-[12px] font-medium text-gray-500 cursor-pointer"
+                  onClick={() => {
+                    handleGetLikedUsers(post._id);
+                    setOpenLikedUsersDialog(true);
+                  }}
+                >
                   {likesArray.length} likes
                 </span>
                 <span className="text-[12px] font-medium text-gray-500">
@@ -498,6 +521,11 @@ function PostCard({
           </div>
         </div>
       </div>
+      <PostLikedUsers
+        likedUsers={likedUsers}
+        openLikedUsersDialog={openLikedUsersDialog}
+        handleOpenLikedUsersDialog={handleOpenLikedUsersDialog}
+      />
       <CommentPopup
         commentPopupOpen={commentPopupOpen}
         handleCommentPopupOpen={handleCommentPopupOpen}

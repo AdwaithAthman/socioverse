@@ -29,6 +29,7 @@ import {
   handleGetUserLikedPosts,
   handleGetUserSavedPosts,
   handleGetOtherUserPosts,
+  handleGetLikedUsers,
 } from "../../application/use-cases/post/userPost";
 
 //importing types
@@ -435,6 +436,16 @@ const postController = (
     })
   })
 
+  const getLikedUsers = asyncHandler(async (req: Request, res: Response) => {
+    const { postId } = req.params as unknown as { postId: string };
+    const users = await handleGetLikedUsers(postId, postDbRepository);
+    res.json({
+      status: "success",
+      message: "liked users fetched",
+      users,
+    })
+  })
+
   return {
     createPost,
     getPosts,
@@ -460,6 +471,7 @@ const postController = (
     getOtherUserPosts,
     getUserLikedPosts,
     getUserSavedPosts,
+    getLikedUsers,
   };
 };
 

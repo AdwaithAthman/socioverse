@@ -550,11 +550,11 @@ export const handleGetUserSavedPosts = async (
 ) => {
   try {
     const user = await dbUserRepository.getUserById(userId);
-    if(user?.savedPosts.length === 0){
+    if (user?.savedPosts.length === 0) {
       return [];
     }
-    else{
-      const posts =  await postDbRepository.getSavedPosts(
+    else {
+      const posts = await postDbRepository.getSavedPosts(
         user?.savedPosts as string[],
         Number(skip),
         Number(limit)
@@ -569,4 +569,21 @@ export const handleGetUserSavedPosts = async (
     );
   }
 };
- 
+
+export const handleGetLikedUsers = async (
+  postId: string,
+  postDbRepository: ReturnType<PostDbInterface>,
+) => {
+  try {
+    const users = await postDbRepository.getLikedUsers(postId);
+    return users;
+   }
+  catch (err) {
+    console.log("Error getting liked users: ", err);
+    throw new AppError(
+      "Error getting liked users!",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+

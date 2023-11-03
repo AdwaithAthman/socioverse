@@ -33,6 +33,7 @@ import {
   addComment,
   addReply,
   getComments,
+  getLikedUsers,
   getReplies,
 } from "../../../API/Post";
 import moment from "moment";
@@ -50,6 +51,8 @@ import {
 import ConfirmDeleteToast from "../../../utils/customToasts/confirmDeleteToast";
 import { useDispatch } from "react-redux";
 import { setHashtagSearch } from "../../../Redux/PostSlice";
+import { Link } from "react-router-dom";
+import PostLikedUsers from "./PostLikedUsers";
 
 //importing types
 import {
@@ -57,7 +60,8 @@ import {
   PostDataInterface,
   ReplyInterface,
 } from "../../../Types/post";
-import { Link } from "react-router-dom";
+import { User } from "../../../Types/loginUser";
+
 
 const CommentPopup = ({
   commentPopupOpen,
@@ -99,6 +103,11 @@ const CommentPopup = ({
     null
   );
   const userId = store.getState().auth.user?._id as string;
+  const [likedUsers, setLikedUsers] = useState<User[]>([]);
+  const [openLikedUsersDialog, setOpenLikedUsersDialog] =
+    useState<boolean>(false);
+  const handleOpenLikedUsersDialog = () =>
+    setOpenLikedUsersDialog(!openLikedUsersDialog);
 
   useEffect(() => {
     if (postDetails) {
@@ -166,15 +175,20 @@ const CommentPopup = ({
     handleCommentPopupOpen();
   };
 
+  const handleGetLikedUsers = async (postId: string) => {
+    const response = await getLikedUsers(postId);
+    setLikedUsers(response.users);
+  };
+
   return (
     <>
       <Dialog
         open={commentPopupOpen}
         size="lg"
         handler={handleCommentPopupOpen}
-        // dismiss={{
-        //   enabled: false,
-        // }}
+        dismiss={{
+          enabled: false,
+        }}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -334,7 +348,10 @@ const CommentPopup = ({
                       </div>
                       <div className="flex items-center justify-between w-full">
                         <div className="flex items-center justify-start gap-4 px-2">
-                          <span className="text-[12px] font-medium text-gray-500">
+                          <span className="text-[12px] font-medium text-gray-500 cursor-pointer" onClick={() => {
+                            postDetails && handleGetLikedUsers(postDetails._id);
+                            setOpenLikedUsersDialog(true);
+                          }}>
                             {likesArray.length} likes
                           </span>
                           <span className="text-[12px] font-medium text-gray-500">
@@ -409,6 +426,11 @@ const CommentPopup = ({
           </section>
         </DialogBody>
       </Dialog>
+      <PostLikedUsers
+        likedUsers={likedUsers}
+        openLikedUsersDialog={openLikedUsersDialog}
+        handleOpenLikedUsersDialog={handleOpenLikedUsersDialog}
+      />
     </>
   );
 };

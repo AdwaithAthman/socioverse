@@ -678,6 +678,53 @@ export const postRepositoryMongoDB = () => {
     }
   }
 
+  const getLikedUsers = async (postId: string) => {
+    try{
+      const postObjId = new mongoose.Types.ObjectId(postId);
+      const users = await Post.aggregate([
+        {
+          $match: {
+            _id: postObjId
+          }
+        },
+        {
+          $unwind: "$likes"
+        },
+        {
+          $addFields: {
+            "likesObjId": {
+              $toObjectId: "$likes"
+            }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "likesObjId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $project: {
+            "_id": "$user._id",
+            "name": "$user.name",
+            "username": "$user.username",
+            "email": "$user.email",
+            "dp": "$user.dp"
+          }
+        }
+      ])
+      return users;
+    }
+    catch (err){
+      throw new Error("Error getting liked users")
+    }
+  }
+
   return {
     createPost,
     getPosts,
@@ -702,6 +749,7 @@ export const postRepositoryMongoDB = () => {
     blockPost,
     unblockPost,
     getMonthlyPosts,
+    getLikedUsers
   };
 };
 

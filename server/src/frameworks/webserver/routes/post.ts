@@ -52,6 +52,7 @@ const postRouter = () => {
     router.get('/getOtherUserPosts/:userId', authMiddleware, controller.getOtherUserPosts)
     router.get('/getUserLikedPosts', authMiddleware, controller.getUserLikedPosts)
     router.get('/getUserSavedPosts', authMiddleware, controller.getUserSavedPosts)
+    router.get('/getLikedUsers/:postId', authMiddleware, controller.getLikedUsers)
 
     return router;
 }

@@ -18,28 +18,13 @@ import {
   Switch,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { blockUser, getAllUsers, unblockUser } from "../../../API/Admin";
+import { blockUser, getAllUsers, unblockUser, getAllUsersCount } from "../../../API/Admin";
 import moment from "moment";
 import { toast } from "react-toastify";
 
 //importing types
 import { User } from "../../../Types/loginUser";
 import { TOAST_ACTION } from "../../../Constants/common";
-
-// const TABS = [
-//   {
-//     label: "All",
-//     value: "all",
-//   },
-//   {
-//     label: "Monitored",
-//     value: "monitored",
-//   },
-//   {
-//     label: "Unmonitored",
-//     value: "unmonitored",
-//   },
-// ];
 
 const TABLE_HEAD = [
   "User",
@@ -49,15 +34,46 @@ const TABLE_HEAD = [
   "Block / Unblock",
 ];
 
+interface UserPageInterface {
+  page: number;
+  users: User[];
+}
+
 const UsersList = () => {
   const [usersList, setUsersList] = useState<User[]>([]);
+  const [userPage, setUserPage] = useState<UserPageInterface[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await getAllUsers();
-      setUsersList(response.users);
+    const fetchUsersCount = async () => {
+      const response = await getAllUsersCount();
+      if (response.status === "success") {
+        setTotalPages(Math.ceil(response.count / 10));
+      }
     };
-    fetchUsers();
+    fetchUsersCount();
   }, []);
+
+  useEffect(() => {
+    const isPageExist = userPage.find(
+      (page) => page.page === currentPage
+    );
+    if (isPageExist) {
+      setUsersList(isPageExist.users);
+    } else {
+      fetchUsers();
+    }
+  }, [currentPage]);
+
+  const fetchUsers = async () => {
+    const response = await getAllUsers(currentPage);
+    setUserPage((prev) => [
+      ...prev,
+      { page: currentPage, users: response.users },
+    ]);
+    setUsersList(response.users);
+  };
 
   const handleToggleChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -106,6 +122,15 @@ const UsersList = () => {
       }
     }
   };
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
 
   return (
     <Card className=" w-full">
@@ -264,13 +289,23 @@ const UsersList = () => {
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Page 1 of 10
+          Page {currentPage} of {totalPages}
         </Typography>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button
+            variant="outlined"
+            size="sm"
+            onClick={handlePrevious}
+            disabled={currentPage === 1}
+          >
             Previous
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button
+            variant="outlined"
+            size="sm"
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+          >
             Next
           </Button>
         </div>

@@ -73,7 +73,6 @@ const PostList = () => {
     } else {
       fetchPosts();
     }
-    // fetchPosts();
   }, [currentPage]);
 
   const fetchPosts = async () => {
@@ -86,7 +85,6 @@ const PostList = () => {
       },
     ]);
     setPostsList(response.posts);
-    // setCurrentPage((prev) => prev + 1);
   };
 
   const handleToggleChange = async (

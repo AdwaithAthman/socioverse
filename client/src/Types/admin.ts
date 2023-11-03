@@ -25,7 +25,7 @@ export interface GetAllPostsResponse {
     posts: PostDataInterface[],
 }
 
-export interface GetAllPostsCountResponse {
+export interface GetCountResponse {
     status: string,
     message: string,
     count: number,

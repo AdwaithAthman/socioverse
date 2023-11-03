@@ -288,11 +288,20 @@ export const commentRepositoryMongoDB = () => {
     }
   }
 
-  const getAllReportedComments = async () => {
+  const getAllReportedComments = async (skip: number, limit: number) => {
     try{
       const comments = await Comment.aggregate([
         {
           $match: { report: { $exists: true, $ne: []}}
+        },
+        {
+          $sort: { createdAt: -1 }
+        },
+        {
+          $skip: skip
+        },
+        {
+          $limit: limit
         },
         {
           $addFields: {
@@ -337,7 +346,7 @@ export const commentRepositoryMongoDB = () => {
     }
   }
 
-  const getAllReportedReplies = async () => {
+  const getAllReportedReplies = async (skip: number, limit: number) => {
     try{
       const replies = await Comment.aggregate([
         {
@@ -366,6 +375,15 @@ export const commentRepositoryMongoDB = () => {
           $match: {
             "replies.report": { $exists: true, $ne: []}
           }
+        },
+        {
+          $sort: { "replies.createdAt": -1 }
+        },
+        {
+          $skip: skip
+        },
+        {
+          $limit: limit
         },
         {
           $project: {
@@ -532,6 +550,26 @@ export const commentRepositoryMongoDB = () => {
     }
   }
 
+  const getAllReportedCommentsCount = async () => {
+    try{
+      const count = await Comment.countDocuments({report: { $exists: true, $ne: []}})
+      return count;
+    }
+    catch(err){
+      throw new Error("Error getting reported comments count")
+    }
+  }
+
+  const getAllReportedRepliesCount = async () => {
+    try{
+      const count = await Comment.countDocuments({"replies.report": { $exists: true, $ne: []}})
+      return count;
+    }
+    catch(err){
+      throw new Error("Error getting reported replies count")
+    }
+  }
+
 
   return {
     addComment,
@@ -556,6 +594,8 @@ export const commentRepositoryMongoDB = () => {
     unblockComment,
     blockReply,
     unblockReply,
+    getAllReportedCommentsCount,
+    getAllReportedRepliesCount,
   };
 };
 

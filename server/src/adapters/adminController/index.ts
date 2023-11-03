@@ -14,6 +14,7 @@ import {
   handleBlockUser,
   handleUnblockUser,
   handleGetAllPosts,
+  handleGetAllPostsCount,
   handleGetReportInfo,
   handleBlockPost,
   handleUnblockPost,
@@ -107,11 +108,21 @@ const adminController = (
   });
 
   const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
-    const posts = await handleGetAllPosts(postDbRepository);
+    const { skip, limit } = req.query as unknown as {skip : number, limit: number }
+    const posts = await handleGetAllPosts(postDbRepository, skip, limit);
     res.json({
       status: "success",
       message: "posts fetched",
       posts
+    });
+  });
+
+  const getAllPostsCount = asyncHandler(async (req: Request, res: Response) => {
+    const count = await handleGetAllPostsCount(postDbRepository);
+    res.json({
+      status: "success",
+      message: "posts count fetched",
+      count
     });
   });
 
@@ -250,6 +261,7 @@ const adminController = (
     blockUser,
     unblockUser,
     getAllPosts,
+    getAllPostsCount,
     getReportInfo,
     blockPost,
     unblockPost,

@@ -94,15 +94,30 @@ export const handleUnblockUser = async (
 }
 
 export const handleGetAllPosts = async (
-    postDbRepository: ReturnType<PostDbInterface>
+    postDbRepository: ReturnType<PostDbInterface>,
+    skip: number,
+    limit: number,
 ) => {
     try{
-        const posts = await postDbRepository.getAllPosts();
+        const posts = await postDbRepository.getAllPosts(Number(skip), Number(limit));
         return posts;
     }
     catch(err){
         console.log(err)
         throw new AppError ("Error while fetching posts", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetAllPostsCount = async (
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        const count = await postDbRepository.getAllPostsCount();
+        return count;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError ("Error while fetching posts count", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 

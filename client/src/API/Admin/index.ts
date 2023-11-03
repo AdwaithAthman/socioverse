@@ -9,6 +9,7 @@ import {
   AdminLoginResponse,
   GetUsersResponse,
   GetAllPostsResponse,
+  GetAllPostsCountResponse,
   GetReportInfoResponse,
   GetAllCommentsResponse,
   GetAllRepliesResponse,
@@ -67,12 +68,22 @@ export const unblockUser = async (
   return response.data;
 };
 
-export const getAllPosts = async (): Promise<GetAllPostsResponse> => {
+export const getAllPosts = async (page: number): Promise<GetAllPostsResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetAllPostsResponse>(
-    END_POINTS.GET_ALL_POSTS
+    `${END_POINTS.GET_ALL_POSTS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 };
+
+export const getAllPostsCount = async (): Promise<GetAllPostsCountResponse> => {
+  const response = await axiosAdminInstance.get<GetAllPostsCountResponse>(
+    END_POINTS.GET_ALL_POSTS_COUNT
+  );
+  return response.data;
+
+}
 
 export const blockPost = async (
   postId: string

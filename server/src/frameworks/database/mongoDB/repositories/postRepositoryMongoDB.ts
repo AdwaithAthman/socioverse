@@ -517,9 +517,18 @@ export const postRepositoryMongoDB = () => {
     }
   };
 
-  const getAllPosts = async () => {
+  const getAllPosts = async (skip: number, limit: number) => {
     try {
       const posts = await Post.aggregate([
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: limit,
+        },
         {
           $addFields: {
             userObjId: { $toObjectId: "$userId" },
@@ -560,15 +569,23 @@ export const postRepositoryMongoDB = () => {
             },
           },
         },
-        {
-          $sort: { createdAt: -1 },
-        }
       ])
       return posts;
     }
     catch (err) {
       console.log(err)
       throw new Error("Error getting all posts")
+    }
+  }
+
+  const getAllPostsCount = async () => {
+    try{
+      const count = await Post.countDocuments();
+      return count;
+    }
+    catch(err){
+      console.log(err)
+      throw new Error("Error getting all posts count")
     }
   }
 
@@ -745,6 +762,7 @@ export const postRepositoryMongoDB = () => {
     getSavedPosts,
     countOfsearchPostsByRegexSearch,
     getAllPosts,
+    getAllPostsCount,
     getReportInfo,
     blockPost,
     unblockPost,

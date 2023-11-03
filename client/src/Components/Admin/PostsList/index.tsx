@@ -1,5 +1,4 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -9,14 +8,9 @@ import {
   CardBody,
   Chip,
   CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
   Avatar,
-  IconButton,
   Tooltip,
   Switch,
-  Badge,
   Popover,
   PopoverHandler,
   PopoverContent,
@@ -27,6 +21,7 @@ import {
   getAllPosts,
   unblockPost,
   getReportInfo,
+  getAllPostsCount,
 } from "../../../API/Admin";
 import moment from "moment";
 import { toast } from "react-toastify";
@@ -49,17 +44,50 @@ const TABLE_HEAD = [
   "Block / Unblock",
 ];
 
+interface PostListInterface {
+  page: number;
+  posts: PostDataInterface[];
+}
+
 const PostList = () => {
   const [postsList, setPostsList] = useState<PostDataInterface[]>([]);
+  const [postsPage, setPostsPage] = useState<PostListInterface[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [reportInfo, setReportInfo] = useState<ReportInfoInterface[]>([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await getAllPosts();
-      setPostsList(response.posts);
-    };
-    fetchPosts();
-  }, []);
+    const fetchPostsCount = async () => {
+      const response = await getAllPostsCount();
+      if (response.status === "success") {
+        setTotalPages(Math.ceil(response.count / 10));
+      }
+    }
+    fetchPostsCount();
+  },[])
+
+  useEffect(() => {
+    const isPageExist = postsPage.find((page) => page.page === currentPage);
+    if (isPageExist) {
+      setPostsList(isPageExist.posts);
+    } else {
+      fetchPosts();
+    }
+    // fetchPosts();
+  }, [currentPage]);
+
+  const fetchPosts = async () => {
+    const response = await getAllPosts(currentPage);
+    setPostsPage((prev) => [
+      ...prev,
+      {
+        page: currentPage,
+        posts: response.posts,
+      },
+    ]);
+    setPostsList(response.posts);
+    // setCurrentPage((prev) => prev + 1);
+  };
 
   const handleToggleChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -114,6 +142,14 @@ const PostList = () => {
     if (response.status === "success") {
       setReportInfo(response.reportInfo);
     }
+  };
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => prev + 1);
   };
 
   return (
@@ -336,13 +372,18 @@ const PostList = () => {
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Typography variant="small" color="blue-gray" className="font-normal">
-            Page 1 of 10
+            Page {currentPage} of {totalPages}
           </Typography>
           <div className="flex gap-2">
-            <Button variant="outlined" size="sm">
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+            >
               Previous
             </Button>
-            <Button variant="outlined" size="sm">
+            <Button variant="outlined" size="sm" onClick={handleNext} disabled={currentPage === totalPages}>
               Next
             </Button>
           </div>

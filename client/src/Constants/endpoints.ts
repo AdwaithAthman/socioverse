@@ -55,6 +55,7 @@ const END_POINTS = {
     BLOCK_USER: 'api/admin/blockUser',
     UNBLOCK_USER: 'api/admin/unblockUser',
     GET_ALL_POSTS: 'api/admin/getAllPosts',
+    GET_ALL_POSTS_COUNT: 'api/admin/getAllPostsCount',
     BLOCK_POST: 'api/admin/blockPost',
     UNBLOCK_POST: 'api/admin/unblockPost',
     GET_REPORT_INFO: 'api/admin/getReportInfo', 

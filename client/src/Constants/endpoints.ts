@@ -28,6 +28,7 @@ const END_POINTS = {
     GET_OTHER_USER_POSTS: 'api/post/getOtherUserPosts',
     GET_USER_LIKED_POSTS: 'api/post/getUserLikedPosts',
     GET_USER_SAVED_POSTS: 'api/post/getUserSavedPosts',
+    GET_LIKED_USERS: 'api/post/getLikedUsers',
     LIKE_POST: 'api/post/likePost',
     SAVE_POST: 'api/post/savePost',
     REPORT_POST: 'api/post/reportPost',
@@ -69,7 +70,7 @@ const END_POINTS = {
     UNBLOCK_REPLY: 'api/admin/unblockReply',
     GET_MONTHLY_USER_SIGNUPS: 'api/admin/getMonthlyUserSignups',
     GET_MONTHLY_POSTS: 'api/admin/getMonthlyPosts',
-    LOGOUT_ADMIN: 'api/admin/logout'
+    LOGOUT_ADMIN: 'api/admin/logout',
 }
 
 export default END_POINTS

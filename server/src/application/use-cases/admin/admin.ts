@@ -400,4 +400,34 @@ export const handleGetPostsOnSearch = async (
     }
 }
 
+export const handleGetReportedCommentsCountOnSearch = async (
+    searchQuery: string,
+    commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+    try{
+        const count = await commentDbRepository.getReportedCommentsCountOnSearch(searchQuery);
+        return count;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError("Error while fetching reported comments count", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetReportedCommentsOnSearch = async (
+    searchQuery: string,
+    skip: number,
+    limit: number,
+    commentDbRepository: ReturnType<CommentDbInterface>
+) => {
+    try{
+        const comments = await commentDbRepository.getReportedCommentsOnSearch(searchQuery, Number(skip), Number(limit));
+        return comments;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError("Error while fetching reported comments", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 

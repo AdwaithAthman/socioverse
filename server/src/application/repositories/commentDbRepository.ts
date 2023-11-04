@@ -53,6 +53,10 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
 
     const getAllReportedRepliesCount = async() => await repository.getAllReportedRepliesCount();
 
+    const getReportedCommentsCountOnSearch = async(searchText: string) => await repository.getReportedCommentsCountOnSearch(searchText);
+
+    const getReportedCommentsOnSearch = async(searchText: string, skip: number, limit: number) => await repository.getReportedCommentsOnSearch(searchText, skip, limit);
+
     return {
         addComment,
         getComments,
@@ -78,6 +82,8 @@ export const commentDbRepository = (repository: ReturnType<CommentRepositoryMong
         unblockReply,
         getAllReportedCommentsCount,
         getAllReportedRepliesCount,
+        getReportedCommentsCountOnSearch,
+        getReportedCommentsOnSearch,
     }
 }
 

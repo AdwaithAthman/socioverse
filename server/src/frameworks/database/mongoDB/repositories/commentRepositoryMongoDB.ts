@@ -214,10 +214,10 @@ export const commentRepositoryMongoDB = () => {
   }
 
   const reportComment = async (commentId: string, userId: string) => {
-    try{
-      await Comment.updateOne({_id: commentId} , {$addToSet: {report: userId}})
+    try {
+      await Comment.updateOne({ _id: commentId }, { $addToSet: { report: userId } })
     }
-    catch(err) {
+    catch (err) {
       console.log(err)
       throw new Error("Error reporting comment");
     }
@@ -289,10 +289,10 @@ export const commentRepositoryMongoDB = () => {
   }
 
   const getAllReportedComments = async (skip: number, limit: number) => {
-    try{
+    try {
       const comments = await Comment.aggregate([
         {
-          $match: { report: { $exists: true, $ne: []}}
+          $match: { report: { $exists: true, $ne: [] } }
         },
         {
           $sort: { createdAt: -1 }
@@ -341,16 +341,16 @@ export const commentRepositoryMongoDB = () => {
 
       return comments;
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error getting all reported comments")
     }
   }
 
   const getAllReportedReplies = async (skip: number, limit: number) => {
-    try{
+    try {
       const replies = await Comment.aggregate([
         {
-          $match: { replies: { $exists: true, $ne: []} }
+          $match: { replies: { $exists: true, $ne: [] } }
         },
         {
           $unwind: "$replies"
@@ -373,7 +373,7 @@ export const commentRepositoryMongoDB = () => {
         },
         {
           $match: {
-            "replies.report": { $exists: true, $ne: []}
+            "replies.report": { $exists: true, $ne: [] }
           }
         },
         {
@@ -405,14 +405,14 @@ export const commentRepositoryMongoDB = () => {
       ])
       return replies;
     }
-    catch(err){
+    catch (err) {
       console.log(err)
       throw new Error("Error getting all reported replies")
     }
   }
 
   const getCommentReportedUsers = async (commentId: string) => {
-    try{
+    try {
       const commentObjId = new mongoose.Types.ObjectId(commentId);
       const reportedUsers = await Comment.aggregate([
         {
@@ -449,13 +449,13 @@ export const commentRepositoryMongoDB = () => {
       ])
       return reportedUsers;
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error getting comment reported users")
     }
   }
 
   const getReplyReportedUsers = async (replyId: string, commentId: string) => {
-    try{
+    try {
       const replyObjId = new mongoose.Types.ObjectId(replyId);
       const commentObjId = new mongoose.Types.ObjectId(commentId);
       const reportedUsers = await Comment.aggregate([
@@ -509,64 +509,176 @@ export const commentRepositoryMongoDB = () => {
       ])
       return reportedUsers;
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error getting reply reported users")
     }
   }
 
   const blockComment = async (commentId: string) => {
-    try{
-      await Comment.updateOne({_id: commentId}, {$set: {isBlock: true}})
+    try {
+      await Comment.updateOne({ _id: commentId }, { $set: { isBlock: true } })
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error blocking comment")
     }
   }
 
   const unblockComment = async (commentId: string) => {
-    try{
-      await Comment.updateOne({_id: commentId}, {$set: {isBlock: false}})
+    try {
+      await Comment.updateOne({ _id: commentId }, { $set: { isBlock: false } })
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error blocking comment")
     }
   }
 
   const blockReply = async (replyId: string, commentId: string) => {
-    try{
-      await Comment.updateOne({_id: commentId, "replies._id": replyId}, {$set: {"replies.$.isBlock": true}})
+    try {
+      await Comment.updateOne({ _id: commentId, "replies._id": replyId }, { $set: { "replies.$.isBlock": true } })
     }
-    catch(err){
-      throw new Error("Error blocking reply") 
+    catch (err) {
+      throw new Error("Error blocking reply")
     }
   }
 
   const unblockReply = async (replyId: string, commentId: string) => {
-    try{
-      await Comment.updateOne({_id: commentId, "replies._id": replyId}, {$set: {"replies.$.isBlock": false}})
+    try {
+      await Comment.updateOne({ _id: commentId, "replies._id": replyId }, { $set: { "replies.$.isBlock": false } })
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error blocking reply")
     }
   }
 
   const getAllReportedCommentsCount = async () => {
-    try{
-      const count = await Comment.countDocuments({report: { $exists: true, $ne: []}})
+    try {
+      const count = await Comment.countDocuments({ report: { $exists: true, $ne: [] } })
       return count;
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error getting reported comments count")
     }
   }
 
   const getAllReportedRepliesCount = async () => {
-    try{
-      const count = await Comment.countDocuments({"replies.report": { $exists: true, $ne: []}})
+    try {
+      const count = await Comment.countDocuments({ "replies.report": { $exists: true, $ne: [] } })
       return count;
     }
-    catch(err){
+    catch (err) {
       throw new Error("Error getting reported replies count")
+    }
+  }
+
+  const getReportedCommentsCountOnSearch = async (searchText: string) => {
+    const regex = new RegExp(`^${searchText}`, "i");
+    try {
+      const count = await Comment.aggregate([
+        {
+          $match: { report: { $exists: true, $ne: [] } }
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $match: {
+            $or: [
+              { "user.name": regex },
+              { "user.username": regex },
+              { "user.email": regex },
+            ]
+          }
+        },
+        {
+          $count: "count"
+        }
+      ])
+
+      return count[0].count;
+    }
+    catch (err) {
+      throw new Error("Error getting reported comments count on search")
+    }
+  }
+
+  const getReportedCommentsOnSearch = async (searchText: string, skip: number, limit: number) => {
+    try{
+      const regex = new RegExp(`^${searchText}`, "i");
+      const comments = await Comment.aggregate([
+        {
+          $match: { report: { $exists: true, $ne: [] } }
+        },
+        {
+          $addFields: {
+            userObjId: { $toObjectId: "$userId" }
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userObjId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $unwind: "$user"
+        },
+        {
+          $match: {
+            $or: [
+              { "user.name": regex },
+              { "user.username": regex },
+              { "user.email": regex },
+            ]
+          }
+        },
+        {
+          $sort: { createdAt: -1 }
+        },
+        {
+          $skip: skip
+        },
+        {
+          $limit: limit
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            comment: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            report: 1,
+            isBlock: 1,
+            user: {
+              _id: 1,
+              name: 1,
+              username: 1,
+              dp: 1,
+              email: 1
+            }
+          }
+        }
+      ])
+
+      return comments;
+    }
+    catch(err){
+      throw new Error("Error getting reported comments on search")
     }
   }
 
@@ -596,6 +708,8 @@ export const commentRepositoryMongoDB = () => {
     unblockReply,
     getAllReportedCommentsCount,
     getAllReportedRepliesCount,
+    getReportedCommentsCountOnSearch,
+    getReportedCommentsOnSearch,
   };
 };
 

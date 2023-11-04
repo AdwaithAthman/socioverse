@@ -18,13 +18,17 @@ import {
   getAllReportedCommentsCount,
   getCommentReportedUsers,
   unblockComment,
+  getReportedCommentsCountOnSearch,
+  getReportedCommentsOnSearch,
 } from "../../../API/Admin";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 //importing types
 import { User } from "../../../Types/loginUser";
 import { TOAST_ACTION } from "../../../Constants/common";
 import { CommentInterface } from "../../../Types/post";
+import { StoreType } from "../../../Redux/Store";
 
 const TABLE_HEAD = [
   "Reported Against",
@@ -50,14 +54,14 @@ const ReportedCommentsList = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [reportInfo, setReportInfo] = useState<User[]>([]);
+  const [searchModeOn, setSearchModeOn] = useState<boolean>(false);
+  const { searchTextForComments } = useSelector(
+    (store: StoreType) => store.admin
+  );
+
+  console.log("SearchTextForComments:::  ", searchTextForComments);
 
   useEffect(() => {
-    const fetchReportedCommentsCount = async () => {
-      const response = await getAllReportedCommentsCount();
-      if (response.status === "success") {
-        setTotalPages(Math.ceil(response.count / 10));
-      }
-    };
     fetchReportedCommentsCount();
   }, []);
 
@@ -68,12 +72,64 @@ const ReportedCommentsList = () => {
     if (isPageExist) {
       setReportedComments(isPageExist.comments);
     } else {
-      fetchReportedComments();
+      searchModeOn
+        ? fetchReportedCommentsOnSearch(searchTextForComments)
+        : fetchReportedComments();
     }
-  }, [currentPage]);
+  }, [currentPage, searchModeOn, reportedCommentsPage]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const performSearch = async () => {
+      const commentsCount = await getReportedCommentsCountOnSearch(
+        searchTextForComments
+      );
+      if (commentsCount.status === "success" && commentsCount.count > 0) {
+        setReportedCommentsPage([]);
+        setTotalPages(Math.ceil(commentsCount.count / 10));
+        setCurrentPage(1);
+        setSearchModeOn(true);
+      } else {
+        toast.error("No user found...!", TOAST_ACTION);
+      }
+    };
+
+    if ( searchTextForComments.length > 0) {
+      timer = setTimeout(performSearch, 800);
+    } else if (searchTextForComments.length === 0 && searchModeOn) {
+      setSearchModeOn(false);
+      setCurrentPage(1);
+      fetchReportedCommentsCount();
+      setReportedCommentsPage([]);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTextForComments]);
+
+  const fetchReportedCommentsCount = async () => {
+    const response = await getAllReportedCommentsCount();
+    if (response.status === "success") {
+      setTotalPages(Math.ceil(response.count / 10));
+    }
+  };
 
   const fetchReportedComments = async () => {
     const response = await getAllReportedComments(currentPage);
+    setReportedCommentsPage((prev) => [
+      ...prev,
+      { page: currentPage, comments: response.reportedComments },
+    ]);
+    setReportedComments(response.reportedComments);
+  };
+
+  const fetchReportedCommentsOnSearch = async (searchQuery: string) => {
+    const response = await getReportedCommentsOnSearch(
+      searchQuery,
+      currentPage
+    );
     setReportedCommentsPage((prev) => [
       ...prev,
       { page: currentPage, comments: response.reportedComments },

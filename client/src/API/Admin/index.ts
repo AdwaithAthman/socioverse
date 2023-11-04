@@ -147,7 +147,7 @@ export const getAllReplies = async (): Promise<GetAllRepliesResponse> => {
 
 export const getAllReportedRepliesCount = async (): Promise<GetCountResponse> => {
   const response = await axiosAdminInstance.get<GetCountResponse>(
-    END_POINTS.GET_ALL_REPLIES_COUNT
+    END_POINTS.GET_ALL_REPORTED_REPLIES_COUNT
   );
   return response.data;
 
@@ -278,6 +278,22 @@ export const getReportedCommentsOnSearch = async (search: string, page: number):
   const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetAllReportedCommentsResponse>(
     `${END_POINTS.GET_REPORTED_COMMENTS_ON_SEARCH}?search=${search}&skip=${skip}&limit=${pageSize}`
+  );
+  return response.data;
+}
+
+export const getReportedRepliesCountOnSearch = async (search: string): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
+    `${END_POINTS.GET_REPORTED_REPLIES_COUNT_ON_SEARCH}?search=${search}`
+  );
+  return response.data;
+}
+
+export const getReportedRepliesOnSearch = async (search: string, page: number): Promise<GetAllReportedRepliesResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
+  const response = await axiosAdminInstance.get<GetAllReportedRepliesResponse>(
+    `${END_POINTS.GET_REPORTED_REPLIES_ON_SEARCH}?search=${search}&skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 }

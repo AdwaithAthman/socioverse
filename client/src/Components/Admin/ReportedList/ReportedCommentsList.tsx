@@ -59,7 +59,6 @@ const ReportedCommentsList = () => {
     (store: StoreType) => store.admin
   );
 
-  console.log("SearchTextForComments:::  ", searchTextForComments);
 
   useEffect(() => {
     fetchReportedCommentsCount();

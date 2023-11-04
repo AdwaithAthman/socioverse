@@ -37,6 +37,8 @@ import {
   handleGetPostsOnSearch,
   handleGetReportedCommentsCountOnSearch,
   handleGetReportedCommentsOnSearch,
+  handleGetReportedRepliesCountOnSearch,
+  handleGetReportedRepliesOnSearch,
 } from "../../application/use-cases/admin/admin";
 import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
 import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
@@ -414,6 +416,26 @@ const adminController = (
     })
   })
 
+  const getReportedRepliesCountOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search } = req.query as unknown as { search: string };
+    const count = await handleGetReportedRepliesCountOnSearch(search, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported replies count fetched",
+      count,
+    })
+  })
+
+  const getReportedRepliesOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search, skip, limit } = req.query as unknown as { search: string, skip: number, limit: number };
+    const reportedReplies = await handleGetReportedRepliesOnSearch(search, skip, limit, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported replies fetched",
+      reportedReplies,
+    })
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
@@ -445,6 +467,8 @@ const adminController = (
     getPostsOnSearch,
     getReportedCommentsCountOnSearch,
     getReportedCommentsOnSearch,
+    getReportedRepliesCountOnSearch,
+    getReportedRepliesOnSearch,
   };
 };
 

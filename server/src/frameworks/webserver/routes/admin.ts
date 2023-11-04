@@ -58,6 +58,8 @@ const adminRouter = () => {
     router.get('/getPostsOnSearch', requireAdmin, controller.getPostsOnSearch);
     router.get('/getReportedCommentsCountOnSearch', requireAdmin, controller.getReportedCommentsCountOnSearch);
     router.get('/getReportedCommentsOnSearch', requireAdmin, controller.getReportedCommentsOnSearch);
+    router.get('/getReportedRepliesCountOnSearch', requireAdmin, controller.getReportedRepliesCountOnSearch);
+    router.get('/getReportedRepliesOnSearch', requireAdmin, controller.getReportedRepliesOnSearch);
 
     return router;
 }

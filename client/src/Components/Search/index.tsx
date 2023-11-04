@@ -71,11 +71,9 @@ const SearchInputDialog = ({
 
     const performSearch = async () => {
       const usersResult = await searchUsers(searchQuery);
-      console.log("users after search function: -> ", usersResult);
       setSearchResultUsers(usersResult.users);
       setIsLastPostPage(false);
       const postResult = await searchPosts(searchQuery, 1);
-      console.log("posts after search function: -> ", postResult);
       setSearchResultPosts(postResult.posts);
       setSearchResultPostsCount(postResult.count);
       setPostPage(2);

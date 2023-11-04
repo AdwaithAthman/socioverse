@@ -233,3 +233,19 @@ export const logoutAdmin = async (): Promise<{ status: string, message: string }
   );
   return response.data;
 }
+
+export const getUsersCountOnSearch = async (search: string): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
+    `${END_POINTS.GET_USERS_COUNT_ON_SEARCH}?search=${search}`
+  );
+  return response.data;
+}
+
+export const getUsersOnSearch = async (search: string, page: number): Promise<GetUsersResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
+  const response = await axiosAdminInstance.get<GetUsersResponse>(
+    `${END_POINTS.GET_USERS_ON_SEARCH}?search=${search}&skip=${skip}&limit=${pageSize}`
+  );
+  return response.data;
+}

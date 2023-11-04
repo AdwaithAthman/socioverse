@@ -62,11 +62,17 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
     
     const getAllUsers = async() => await repository.getAllUsers()
 
+    const getAllUsersCount = async() => await repository.getAllUsersCount()
+
     const blockUser = async(userId: string) => await repository.blockUser(userId)
 
     const unblockUser = async(userId: string) => await repository.unblockUser(userId)
 
     const getMonthlyUserSignups = async() => await repository.getMonthlyUserSignups();
+
+    const getUsersCountOnSearch = async(searchQuery: string) => await repository.getUsersCountOnSearch(searchQuery);
+
+    const getUsersOnSearch = async(searchQuery: string, skip: number, limit: number) => await repository.getUsersOnSearch(searchQuery, skip, limit);
 
     return {
         addUser,
@@ -97,9 +103,12 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
         changeIsAccountVerified,
         changeIsAccountUnverified,
         getAllUsers,
+        getAllUsersCount,
         blockUser,
         unblockUser,
         getMonthlyUserSignups,
+        getUsersCountOnSearch,
+        getUsersOnSearch,
     }
 }
 

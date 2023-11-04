@@ -15,6 +15,7 @@ export const userRepositoryMongoDB = () => {
       return await newUser.save();
     } catch (error) {
       console.log(error);
+      throw new Error("Error adding user!");
     }
   };
 
@@ -24,8 +25,19 @@ export const userRepositoryMongoDB = () => {
       return users;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting all users!");
     }
   };
+
+  const getAllUsersCount = async () => {
+    try {
+      const count = await User.countDocuments();
+      return count;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting all users count!");
+    }
+  }
 
   const getUserById = async (userId: string) => {
     try {
@@ -33,6 +45,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting user by id!");
     }
   };
 
@@ -42,6 +55,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting user by email!");
     }
   };
 
@@ -51,6 +65,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting user by username!");
     }
   };
 
@@ -72,6 +87,7 @@ export const userRepositoryMongoDB = () => {
       );
     } catch (error) {
       console.log(error);
+      throw new Error("Error logging out user!");
     }
   };
 
@@ -81,6 +97,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting user by phone number!");
     }
   };
 
@@ -100,6 +117,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error adding refresh token and expiry!");
     }
   };
 
@@ -113,6 +131,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error updating cover photo!");
     }
   };
 
@@ -126,6 +145,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error updating dp!")
     }
   };
 
@@ -134,6 +154,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: userId }, { $unset: { coverPhoto: 1 } });
     } catch (error) {
       console.log(error);
+      throw new Error("Error deleting cover photo!");
     }
   };
 
@@ -142,6 +163,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: userId }, { $unset: { dp: 1 } });
     } catch (error) {
       console.log(error);
+      throw new Error("Error deleting profile photo!")
     }
   };
 
@@ -153,6 +175,7 @@ export const userRepositoryMongoDB = () => {
       );
     } catch (error) {
       console.log(error);
+      throw new Error("Error updating password!");
     }
   };
 
@@ -180,6 +203,7 @@ export const userRepositoryMongoDB = () => {
       return user;
     } catch (error) {
       console.log(error);
+      throw new Error("Error updating profile!")
     }
   };
 
@@ -203,6 +227,7 @@ export const userRepositoryMongoDB = () => {
       return users;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting rest of users!")
     }
   };
 
@@ -212,6 +237,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: friendId }, { $push: { followers: userId } });
     } catch (error) {
       console.log(error);
+      throw new Error("Error following user!")
     }
   };
 
@@ -221,6 +247,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: friendId }, { $pull: { followers: userId } });
     } catch (error) {
       console.log(error);
+      throw new Error("Error unfollowing user!")
     }
   };
 
@@ -230,6 +257,7 @@ export const userRepositoryMongoDB = () => {
       return user?.followers;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting followers!")
     }
   };
 
@@ -240,6 +268,7 @@ export const userRepositoryMongoDB = () => {
       return user?.following;
     } catch (error) {
       console.log(error);
+      throw new Error("Error getting following!")
     }
   };
 
@@ -248,6 +277,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: userId }, { $push: { posts: postId } });
     } catch (error) {
       console.log(error);
+      throw new Error ("Error updating posts!")
     }
   };
 
@@ -257,6 +287,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: userId }, { $pull: { posts: postID } });
     } catch (error) {
       console.log(error);
+      throw new Error ("Error deleting post!")
     }
   };
 
@@ -266,6 +297,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: userId }, { $addToSet: { savedPosts: postObjId }  });
     } catch (error) {
       console.log(error);
+      throw new Error ("Error saving post!")
     }
   };
 
@@ -274,6 +306,7 @@ export const userRepositoryMongoDB = () => {
       await User.updateOne({ _id: userId }, { $pull: { savedPosts: postId } });
     } catch (error) {
       console.log(error);
+      throw new Error ("Error unsaving post!")
     }
   };
 
@@ -385,9 +418,36 @@ export const userRepositoryMongoDB = () => {
     }
   }
 
+  const getUsersCountOnSearch = async (searchQuery: string) => {
+    try{
+      const regex = new RegExp(`^${searchQuery}`, "i");
+      const count = await User.countDocuments({
+        $or: [{ name: regex }, { email: regex }, { username: regex }]
+      });
+      return count;
+    }
+    catch(err){
+      throw new Error("Error getting users count on search");
+    }
+  }
+
+  const getUsersOnSearch = async (searchQuery: string, skip: number, limit: number) => {
+    try{
+      const regex = new RegExp(`^${searchQuery}`, "i");
+      const users = await User.find({
+        $or: [{ name: regex }, { email: regex }, { username: regex }]
+      }).skip(skip).limit(limit);
+      return users;
+    }
+    catch(err){
+      throw new Error("Error getting users on search");
+    }
+  }
+
   return {
     addUser,
     getAllUsers,
+    getAllUsersCount,
     getUserById,
     getUserByEmail,
     getUserByUsername,
@@ -417,6 +477,8 @@ export const userRepositoryMongoDB = () => {
     blockUser,
     unblockUser,
     getMonthlyUserSignups,
+    getUsersCountOnSearch,
+    getUsersOnSearch,
   };
 };
 

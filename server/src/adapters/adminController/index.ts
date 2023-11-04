@@ -33,6 +33,8 @@ import {
   handleGetMonthlyPosts,
   handleGetUsersCountOnSearch,
   handleGetUsersOnSearch,
+  handleGetPostsCountOnSearch,
+  handleGetPostsOnSearch,
 } from "../../application/use-cases/admin/admin";
 import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
 import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
@@ -370,6 +372,26 @@ const adminController = (
     });
   });
 
+  const getPostsCountOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search } = req.query as unknown as { search: string };
+    const count = await handleGetPostsCountOnSearch(search, postDbRepository);
+    res.json({
+      status: "success",
+      message: "posts count fetched",
+      count,
+    });
+  })
+
+  const getPostsOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search, skip, limit } = req.query as unknown as { search: string, skip: number, limit: number };
+    const posts = await handleGetPostsOnSearch(search, skip, limit, postDbRepository);
+    res.json({
+      status: "success",
+      message: "posts fetched",
+      posts,
+    })
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
@@ -397,6 +419,8 @@ const adminController = (
     logoutAdmin,
     getUsersCountOnSearch,
     getUsersOnSearch,
+    getPostsCountOnSearch,
+    getPostsOnSearch,
   };
 };
 

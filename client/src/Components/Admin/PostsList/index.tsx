@@ -22,6 +22,8 @@ import {
   unblockPost,
   getReportInfo,
   getAllPostsCount,
+  getPostsCountOnSearch,
+  getPostsOnSearch,
 } from "../../../API/Admin";
 import moment from "moment";
 import { toast } from "react-toastify";
@@ -55,14 +57,10 @@ const PostList = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [reportInfo, setReportInfo] = useState<ReportInfoInterface[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchModeOn, setSearchModeOn] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchPostsCount = async () => {
-      const response = await getAllPostsCount();
-      if (response.status === "success") {
-        setTotalPages(Math.ceil(response.count / 10));
-      }
-    }
     fetchPostsCount();
   },[])
 
@@ -71,9 +69,46 @@ const PostList = () => {
     if (isPageExist) {
       setPostsList(isPageExist.posts);
     } else {
-      fetchPosts();
+      searchModeOn ? fetchPostsOnSearch(searchText) : fetchPosts();
     }
-  }, [currentPage]);
+  }, [currentPage, searchModeOn, postsPage]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const performSearch = async () => {
+      const postsCount = await getPostsCountOnSearch(searchText);
+      if (postsCount.status === "success" && postsCount.count > 0) {
+        setPostsPage([]);
+        setTotalPages(Math.ceil(postsCount.count / 10));
+        setCurrentPage(1);
+        setSearchModeOn(true);
+      } else {
+        toast.error("No user found...!", TOAST_ACTION);
+      }
+    };
+
+    if (searchText.length > 0) {
+      timer = setTimeout(performSearch, 800);
+    } else if (searchText.length === 0 && searchModeOn) {
+      setSearchModeOn(false);
+      setCurrentPage(1);
+      fetchPostsCount();
+      setPostsPage([]);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchText]);
+
+
+  const fetchPostsCount = async () => {
+    const response = await getAllPostsCount();
+    if (response.status === "success") {
+      setTotalPages(Math.ceil(response.count / 10));
+    }
+  }
 
   const fetchPosts = async () => {
     const response = await getAllPosts(currentPage);
@@ -83,6 +118,15 @@ const PostList = () => {
         page: currentPage,
         posts: response.posts,
       },
+    ]);
+    setPostsList(response.posts);
+  };
+
+  const fetchPostsOnSearch = async (searchQuery: string) => {
+    const response = await getPostsOnSearch(searchQuery, currentPage);
+    setPostsPage((prev) => [
+      ...prev,
+      { page: currentPage, posts: response.posts },
     ]);
     setPostsList(response.posts);
   };
@@ -168,6 +212,8 @@ const PostList = () => {
                 <Input
                   label="Search"
                   icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  value={searchText}
                 />
               </div>
             </div>

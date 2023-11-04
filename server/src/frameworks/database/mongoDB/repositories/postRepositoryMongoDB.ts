@@ -742,6 +742,116 @@ export const postRepositoryMongoDB = () => {
     }
   }
 
+  const getPostsCountOnSearch = async (searchQuery: string) => {
+    try{
+      const regex = new RegExp(`^${searchQuery}`, "i");
+    const count = await Post.aggregate([
+      {
+        $addFields: {
+          userObjId: { $toObjectId: "$userId" },
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userObjId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $match: {
+          $or: [
+            { "user.name": regex},
+            { "user.username": regex},
+            { "user.email": regex},
+          ]
+        }
+      },
+      {
+        $count: "count"
+      },
+    ])
+    return count[0].count;
+    }
+    catch(err){
+      throw new Error("Error getting posts count on search")
+    }
+  }
+
+  const getPostsOnSearch = async (searchQuery: string, skip: number, limit: number) => {
+    try{
+      const regex = new RegExp(`^${searchQuery}`, "i");
+        const posts = await Post.aggregate([
+          {
+            $addFields: {
+              userObjId: { $toObjectId: "$userId" },
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "userObjId",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+            $unwind: "$user",
+          },
+          {
+            $match: {
+              $or: [
+                { "user.name": regex},
+                { "user.username": regex},
+                { "user.email": regex},
+              ]
+            }
+          },
+          {
+            $sort: { createdAt: -1 },
+          },
+          {
+            $skip: skip,
+          },
+          {
+            $limit: limit,
+          },
+          {
+            $project: {
+              _id: 1,
+              userId: 1,
+              hashtags: 1,
+              hashtagsArray: 1,
+              description: 1,
+              likes: 1,
+              comments: 1,
+              saved: 1,
+              reports: 1,
+              image: 1,
+              isBlock: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              user: {
+                _id: "$user._id",
+                name: "$user.name",
+                username: "$user.username",
+                email: "$user.email",
+                dp: "$user.dp",
+              },
+            },
+          },
+      ])
+      return posts;
+    }
+    catch(err){
+      throw new Error("Error getting posts on search")
+    }
+  }
+
   return {
     createPost,
     getPosts,
@@ -767,7 +877,9 @@ export const postRepositoryMongoDB = () => {
     blockPost,
     unblockPost,
     getMonthlyPosts,
-    getLikedUsers
+    getLikedUsers,
+    getPostsCountOnSearch,
+    getPostsOnSearch,
   };
 };
 

@@ -54,6 +54,8 @@ const adminRouter = () => {
     router.delete('/logout', requireAdmin, controller.logoutAdmin)
     router.get('/getUsersCountOnSearch', requireAdmin, controller.getUsersCountOnSearch);
     router.get('/getUsersOnSearch', requireAdmin, controller.getUsersOnSearch);
+    router.get('/getPostsCountOnSearch', requireAdmin, controller.getPostsCountOnSearch);
+    router.get('/getPostsOnSearch', requireAdmin, controller.getPostsOnSearch);
 
     return router;
 }

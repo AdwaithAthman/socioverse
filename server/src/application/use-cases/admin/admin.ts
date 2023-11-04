@@ -370,3 +370,34 @@ export const handleGetUsersOnSearch = async (
     }
 }
 
+export const handleGetPostsCountOnSearch = async (
+    searchQuery: string,
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        const count = await postDbRepository.getPostsCountOnSearch(searchQuery);
+        return count;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError("Error while fetching posts count", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetPostsOnSearch = async (
+    searchQuery: string,
+    skip: number,
+    limit: number,
+    postDbRepository: ReturnType<PostDbInterface>
+) => {
+    try{
+        const posts = await postDbRepository.getPostsOnSearch(searchQuery, Number(skip), Number(limit));
+        return posts;
+    }
+    catch(err){
+        console.log(err)
+        throw new AppError("Error while fetching posts", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+

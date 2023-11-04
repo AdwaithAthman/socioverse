@@ -241,11 +241,27 @@ export const getUsersCountOnSearch = async (search: string): Promise<GetCountRes
   return response.data;
 }
 
+export const getPostsCountOnSearch = async (search: string): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
+    `${END_POINTS.GET_POSTS_COUNT_ON_SEARCH}?search=${search}`
+  );
+  return response.data;
+}
+
 export const getUsersOnSearch = async (search: string, page: number): Promise<GetUsersResponse> => {
   const pageSize = 10;
   const skip: number = (page - 1) * pageSize;
   const response = await axiosAdminInstance.get<GetUsersResponse>(
     `${END_POINTS.GET_USERS_ON_SEARCH}?search=${search}&skip=${skip}&limit=${pageSize}`
+  );
+  return response.data;
+}
+
+export const getPostsOnSearch = async (search: string, page: number): Promise<GetAllPostsResponse> => {
+  const pageSize = 10;
+  const skip: number = (page - 1) * pageSize;
+  const response = await axiosAdminInstance.get<GetAllPostsResponse>(
+    `${END_POINTS.GET_POSTS_ON_SEARCH}?search=${search}&skip=${skip}&limit=${pageSize}`
   );
   return response.data;
 }

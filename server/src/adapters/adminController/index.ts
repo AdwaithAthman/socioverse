@@ -35,6 +35,8 @@ import {
   handleGetUsersOnSearch,
   handleGetPostsCountOnSearch,
   handleGetPostsOnSearch,
+  handleGetReportedCommentsCountOnSearch,
+  handleGetReportedCommentsOnSearch,
 } from "../../application/use-cases/admin/admin";
 import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
 import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
@@ -392,6 +394,26 @@ const adminController = (
     })
   })
 
+  const getReportedCommentsCountOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search } = req.query as unknown as { search: string };
+    const count = await handleGetReportedCommentsCountOnSearch(search, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported comments count fetched",
+      count,
+    })
+  })
+
+  const getReportedCommentsOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search, skip, limit } = req.query as unknown as { search: string, skip: number, limit: number };
+    const reportedComments = await handleGetReportedCommentsOnSearch(search, skip, limit, commentDbRepository);
+    res.json({
+      status: "success",
+      message: "reported comments fetched",
+      reportedComments,
+    })
+  })
+
   return {
     adminLogin,
     refreshAdminAccessToken,
@@ -421,6 +443,8 @@ const adminController = (
     getUsersOnSearch,
     getPostsCountOnSearch,
     getPostsOnSearch,
+    getReportedCommentsCountOnSearch,
+    getReportedCommentsOnSearch,
   };
 };
 

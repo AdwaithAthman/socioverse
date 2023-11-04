@@ -62,7 +62,7 @@ const PostList = () => {
 
   useEffect(() => {
     fetchPostsCount();
-  },[])
+  }, []);
 
   useEffect(() => {
     const isPageExist = postsPage.find((page) => page.page === currentPage);
@@ -102,13 +102,12 @@ const PostList = () => {
     };
   }, [searchText]);
 
-
   const fetchPostsCount = async () => {
     const response = await getAllPostsCount();
     if (response.status === "success") {
       setTotalPages(Math.ceil(response.count / 10));
     }
-  }
+  };
 
   const fetchPosts = async () => {
     const response = await getAllPosts(currentPage);
@@ -427,7 +426,12 @@ const PostList = () => {
             >
               Previous
             </Button>
-            <Button variant="outlined" size="sm" onClick={handleNext} disabled={currentPage === totalPages}>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
               Next
             </Button>
           </div>

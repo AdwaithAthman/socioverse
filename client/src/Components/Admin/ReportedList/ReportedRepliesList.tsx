@@ -18,13 +18,17 @@ import {
   getAllReportedReplies,
   unblockReply,
   getAllReportedRepliesCount,
+  getReportedRepliesCountOnSearch,
+  getReportedRepliesOnSearch,
 } from "../../../API/Admin";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 //importing types
 import { User } from "../../../Types/loginUser";
 import { TOAST_ACTION } from "../../../Constants/common";
 import { ReplyInterface } from "../../../Types/post";
+import { StoreType } from "../../../Redux/Store";
 
 const TABLE_HEAD = [
   "Reported By",
@@ -48,14 +52,12 @@ const ReportedRepliesList = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [reportInfo, setReportInfo] = useState<User[]>([]);
+  const [searchModeOn, setSearchModeOn] = useState<boolean>(false);
+  const { searchTextForReplies } = useSelector(
+    (store: StoreType) => store.admin
+  );
 
   useEffect(() => {
-    const fetchReportedRepliesCount = async () => {
-      const response = await getAllReportedRepliesCount();
-      if (response.status === "success") {
-        setTotalPages(Math.ceil(response.count / 10));
-      }
-    };
     fetchReportedRepliesCount();
   }, []);
 
@@ -66,12 +68,61 @@ const ReportedRepliesList = () => {
     if (isPageExist) {
       setReportedReplies(isPageExist.replies);
     } else {
-      fetchReportedReplies();
+      searchModeOn
+        ? fetchReportedRepliesOnSearch(searchTextForReplies)
+        : fetchReportedReplies();
     }
-  }, [currentPage]);
+  }, [currentPage, searchModeOn, reportedRepliesPage]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const performSearch = async () => {
+      const repliesCount = await getReportedRepliesCountOnSearch(
+        searchTextForReplies
+      );
+      if (repliesCount.status === "success" && repliesCount.count > 0) {
+        setReportedRepliesPage([]);
+        setTotalPages(Math.ceil(repliesCount.count / 10));
+        setCurrentPage(1);
+        setSearchModeOn(true);
+      } else {
+        toast.error("No user found...!", TOAST_ACTION);
+      }
+    };
+
+    if (searchTextForReplies.length > 0) {
+      timer = setTimeout(performSearch, 800);
+    } else if (searchTextForReplies.length === 0 && searchModeOn) {
+      setSearchModeOn(false);
+      setCurrentPage(1);
+      fetchReportedRepliesCount();
+      setReportedRepliesPage([]);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTextForReplies]);
+
+  const fetchReportedRepliesCount = async () => {
+    const response = await getAllReportedRepliesCount();
+    if (response.status === "success") {
+      setTotalPages(Math.ceil(response.count / 10));
+    }
+  };
 
   const fetchReportedReplies = async () => {
     const response = await getAllReportedReplies(currentPage);
+    setReportedRepliesPage((prev) => [
+      ...prev,
+      { page: currentPage, replies: response.reportedReplies },
+    ]);
+    setReportedReplies(response.reportedReplies);
+  };
+
+  const fetchReportedRepliesOnSearch = async (searchQuery: string) => {
+    const response = await getReportedRepliesOnSearch(searchQuery, currentPage);
     setReportedRepliesPage((prev) => [
       ...prev,
       { page: currentPage, replies: response.reportedReplies },

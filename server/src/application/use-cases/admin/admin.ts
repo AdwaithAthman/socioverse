@@ -67,6 +67,20 @@ export const handleGetUsers = async (
     }
 }
 
+export const handleGetAllUsersCount = async (
+    dbUserRepository: ReturnType<UserDbInterface>
+) => {
+    try {
+        const count = await dbUserRepository.getAllUsersCount();
+        return count;
+    }
+    catch (err) {
+        console.log(err)
+        throw new AppError("Error while fetching users count!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
+
 export const handleBlockUser = async (
     userId: string,
     dbUserRepository: ReturnType<UserDbInterface>
@@ -325,3 +339,34 @@ export const handleGetMonthlyPosts = async (
         throw new AppError("Error getting monthly posts!", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
+
+export const handleGetUsersCountOnSearch = async (
+    searchQuery: string,
+    userDbRepository: ReturnType<UserDbInterface>
+) => {
+    try {
+        const count = await userDbRepository.getUsersCountOnSearch(searchQuery);
+        return count;
+    }
+    catch (err) {
+        console.log(err)
+        throw new AppError("Error while fetching users count", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const handleGetUsersOnSearch = async (
+    searchQuery: string,
+    skip: number,
+    limit: number,
+    userDbRepository: ReturnType<UserDbInterface>
+) => {
+    try {
+        const users = await userDbRepository.getUsersOnSearch(searchQuery, Number(skip), Number(limit));
+        return users;
+    }
+    catch (err) {
+        console.log(err)
+        throw new AppError("Error while fetching users", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+

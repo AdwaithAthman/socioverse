@@ -11,6 +11,7 @@ import {
   handleAdminLogin,
   handleRefreshAdminAccessToken,
   handleGetUsers,
+  handleGetAllUsersCount,
   handleBlockUser,
   handleUnblockUser,
   handleGetAllPosts,
@@ -30,6 +31,8 @@ import {
   handleUnblockReply,
   handleGetMonthlyUserSignups,
   handleGetMonthlyPosts,
+  handleGetUsersCountOnSearch,
+  handleGetUsersOnSearch,
 } from "../../application/use-cases/admin/admin";
 import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
 import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
@@ -91,8 +94,17 @@ const adminController = (
     });
   });
 
+  const getAllUsersCount = asyncHandler(async (req: Request, res: Response) => {
+    const count = await handleGetAllUsersCount(dbUserRepository);
+    res.json({
+      status: "success",
+      message: "users count fetched",
+      count,
+    });
+  })
+
   const blockUser = asyncHandler(async (req: Request, res: Response) => {
-    const { userId } = req.params as unknown as {userId : string}
+    const { userId } = req.params as unknown as { userId: string };
     const users = await handleBlockUser(userId, dbUserRepository);
     res.json({
       status: "success",
@@ -101,7 +113,7 @@ const adminController = (
   });
 
   const unblockUser = asyncHandler(async (req: Request, res: Response) => {
-    const { userId } = req.params as unknown as {userId : string}
+    const { userId } = req.params as unknown as { userId: string };
     const users = await handleUnblockUser(userId, dbUserRepository);
     res.json({
       status: "success",
@@ -110,12 +122,15 @@ const adminController = (
   });
 
   const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
-    const { skip, limit } = req.query as unknown as {skip : number, limit: number }
+    const { skip, limit } = req.query as unknown as {
+      skip: number;
+      limit: number;
+    };
     const posts = await handleGetAllPosts(postDbRepository, skip, limit);
     res.json({
       status: "success",
       message: "posts fetched",
-      posts
+      posts,
     });
   });
 
@@ -124,40 +139,46 @@ const adminController = (
     res.json({
       status: "success",
       message: "posts count fetched",
-      count
+      count,
     });
   });
 
-  const getAllReportedCommentsCount = asyncHandler(async (req: Request, res: Response) => {
-    const count = await handleGetAllReportedCommentsCount(commentDbRepository);
-    res.json({
-      status: "success",
-      message: "reported comments count fetched",
-      count
-    });
-  });
+  const getAllReportedCommentsCount = asyncHandler(
+    async (req: Request, res: Response) => {
+      const count = await handleGetAllReportedCommentsCount(
+        commentDbRepository
+      );
+      res.json({
+        status: "success",
+        message: "reported comments count fetched",
+        count,
+      });
+    }
+  );
 
-  const getAllReportedRepliesCount = asyncHandler(async (req: Request, res: Response) => {
-    const count = await handleGetAllReportedRepliesCount(commentDbRepository);
-    res.json({
-      status: "success",
-      message: "reported replies count fetched",
-      count
-    });
-  });
+  const getAllReportedRepliesCount = asyncHandler(
+    async (req: Request, res: Response) => {
+      const count = await handleGetAllReportedRepliesCount(commentDbRepository);
+      res.json({
+        status: "success",
+        message: "reported replies count fetched",
+        count,
+      });
+    }
+  );
 
   const getReportInfo = asyncHandler(async (req: Request, res: Response) => {
-    const { postId } = req.params as unknown as {postId : string}
+    const { postId } = req.params as unknown as { postId: string };
     const reportInfo = await handleGetReportInfo(postId, postDbRepository);
     res.json({
       status: "success",
       message: "report info fetched",
-      reportInfo
-    })
+      reportInfo,
+    });
   });
 
   const blockPost = asyncHandler(async (req: Request, res: Response) => {
-    const { postId } = req.params as unknown as {postId : string}
+    const { postId } = req.params as unknown as { postId: string };
     await handleBlockPost(postId, postDbRepository);
     res.json({
       status: "success",
@@ -166,7 +187,7 @@ const adminController = (
   });
 
   const unblockPost = asyncHandler(async (req: Request, res: Response) => {
-    const { postId } = req.params as unknown as {postId : string}
+    const { postId } = req.params as unknown as { postId: string };
     await handleUnblockPost(postId, postDbRepository);
     res.json({
       status: "success",
@@ -174,90 +195,132 @@ const adminController = (
     });
   });
 
-  const getAllReportedComments = asyncHandler(async (req: Request, res: Response) => {
-    const { skip, limit } = req.query as unknown as {skip : number, limit: number }
-    const reportedComments = await handleGetAllReportedComments(commentDbRepository, skip, limit);
-    res.json({
-      status: "success",
-      message: "reported comments fetched",
-      reportedComments
-    })
-  })
+  const getAllReportedComments = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { skip, limit } = req.query as unknown as {
+        skip: number;
+        limit: number;
+      };
+      const reportedComments = await handleGetAllReportedComments(
+        commentDbRepository,
+        skip,
+        limit
+      );
+      res.json({
+        status: "success",
+        message: "reported comments fetched",
+        reportedComments,
+      });
+    }
+  );
 
-  const getCommentReportedUsers = asyncHandler(async (req: Request, res: Response) => {
-    const { commentId } = req.params as unknown as {commentId : string}
-    const reportedUsers = await handleGetCommentReportedUsers(commentId, commentDbRepository);
-    res.json({
-      status: "success",
-      message: "reported users fetched",
-      reportedUsers
-    })
-  })
+  const getCommentReportedUsers = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { commentId } = req.params as unknown as { commentId: string };
+      const reportedUsers = await handleGetCommentReportedUsers(
+        commentId,
+        commentDbRepository
+      );
+      res.json({
+        status: "success",
+        message: "reported users fetched",
+        reportedUsers,
+      });
+    }
+  );
 
-  const getReplyReportedUsers = asyncHandler(async (req: Request, res: Response) => {
-    const { replyId, commentId } = req.query as unknown as {replyId : string, commentId: string}
-    const reportedUsers = await handleGetReplyReportedUsers(replyId, commentId, commentDbRepository);
-    res.json({
-      status: "success",
-      message: "reported users fetched",
-      reportedUsers
-    })
-  })
+  const getReplyReportedUsers = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { replyId, commentId } = req.query as unknown as {
+        replyId: string;
+        commentId: string;
+      };
+      const reportedUsers = await handleGetReplyReportedUsers(
+        replyId,
+        commentId,
+        commentDbRepository
+      );
+      res.json({
+        status: "success",
+        message: "reported users fetched",
+        reportedUsers,
+      });
+    }
+  );
 
   const blockComment = asyncHandler(async (req: Request, res: Response) => {
-    const { commentId } = req.params as unknown as {commentId : string}
+    const { commentId } = req.params as unknown as { commentId: string };
     await handleBlockComment(commentId, commentDbRepository);
     res.json({
       status: "success",
-      message: "comment blocked"
-    })
-  })
+      message: "comment blocked",
+    });
+  });
 
   const unblockComment = asyncHandler(async (req: Request, res: Response) => {
-    const { commentId } = req.params as unknown as {commentId : string}
+    const { commentId } = req.params as unknown as { commentId: string };
     await handleUnblockComment(commentId, commentDbRepository);
     res.json({
       status: "success",
-      message: "comment unblocked"
-    })
-  })
+      message: "comment unblocked",
+    });
+  });
 
-  const getAllReportedReplies = asyncHandler(async (req: Request, res: Response) => {
-    const { skip, limit } = req.query as unknown as {skip : number, limit: number }
-    const reportedReplies = await handleGetAllReportedReplies(commentDbRepository, skip, limit);
-    res.json({
-      status: "success",
-      message: "reported replies fetched",
-      reportedReplies
-    })
-  })
+  const getAllReportedReplies = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { skip, limit } = req.query as unknown as {
+        skip: number;
+        limit: number;
+      };
+      const reportedReplies = await handleGetAllReportedReplies(
+        commentDbRepository,
+        skip,
+        limit
+      );
+      res.json({
+        status: "success",
+        message: "reported replies fetched",
+        reportedReplies,
+      });
+    }
+  );
 
   const blockReply = asyncHandler(async (req: Request, res: Response) => {
-    const { replyId, commentId } = req.query as unknown as {replyId : string, commentId: string}
+    const { replyId, commentId } = req.query as unknown as {
+      replyId: string;
+      commentId: string;
+    };
     await handleBlockReply(replyId, commentId, commentDbRepository);
     res.json({
       status: "success",
-      message: "reply blocked"
-    })
-  })
+      message: "reply blocked",
+    });
+  });
 
   const unblockReply = asyncHandler(async (req: Request, res: Response) => {
-    const { replyId, commentId } = req.query as unknown as {replyId : string, commentId: string}
+    const { replyId, commentId } = req.query as unknown as {
+      replyId: string;
+      commentId: string;
+    };
     await handleUnblockReply(replyId, commentId, commentDbRepository);
     res.json({
       status: "success",
-      message: "reply unblocked"
-    })
-  })
+      message: "reply unblocked",
+    });
+  });
 
-  const getMonthlyUserSignups = asyncHandler(async (req: Request, res: Response) => {
-    const monthlyUserSignups = await handleGetMonthlyUserSignups(dbUserRepository);
-    res.json({
-      status: "success",
-      message: "monthly user signups fetched",
-      monthlyUserSignups
-    })
-  })
+  const getMonthlyUserSignups = asyncHandler(
+    async (req: Request, res: Response) => {
+      const monthlyUserSignups = await handleGetMonthlyUserSignups(
+        dbUserRepository
+      );
+      res.json({
+        status: "success",
+        message: "monthly user signups fetched",
+        monthlyUserSignups,
+      });
+    }
+  );
 
   const getMonthlyPosts = asyncHandler(async (req: Request, res: Response) => {
     const monthlyPosts = await handleGetMonthlyPosts(postDbRepository);
@@ -266,7 +329,7 @@ const adminController = (
       message: "monthly posts fetched",
       monthlyPosts,
     });
-  })
+  });
 
   const logoutAdmin = asyncHandler(async (req: Request, res: Response) => {
     res.clearCookie("adminRefreshToken");
@@ -274,12 +337,44 @@ const adminController = (
       status: "success",
       message: "admin logged out",
     });
-  })
+  });
+
+  const getUsersCountOnSearch = asyncHandler(
+    async (req: Request, res: Response) => {
+      const { search } = req.query as unknown as { search: string };
+      const count = await handleGetUsersCountOnSearch(search, dbUserRepository);
+      res.json({
+        status: "success",
+        message: "users count fetched",
+        count,
+      });
+    }
+  );
+
+  const getUsersOnSearch = asyncHandler(async (req: Request, res: Response) => {
+    const { search, skip, limit } = req.query as unknown as {
+      search: string;
+      skip: number;
+      limit: number;
+    };
+    const users = await handleGetUsersOnSearch(
+      search,
+      skip,
+      limit,
+      dbUserRepository
+    );
+    res.json({
+      status: "success",
+      message: "users fetched",
+      users,
+    });
+  });
 
   return {
     adminLogin,
     refreshAdminAccessToken,
     getUsers,
+    getAllUsersCount,
     blockUser,
     unblockUser,
     getAllPosts,
@@ -300,6 +395,8 @@ const adminController = (
     getMonthlyUserSignups,
     getMonthlyPosts,
     logoutAdmin,
+    getUsersCountOnSearch,
+    getUsersOnSearch,
   };
 };
 

@@ -18,7 +18,14 @@ import {
   Switch,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { blockUser, getAllUsers, unblockUser, getAllUsersCount } from "../../../API/Admin";
+import {
+  blockUser,
+  getAllUsers,
+  unblockUser,
+  getAllUsersCount,
+  getUsersCountOnSearch,
+  getUsersOnSearch,
+} from "../../../API/Admin";
 import moment from "moment";
 import { toast } from "react-toastify";
 
@@ -44,30 +51,70 @@ const UsersList = () => {
   const [userPage, setUserPage] = useState<UserPageInterface[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchModeOn, setSearchModeOn] = useState<boolean>(false);
+  //const [refetchUsers, setRefetchUsers] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchUsersCount = async () => {
-      const response = await getAllUsersCount();
-      if (response.status === "success") {
-        setTotalPages(Math.ceil(response.count / 10));
-      }
-    };
     fetchUsersCount();
   }, []);
 
   useEffect(() => {
-    const isPageExist = userPage.find(
-      (page) => page.page === currentPage
-    );
-    if (isPageExist) {
-      setUsersList(isPageExist.users);
-    } else {
-      fetchUsers();
+      const isPageExist = userPage.find((page) => page.page === currentPage);
+      if (isPageExist) {
+        setUsersList(isPageExist.users);
+      } else {
+        searchModeOn ? fetchUsersOnSearch(searchText) : fetchUsers();
+      }
+  }, [currentPage, searchModeOn, userPage]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const performSearch = async () => {
+      const usersCount = await getUsersCountOnSearch(searchText);
+      if (usersCount.status === "success" && usersCount.count > 0) {
+        setUserPage([]);
+        setTotalPages(Math.ceil(usersCount.count / 10));
+        setCurrentPage(1);
+        setSearchModeOn(true);
+      } else {
+        toast.error("No user found...!", TOAST_ACTION);
+      }
+    };
+
+    if (searchText.length > 0) {
+      timer = setTimeout(performSearch, 800);
+    } else if (searchText.length === 0 && searchModeOn) {
+      setSearchModeOn(false);
+      setCurrentPage(1);
+      fetchUsersCount();
+      setUserPage([]);
     }
-  }, [currentPage]);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchText]);
+
+  const fetchUsersCount = async () => {
+    const response = await getAllUsersCount();
+    if (response.status === "success") {
+      setTotalPages(Math.ceil(response.count / 10));
+    }
+  };
 
   const fetchUsers = async () => {
     const response = await getAllUsers(currentPage);
+    setUserPage((prev) => [
+      ...prev,
+      { page: currentPage, users: response.users },
+    ]);
+    setUsersList(response.users);
+  };
+
+  const fetchUsersOnSearch = async (searchQuery: string) => {
+    const response = await getUsersOnSearch(searchQuery, currentPage);
     setUserPage((prev) => [
       ...prev,
       { page: currentPage, users: response.users },
@@ -131,7 +178,6 @@ const UsersList = () => {
     setCurrentPage((prev) => prev + 1);
   };
 
-
   return (
     <Card className=" w-full">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -149,6 +195,8 @@ const UsersList = () => {
               <Input
                 label="Search"
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                onChange={(e) => setSearchText(e.target.value)}
+                value={searchText}
               />
             </div>
           </div>

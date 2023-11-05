@@ -20,19 +20,25 @@ const Profile = () => {
   }
   return (
     <>
-      <div className="flex flex-col justify-evenly items-start lg:mx-5">
+      <div className="flex flex-col justify-evenly items-start lg:mx-5 h-[100vh]">
+        <div className=" no-scrollbar overflow-y-hidden h-[45vh] w-full">
         <ProfileHeader id={userId? userId : null} ifOtherUser={ifOtherUser}/>
-        <div className="flex items-start w-full gap-5">
-          <div className="flex flex-col px-10 w-4/12 mt-28">
+        </div>
+        <div className="flex items-start w-full gap-5 h-[55vh] ">
+          <div className="flex flex-col px-10 w-4/12 mt-14 sticky overflow-y-hidden h-[85vh]"> 
             <ProfileAside id={userId? userId : null} otherUser={otherUser} />
           </div>
-          <div className="flex flex-col pr-10 w-8/12 mt-28">
+          <div className="flex flex-col pr-10 w-8/12 mt-14 sticky overflow-y-auto h-[90vh]">
             {( location.pathname === `/profile/${userInfo?._id}/settings` && userInfo )? (
               <Settings />
             ) : ( location.pathname === `/profile/${userInfo?._id}/edit-profile` && userInfo ) ? (
+              <div className="mb-10 overflow-y-hidden">
               <EditProfile />
+              </div>
             ) : (
+              <div className="overflow-y-auto no-scrollbar">
               <PostTabs userId={userId} />
+              </div>
             )}
           </div>
         </div>
@@ -42,3 +48,4 @@ const Profile = () => {
 };
 
 export default Profile;
+//mt-28

@@ -6,6 +6,7 @@ import { ChatRepositoryMongoDB } from '../../frameworks/database/mongoDB/reposit
 import {
     handleAccessOrCreateChat,
     handleFetchChats,
+    handleCreateGroupChat,
 } from '../../application/use-cases/chat/chat';
 
 
@@ -36,9 +37,19 @@ const chatController = (
         });
     });
 
+    const createGroupChat = asyncHandler(async (req: Request, res: Response) => {
+        const { userId, users, name }: { userId: string, users: string[], name: string } = req.body;
+        const groupChat = await handleCreateGroupChat(userId, users, name, chatDbRepository);
+        res.status(200).json({
+            status: "success",
+            groupChat,
+        });
+    });
+
     return {
         createOrAccessChat,
         fetchChats,
+        createGroupChat,
     }
 }
 

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 //importing types
-import { User } from "../../../Types/loginUser";
+import { User } from "../../Types/loginUser";
 
 const PostLikedUsers = ({
   likedUsers,

@@ -9,13 +9,13 @@ import {
 } from "@material-tailwind/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import ReactQuillComponent from "./ReactQuill";
-import { TOAST_ACTION } from "../../../Constants/common";
+import { TOAST_ACTION } from "../../Constants/common";
 import { toast, ToastContainer } from "react-toastify";
-import { editPost } from "../../../API/Post";
+import { editPost } from "../../API/Post";
 import { Link } from "react-router-dom";
 
 //importing types
-import { PostDataInterface } from "../../../Types/post";
+import { PostDataInterface } from "../../Types/post";
 
 const EditPostDialogBox = ({
   open,

@@ -6,9 +6,9 @@ import { ReactComponent as Loader } from "../../assets/Loader.svg";
 //components
 import AsideTwo from "./Aside_2";
 import AsideOne from "./Aside_1";
-import PostBox from "./Post/PostBox";
-import PostCard from "./Post/PostCard";
-import PostDialogBox from "./Post/PostDialogBox";
+import PostBox from "../Post/PostBox";
+import PostCard from "../Post/PostCard";
+import PostDialogBox from "../Post/PostDialogBox";
 import { getUserInfo } from "../../API/Profile";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../Redux/AuthSlice";

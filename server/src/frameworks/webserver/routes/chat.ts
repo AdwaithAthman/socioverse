@@ -19,8 +19,8 @@ const chatRouter = () => {
     router.get('/fetchChats', authMiddleware, controller.fetchChats)
     router.post('/createGroup', authMiddleware, controller.createGroupChat);
     router.put('/renameGroup', authMiddleware, controller.renameGroupChat);
-    // router.delete('/removeFromGroup', authMiddleware, controller.removeFromGroup);
-    // router.put('/addToGroup', authMiddleware, controller.addToGroup); 
+    router.put('/addToGroup', authMiddleware, controller.addToGroup); 
+    router.delete('/removeFromGroup', authMiddleware, controller.removeFromGroup);
 
     return router;
 }

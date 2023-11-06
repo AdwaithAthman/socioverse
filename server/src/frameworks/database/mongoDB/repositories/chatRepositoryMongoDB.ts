@@ -116,6 +116,50 @@ export const chatRepositoryMongoDB = () => {
     }
   };
 
+  const addToGroup = async (chatId: string, userId: string) => {
+    try {
+      const updatedChat = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+          $addToSet: {
+            users: userId,
+          },
+        },
+        {
+          new: true,
+        }
+      )
+        .populate("users", "-password -savedPosts -posts")
+        .populate("groupAdmin", "name dp username email _id");
+      return updatedChat;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error in adding user to group");
+    }
+  };
+
+  const removeFromGroup = async (chatId: string, userId: string) => {
+    try {
+      const updatedChat = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+          $pull: {
+            users: userId,
+          },
+        },
+        {
+          new: true,
+        }
+      )
+        .populate("users", "-password -savedPosts -posts")
+        .populate("groupAdmin", "name dp username email _id");
+      return updatedChat;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error in removing user from group");
+    }
+  };
+
   return {
     accessChat,
     createChat,
@@ -123,6 +167,8 @@ export const chatRepositoryMongoDB = () => {
     fetchChats,
     createGroupChat,
     renameGroupChat,
+    addToGroup,
+    removeFromGroup,
   };
 };
 

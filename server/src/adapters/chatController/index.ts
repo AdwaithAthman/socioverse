@@ -8,6 +8,8 @@ import {
     handleFetchChats,
     handleCreateGroupChat,
     handleRenameGroupChat,
+    handleAddToGroup,
+    handleRemoveFromGroup,
 } from '../../application/use-cases/chat/chat';
 
 
@@ -56,11 +58,31 @@ const chatController = (
         });
     });
 
+    const addToGroup = asyncHandler(async (req: Request, res: Response) => {
+        const { chatId, newUserId }: { chatId: string, newUserId: string } = req.body;
+        const updatedChat = await handleAddToGroup(chatId, newUserId, chatDbRepository);
+        res.status(200).json({
+            status: "success",
+            updatedChat,
+        });
+    });
+
+    const removeFromGroup = asyncHandler(async (req: Request, res: Response) => {
+        const { chatId, removeUserId }: { chatId: string, removeUserId: string } = req.body;
+        const updatedChat = await handleRemoveFromGroup(chatId, removeUserId, chatDbRepository);
+        res.status(200).json({
+            status: "success",
+            updatedChat,
+        });
+    });
+
     return {
         createOrAccessChat,
         fetchChats,
         createGroupChat,
         renameGroupChat,
+        addToGroup,
+        removeFromGroup,
     }
 }
 

@@ -76,3 +76,34 @@ export const handleRenameGroupChat = async (
   }
 }
 
+export const handleAddToGroup = async (
+  chatId: string,
+  newUserId: string,
+  chatDbRepository: ReturnType<ChatDbRepository>
+) => {
+  try{
+    const updatedChat = await chatDbRepository.addToGroup(chatId, newUserId);
+    return updatedChat;
+  }
+  catch(err){
+    console.log(err);
+    throw new AppError("Error in adding user to group chat", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export const handleRemoveFromGroup = async (
+  chatId: string,
+  removeUserId: string,
+  chatDbRepository: ReturnType<ChatDbRepository>
+) => {
+  try{
+    const updatedChat = await chatDbRepository.removeFromGroup(chatId, removeUserId);
+    return updatedChat;
+  }
+  catch(err){
+    console.log(err);
+    throw new AppError("Error in removing user from group chat", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+

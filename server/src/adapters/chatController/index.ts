@@ -18,6 +18,7 @@ const chatController = (
 
     const createOrAccessChat = asyncHandler(async (req: Request, res: Response) => {
         const { userId, otherUserId }: { userId: string, otherUserId: string } = req.body;
+        console.log("otherUserId: ", otherUserId)
         const chat = await handleAccessOrCreateChat(userId, otherUserId, chatDbRepository);
         res.status(200).json({ 
             status: "success",

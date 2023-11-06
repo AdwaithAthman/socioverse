@@ -12,7 +12,8 @@ export const handleAccessOrCreateChat = async (
     try{
         let chat = await chatDbRepository.accessChat(loggedInUserId, otherUserId);
         if (!chat) {
-          chat = await chatDbRepository.createChat(loggedInUserId, otherUserId);
+         const newChat = await chatDbRepository.createChat(loggedInUserId, otherUserId);
+         chat = await chatDbRepository.getFullChat(newChat._id);
         }
         return chat;
     }

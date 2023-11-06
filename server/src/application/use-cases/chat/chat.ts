@@ -22,3 +22,18 @@ export const handleAccessOrCreateChat = async (
         throw new AppError("Error in accessing or creating chat", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 };
+
+export const handleFetchChats = async (
+  userId: string,
+  chatDbRepository: ReturnType<ChatDbRepository>
+) => {
+    try{
+        const chats = await chatDbRepository.fetchChats(userId);
+        return chats;
+    }
+    catch(err){
+        console.log(err);
+        throw new AppError("Error in fetching chats", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+

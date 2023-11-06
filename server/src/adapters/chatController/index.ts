@@ -7,6 +7,7 @@ import {
     handleAccessOrCreateChat,
     handleFetchChats,
     handleCreateGroupChat,
+    handleRenameGroupChat,
 } from '../../application/use-cases/chat/chat';
 
 
@@ -46,10 +47,20 @@ const chatController = (
         });
     });
 
+    const renameGroupChat = asyncHandler(async (req: Request, res: Response) => {
+        const { chatId, name }: { chatId: string, name: string } = req.body;
+        const updatedChat = await handleRenameGroupChat(chatId, name, chatDbRepository);
+        res.status(200).json({
+            status: "success",
+            updatedChat,
+        });
+    });
+
     return {
         createOrAccessChat,
         fetchChats,
         createGroupChat,
+        renameGroupChat,
     }
 }
 

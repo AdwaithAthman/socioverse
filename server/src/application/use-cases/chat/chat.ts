@@ -45,7 +45,7 @@ export const handleCreateGroupChat = async (
 ) => {
   try {
     users.unshift(userId)
-    if(users.length < 2) throw new AppError("Atleast 2 users are required to form a group chat", HttpStatus.BAD_REQUEST);
+    if (users.length < 2) throw new AppError("Atleast 2 users are required to form a group chat", HttpStatus.BAD_REQUEST);
     const createdGroupChat = await chatDbRepository.createGroupChat(users, name);
     const groupChat = await chatDbRepository.getFullChat(createdGroupChat._id);
     return groupChat;
@@ -58,6 +58,21 @@ export const handleCreateGroupChat = async (
       }
     }
     throw new AppError("Error in creating group chat", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export const handleRenameGroupChat = async (
+  chatId: string,
+  name: string,
+  chatDbRepository: ReturnType<ChatDbRepository>
+) => {
+  try {
+    const updatedChat = await chatDbRepository.renameGroupChat(chatId, name);
+    return updatedChat;
+  }
+  catch (err) {
+    console.log(err);
+    throw new AppError("Error in renaming group chat", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 

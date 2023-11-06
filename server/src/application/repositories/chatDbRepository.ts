@@ -11,6 +11,8 @@ export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) 
         const fetchChats = async(userId: string) => await repository.fetchChats(userId);
 
         const createGroupChat = async(users: string[], name: string) => await repository.createGroupChat(users, name);
+
+        const renameGroupChat = async(chatId: string, name: string) => await repository.renameGroupChat(chatId, name);
     
         return {
             accessChat,
@@ -18,6 +20,7 @@ export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) 
             getFullChat,
             fetchChats,
             createGroupChat,
+            renameGroupChat,
         }
 }
 

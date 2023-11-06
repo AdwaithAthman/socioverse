@@ -282,7 +282,7 @@ function PostTabs({ userId }: { userId?: string }) {
 
   return (
     <Tabs id="custom-animation" value="myPosts">
-      <TabsHeader>
+      <TabsHeader className="sticky overflow-y-hidden">
         {(myUserId === userId ? data : dataOfOtherUser).map(
           ({ label, value }) => (
             <Tab
@@ -304,6 +304,7 @@ function PostTabs({ userId }: { userId?: string }) {
           mount: { y: 0 },
           unmount: { y: 250 },
         }}
+        className="overflow-y-auto h-[80vh] no-scrollbar"
       >
         {(myUserId === userId ? data : dataOfOtherUser).map(
           ({ value, desc }) => (

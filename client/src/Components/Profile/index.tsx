@@ -36,7 +36,7 @@ const Profile = () => {
               <EditProfile />
               </div>
             ) : (
-              <div className="overflow-y-auto no-scrollbar">
+              <div className="overflow-y-hidden no-scrollbar">
               <PostTabs userId={userId} />
               </div>
             )}

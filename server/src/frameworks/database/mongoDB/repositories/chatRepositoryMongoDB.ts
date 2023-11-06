@@ -95,12 +95,34 @@ export const chatRepositoryMongoDB = () => {
     }
   };
 
+  const renameGroupChat = async (chatId: string, name: string) => {
+    try {
+      const updatedChat = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+          chatName: name,
+        },
+        {
+          new: true,
+        }
+      )
+        .populate("users", "-password -savedPosts -posts")
+        .populate("groupAdmin", "name dp username email _id");
+
+      return updatedChat;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error in renaming group chat");
+    }
+  };
+
   return {
     accessChat,
     createChat,
     getFullChat,
     fetchChats,
     createGroupChat,
+    renameGroupChat,
   };
 };
 

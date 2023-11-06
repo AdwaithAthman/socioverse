@@ -12,10 +12,10 @@ import { HiHashtag } from "react-icons/hi";
 import ReactQuillComponent from "./ReactQuill";
 import { FiCamera } from "react-icons/fi";
 import classnames from "classnames";
-import ImageCropper from "../../Crop/ImageCropper";
+import ImageCropper from "../Crop/ImageCropper";
 import { useSelector } from "react-redux";
-import { usePostUploadMutation } from "../../../utils/hooks/usePostUploadMutation";
-import { TOAST_ACTION } from "../../../Constants/common";
+import { usePostUploadMutation } from "../../utils/hooks/usePostUploadMutation";
+import { TOAST_ACTION } from "../../Constants/common";
 import { toast, ToastContainer } from "react-toastify";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch } from "react-redux";
@@ -23,11 +23,11 @@ import {
   deleteTempPostImage,
   resetTempPostImage,
   setTempPostImage,
-} from "../../../Redux/PostSlice";
+} from "../../Redux/PostSlice";
 
 //importing types
-import { StoreType } from "../../../Redux/Store";
-import { PostDataInterface } from "../../../Types/post";
+import { StoreType } from "../../Redux/Store";
+import { PostDataInterface } from "../../Types/post";
 import { Link } from "react-router-dom";
 
 interface SelectedImages {

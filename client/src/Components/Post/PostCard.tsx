@@ -7,21 +7,21 @@ import { BiEditAlt } from "react-icons/bi";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
-import ConfirmDeleteToast from "../../../utils/customToasts/confirmDeleteToast";
-import { TOAST_ACTION } from "../../../Constants/common";
+import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
+import { TOAST_ACTION } from "../../Constants/common";
 import {
   deletePost,
   likePost,
   savePost,
   reportPost,
   getLikedUsers,
-} from "../../../API/Post";
+} from "../../API/Post";
 import CommentPopup from "./CommentPopup";
-import { getPostDetails } from "../../../API/Post";
+import { getPostDetails } from "../../API/Post";
 import EditPostDialogBox from "./EditPostDialogBox";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { setHashtagSearch } from "../../../Redux/PostSlice";
+import { setHashtagSearch } from "../../Redux/PostSlice";
 import PostLikedUsers from "./PostLikedUsers";
 
 import {
@@ -35,11 +35,11 @@ import {
 import { Link } from "react-router-dom";
 
 //importing types
-import { PostDataInterface } from "../../../Types/post";
-import store, { StoreType } from "../../../Redux/Store";
-import { LikePostId } from "../../Profile/PostTabs";
-import { SavePostId } from "../../Profile/PostTabs";
-import { User } from "../../../Types/loginUser";
+import { PostDataInterface } from "../../Types/post";
+import store, { StoreType } from "../../Redux/Store";
+import { LikePostId } from "../Profile/PostTabs";
+import { SavePostId } from "../Profile/PostTabs";
+import { User } from "../../Types/loginUser";
 
 function PostCard({
   postData,

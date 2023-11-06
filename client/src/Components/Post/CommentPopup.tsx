@@ -27,7 +27,7 @@ import { SlOptions } from "react-icons/sl";
 import { BiEditAlt, BiShareAlt } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import InputEmoji from "react-input-emoji";
-import { TOAST_ACTION } from "../../../Constants/common";
+import { TOAST_ACTION } from "../../Constants/common";
 import { toast, ToastContainer } from "react-toastify";
 import {
   addComment,
@@ -35,9 +35,9 @@ import {
   getComments,
   getLikedUsers,
   getReplies,
-} from "../../../API/Post";
+} from "../../API/Post";
 import moment from "moment";
-import store from "../../../Redux/Store";
+import store from "../../Redux/Store";
 import classnames from "classnames";
 import {
   updateComment,
@@ -47,10 +47,10 @@ import {
   deleteReply,
   reportComment,
   reportReply,
-} from "../../../API/Post";
-import ConfirmDeleteToast from "../../../utils/customToasts/confirmDeleteToast";
+} from "../../API/Post";
+import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
 import { useDispatch } from "react-redux";
-import { setHashtagSearch } from "../../../Redux/PostSlice";
+import { setHashtagSearch } from "../../Redux/PostSlice";
 import { Link } from "react-router-dom";
 import PostLikedUsers from "./PostLikedUsers";
 
@@ -59,8 +59,8 @@ import {
   CommentInterface,
   PostDataInterface,
   ReplyInterface,
-} from "../../../Types/post";
-import { User } from "../../../Types/loginUser";
+} from "../../Types/post";
+import { User } from "../../Types/loginUser";
 
 
 const CommentPopup = ({

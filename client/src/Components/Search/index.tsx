@@ -11,7 +11,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ImSearch } from "react-icons/im";
 import { RiUserUnfollowFill } from "react-icons/ri";
 import { TiUserAdd } from "react-icons/ti";
-import PostCard from "../Home/Post/PostCard";
+import PostCard from "../Post/PostCard";
 import { useEffect, useRef, useState } from "react";
 import { searchUsers } from "../../API/Profile";
 import { ReactComponent as Loader } from "../../assets/Loader.svg";

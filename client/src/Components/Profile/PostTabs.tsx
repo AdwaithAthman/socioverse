@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import { useEffect, useRef, useState } from "react";
 import { PostDataInterface } from "../../Types/post";
-import PostCard from "../Home/Post/PostCard";
+import PostCard from "../Post/PostCard";
 import { ReactComponent as Loader } from "../../assets/Loader.svg";
 import {
   getUserPosts,

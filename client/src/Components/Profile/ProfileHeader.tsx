@@ -13,7 +13,11 @@ import MyDropzone from "./MyDropzone";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserInfo, getOtherUserInfo } from "../../API/Profile";
 import { useDispatch } from "react-redux";
-import { addFollower, removeFollower, setCredentials } from "../../Redux/AuthSlice";
+import {
+  addFollower,
+  removeFollower,
+  setCredentials,
+} from "../../Redux/AuthSlice";
 import store from "../../Redux/Store";
 import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
 import { deleteCoverPhoto, deleteProfilePhoto } from "../../API/Profile";
@@ -78,17 +82,16 @@ const ProfileHeader = ({
   }, [dispatch, id, userData]);
 
   const getOtherUser = async (id: string) => {
-    try{
+    try {
       const { otherUser } = await getOtherUserInfo(id);
-    setOtherUserInfo(otherUser);
-    if (otherUser?.coverPhoto) {
-      setCoverPhotoImg(otherUser.coverPhoto);
-    }
-    if (otherUser?.dp) {
-      setDp(otherUser.dp);
-    }
-    }
-    catch(error){
+      setOtherUserInfo(otherUser);
+      if (otherUser?.coverPhoto) {
+        setCoverPhotoImg(otherUser.coverPhoto);
+      }
+      if (otherUser?.dp) {
+        setDp(otherUser.dp);
+      }
+    } catch (error) {
       if (isAxiosError(error)) {
         const err: AxiosErrorData = error as AxiosErrorData;
         if (
@@ -96,7 +99,7 @@ const ProfileHeader = ({
           err.response.status >= 400 &&
           err.response.status <= 500
         ) {
-          navigate("/error")
+          navigate("/error");
         }
       }
     }
@@ -170,9 +173,11 @@ const ProfileHeader = ({
     handleImageCropperOpen();
   };
 
-  const handleProfilePhoto = (e: any) => {
-    setImgFile(e.target.files[0]);
-    setImageCropperOpen(true);
+  const handleProfilePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImgFile(e.target.files[0]);
+      setImageCropperOpen(true);
+    }
   };
 
   const handleDeleteProfilePhoto = () => {
@@ -205,16 +210,18 @@ const ProfileHeader = ({
             src={coverPhotoImg}
             className="h-full rounded-lg w-full object-fit relative"
           />
-          {!otherUser && (<div className="absolute bottom-4 right-20">
-            <div className="flex gap-3">
-              <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 border-blue-gray-700 hover:border-red-700 hover:bg-white hover:border-3 group opacity-70 hover:opacity-100">
-                <RiDeleteBin6Line
-                  className="text-xl text-white group-hover:text-red-500"
-                  onClick={handleDeleteCoverPhoto}
-                />
+          {!otherUser && (
+            <div className="absolute bottom-4 right-20">
+              <div className="flex gap-3">
+                <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 border-blue-gray-700 hover:border-red-700 hover:bg-white hover:border-3 group opacity-70 hover:opacity-100">
+                  <RiDeleteBin6Line
+                    className="text-xl text-white group-hover:text-red-500"
+                    onClick={handleDeleteCoverPhoto}
+                  />
+                </div>
               </div>
             </div>
-          </div>)}
+          )}
         </>
       );
     } else {
@@ -234,19 +241,21 @@ const ProfileHeader = ({
             className="h-40 w-40 rounded-full border-4 border-white"
             src={dp}
           />
-          {!otherUser && (<div className="absolute bottom-7 left-[5rem]">
-            <div className="flex gap-3">
-              <div
-                className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 
+          {!otherUser && (
+            <div className="absolute bottom-7 left-[5rem]">
+              <div className="flex gap-3">
+                <div
+                  className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 
                 border-blue-gray-700 hover:border-red-700 hover:bg-white group-hover:border-3 opacity-0 group-hover:opacity-100"
-              >
-                <RiDeleteBin6Line
-                  className="text-xl text-white hover:text-red-500"
-                  onClick={handleDeleteProfilePhoto}
-                />
+                >
+                  <RiDeleteBin6Line
+                    className="text-xl text-white hover:text-red-500"
+                    onClick={handleDeleteProfilePhoto}
+                  />
+                </div>
               </div>
             </div>
-          </div>)}
+          )}
         </div>
       );
     } else {
@@ -357,7 +366,7 @@ const ProfileHeader = ({
         position: "bottom-left",
       });
       dispatch(addFollower(friendId));
-    })
+    });
   };
   const handleUnfollowingButton = async (friendId: string, name: string) => {
     unfollowUser(friendId).then(() => {
@@ -368,7 +377,7 @@ const ProfileHeader = ({
         position: "bottom-left",
       });
       dispatch(removeFollower(friendId));
-    })
+    });
   };
   return (
     <>
@@ -421,18 +430,28 @@ const ProfileHeader = ({
             </>
           ) : (
             <>
-              { following ? (
+              {following ? (
                 <Button
                   variant="outlined"
                   className="rounded-full text-black border-black"
-                  onClick={() => handleUnfollowingButton(id as string, otherUserInfo?.name as string)}
+                  onClick={() =>
+                    handleUnfollowingButton(
+                      id as string,
+                      otherUserInfo?.name as string
+                    )
+                  }
                 >
                   Following
                 </Button>
               ) : (
                 <Button
                   className="rounded-full bg-socioverse-500"
-                  onClick={() => handleFollowingButton(id as string, otherUserInfo?.name as string)}
+                  onClick={() =>
+                    handleFollowingButton(
+                      id as string,
+                      otherUserInfo?.name as string
+                    )
+                  }
                 >
                   Follow
                 </Button>

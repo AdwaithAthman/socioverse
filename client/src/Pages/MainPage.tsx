@@ -1,19 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "react-router-dom";
 import HomePage from "./HomePage";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { StoreType } from "../Redux/Store";
+import ChatPage from "./ChatPage";
 
 const MainPage = () => {
-  const user = useSelector((state: StoreType) => state.auth.isAuthenticated);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if(!user){
-        navigate("/login");
-    }
-  },[navigate, user])
   const section = useParams().section || "home";
   return (
     <>
@@ -26,7 +16,7 @@ const MainPage = () => {
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
           {section === "home" && <HomePage />}
-          {section === "message" && <div>Message</div>}
+          {section === "message" && <ChatPage />}
         </motion.div>
       </AnimatePresence>
     </>

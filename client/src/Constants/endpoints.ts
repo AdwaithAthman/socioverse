@@ -83,6 +83,7 @@ const END_POINTS = {
     GET_MONTHLY_USER_SIGNUPS: 'api/admin/getMonthlyUserSignups',
     GET_MONTHLY_POSTS: 'api/admin/getMonthlyPosts',
     LOGOUT_ADMIN: 'api/admin/logout',
+    FETCH_OTHER_USER_CHAT: 'api/chat/createOrAccessChat',
 }
 
 export default END_POINTS

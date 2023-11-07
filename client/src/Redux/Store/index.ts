@@ -3,6 +3,7 @@ import authReducer from "../AuthSlice";
 import photoReducer from "../PhotoSlice";
 import postReducer from "../PostSlice";
 import adminReducer from "../AdminSlice";
+import chatReducer from "../ChatSlice";
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         photo: photoReducer,
         post: postReducer,
         admin: adminReducer,
+        chat: chatReducer,
     }
 })
 

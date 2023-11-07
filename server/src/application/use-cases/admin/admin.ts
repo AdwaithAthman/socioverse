@@ -135,6 +135,19 @@ export const handleGetAllPostsCount = async (
     }
 }
 
+export const handleGetBlockedUsersCount = async (
+    userDbRepository: ReturnType<UserDbInterface>
+) => {
+    try{
+        const count = await userDbRepository.getBlockedUsersCount();
+        return count;
+    }
+    catch (err) {
+        console.log(err)
+        throw new AppError("Error while fetching blocked users count", HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+
 export const handleGetAllReportedCommentsCount = async (
     commentDbRepository: ReturnType<CommentDbInterface>
 ) => {

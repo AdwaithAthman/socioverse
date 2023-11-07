@@ -4,7 +4,13 @@ import { ImUserMinus, ImUserCheck } from "react-icons/im";
 import { RiUserFill, RiFileUserLine } from "react-icons/ri";
 import { Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { getAllPosts, getAllUsers } from "../../../API/Admin";
+import {
+  getAllPosts,
+  getAllPostsCount,
+  getAllUsers,
+  getAllUsersCount,
+  getBlockedUsersCount,
+} from "../../../API/Admin";
 
 const Dashboard = () => {
   const [totalUsers, setTotalUsers] = useState<number>(0);
@@ -14,20 +20,26 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchTotalUsers = async () => {
-      let blockCount = 0;
-      const result = await getAllUsers();
-      result.users.map((user) => (user.isBlock ? blockCount++ : blockCount));
-      setTotalUsers(result.users.length);
-      setBlockedUsers(blockCount);
-      setActiveUsers(result.users.length - blockCount);
+      const result = await getAllUsersCount();
+      setTotalUsers(result.count);
+    };
+    const fetchBlockedUsers = async () => {
+      const result = await getBlockedUsersCount();
+      setBlockedUsers(result.count);
     };
     const fetchTotalPosts = async () => {
-      const result = await getAllPosts();
-      setTotalPosts(result.posts.length);
+      const result = await getAllPostsCount();
+      setTotalPosts(result.count);
     };
     fetchTotalUsers();
+    fetchBlockedUsers();
     fetchTotalPosts();
   }, []);
+
+  useEffect(() => {
+    console.log(totalUsers, blockedUsers);
+    setActiveUsers(totalUsers - blockedUsers);
+  }, [totalUsers, blockedUsers]);
 
   const StaticticsInfo = [
     {

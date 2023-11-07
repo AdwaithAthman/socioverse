@@ -39,6 +39,7 @@ import {
   handleGetReportedCommentsOnSearch,
   handleGetReportedRepliesCountOnSearch,
   handleGetReportedRepliesOnSearch,
+  handleGetBlockedUsersCount,
 } from "../../application/use-cases/admin/admin";
 import { CommentRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/commentRepositoryMongoDB";
 import { CommentDbInterface } from "../../application/repositories/commentDbRepository";
@@ -102,6 +103,15 @@ const adminController = (
 
   const getAllUsersCount = asyncHandler(async (req: Request, res: Response) => {
     const count = await handleGetAllUsersCount(dbUserRepository);
+    res.json({
+      status: "success",
+      message: "users count fetched",
+      count,
+    });
+  })
+
+  const getBlockedUsersCount = asyncHandler(async (req: Request, res: Response) => {
+    const count = await handleGetBlockedUsersCount(dbUserRepository);
     res.json({
       status: "success",
       message: "users count fetched",
@@ -441,6 +451,7 @@ const adminController = (
     refreshAdminAccessToken,
     getUsers,
     getAllUsersCount,
+    getBlockedUsersCount,
     blockUser,
     unblockUser,
     getAllPosts,

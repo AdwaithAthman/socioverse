@@ -64,6 +64,8 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
 
     const getAllUsersCount = async() => await repository.getAllUsersCount()
 
+    const getBlockedUsersCount = async() => await repository.getBlockedUsersCount()
+
     const blockUser = async(userId: string) => await repository.blockUser(userId)
 
     const unblockUser = async(userId: string) => await repository.unblockUser(userId)
@@ -104,6 +106,7 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
         changeIsAccountUnverified,
         getAllUsers,
         getAllUsersCount,
+        getBlockedUsersCount,
         blockUser,
         unblockUser,
         getMonthlyUserSignups,

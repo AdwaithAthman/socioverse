@@ -59,6 +59,7 @@ const END_POINTS = {
     UNBLOCK_USER: 'api/admin/unblockUser',
     GET_ALL_POSTS: 'api/admin/getAllPosts',
     GET_ALL_POSTS_COUNT: 'api/admin/getAllPostsCount',
+    GET_BLOCKED_USERS_COUNT: 'api/admin/getBlockedUsersCount',
     GET_POSTS_COUNT_ON_SEARCH: 'api/admin/getPostsCountOnSearch',
     GET_REPORTED_COMMENTS_COUNT_ON_SEARCH: 'api/admin/getReportedCommentsCountOnSearch',
     GET_REPORTED_COMMENTS_ON_SEARCH: 'api/admin/getReportedCommentsOnSearch',

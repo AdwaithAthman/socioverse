@@ -39,6 +39,16 @@ export const userRepositoryMongoDB = () => {
     }
   }
 
+  const getBlockedUsersCount = async () => {
+    try {
+      const count = await User.countDocuments({ isBlock: true });
+      return count;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting blocked users!");
+    }
+  }
+
   const getUserById = async (userId: string) => {
     try {
       const user = await User.findById(userId);
@@ -448,6 +458,7 @@ export const userRepositoryMongoDB = () => {
     addUser,
     getAllUsers,
     getAllUsersCount,
+    getBlockedUsersCount,
     getUserById,
     getUserByEmail,
     getUserByUsername,

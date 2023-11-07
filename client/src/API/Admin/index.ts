@@ -297,3 +297,10 @@ export const getReportedRepliesOnSearch = async (search: string, page: number): 
   );
   return response.data;
 }
+
+export const getBlockedUsersCount = async (): Promise<GetCountResponse> => {
+  const response = await axiosAdminInstance.get<GetCountResponse>(
+    END_POINTS.GET_BLOCKED_USERS_COUNT
+  );
+  return response.data;
+}

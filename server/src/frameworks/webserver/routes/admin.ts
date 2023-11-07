@@ -31,7 +31,8 @@ const adminRouter = () => {
     router.post('/login', requestLimiter, controller.adminLogin);
     router.get('/refresh', controller.refreshAdminAccessToken);
     router.get('/getUsers', requireAdmin, controller.getUsers);
-    router.get('/getAllUsersCount', requireAdmin, controller.getAllUsersCount)
+    router.get('/getAllUsersCount', requireAdmin, controller.getAllUsersCount);
+    router.get('/getBlockedUsersCount', requireAdmin, controller.getBlockedUsersCount);
     router.post('/blockUser/:userId', requireAdmin, controller.blockUser);
     router.post('/unblockUser/:userId', requireAdmin, controller.unblockUser);
     router.get('/getAllPosts', requireAdmin, controller.getAllPosts);

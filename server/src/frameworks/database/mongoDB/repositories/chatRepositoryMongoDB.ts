@@ -71,7 +71,7 @@ export const chatRepositoryMongoDB = () => {
       },
     })
       .populate("users", "-password -savedPosts -posts")
-      .populate("groupAdmins", "-password -savedPosts -posts")
+      .populate("groupAdmin", "-password -savedPosts -posts")
       .populate("latestMessage")
       .populate("latestMessage.sender", "name username email dp")
       .sort({ updatedAt: -1 });

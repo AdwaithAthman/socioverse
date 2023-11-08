@@ -45,12 +45,16 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-[80vh] lg:h-[85vh] ">
+         {/* <SideDrawer userId={(user && user._id) as string} /> */}
       <ToastContainer />
-      <SideDrawer userId={(user && user._id) as string} />
-      <div className="flex justify-between w-full p-2">
-        <MyChats />
+      <div className="flex justify-between items-center w-full h-full p-2">
+        <div className="w-full md:w-5/12 h-full bg-white border border-blue-gray-500 rounded-lg">
+        <MyChats userId={(user && user._id) as string} />
+        </div>
+        <div className="hidden md:block md:w-7/12 h-full bg-white border-y border-r border-blue-gray-500 rounded-lg">
         <ChatBox />
+        </div>
       </div>
     </div>
   );

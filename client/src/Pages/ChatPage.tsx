@@ -10,9 +10,13 @@ import { isAxiosError } from "axios";
 import { AxiosErrorData } from "../Types/axiosErrorData";
 import { setCredentials } from "../Redux/AuthSlice";
 import { ToastContainer } from "react-toastify";
+import classnames from "classnames";
 
 const ChatPage = () => {
   const user = useSelector((state: StoreType) => state.auth.user);
+  const selectedChat = useSelector(
+    (state: StoreType) => state.chat.selectedChat
+  );
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -46,14 +50,26 @@ const ChatPage = () => {
 
   return (
     <div className="w-full h-[80vh] lg:h-[85vh] ">
-         {/* <SideDrawer userId={(user && user._id) as string} /> */}
+      {/* <SideDrawer userId={(user && user._id) as string} /> */}
       <ToastContainer />
-      <div className="flex justify-between items-center w-full h-full p-2">
-        <div className="w-full md:w-5/12 h-full bg-white border border-blue-gray-500 rounded-lg">
-        <MyChats userId={(user && user._id) as string} />
+      <div className="flex justify-between items-center w-full h-full p-2 gap-5">
+        <div
+          className={classnames(
+            "md:block md:w-5/12 h-full bg-white border border-blue-gray-500 rounded-xl",
+            { "w-full": !selectedChat },
+            { hidden: selectedChat }
+          )}
+        >
+          <MyChats userId={(user && user._id) as string} />
         </div>
-        <div className="hidden md:block md:w-7/12 h-full bg-white border-y border-r border-blue-gray-500 rounded-lg">
-        <ChatBox />
+        <div
+          className={classnames(
+            "md:block md:w-7/12 h-full bg-white border border-blue-gray-500 rounded-xl",
+            { "w-full block": selectedChat },
+            { "hidden": !selectedChat }
+          )}
+        >
+          <ChatBox />
         </div>
       </div>
     </div>

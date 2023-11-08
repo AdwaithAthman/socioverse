@@ -72,14 +72,14 @@ const SideDrawer = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      <Popover placement="bottom-start" dismiss={{ enabled: false }}>
+      <Popover placement="bottom-end" dismiss={{ enabled: false }}>
         <PopoverHandler onClick={handlePopoverOpen}>
           <div
             id="popover-button"
             className={classnames(
-              "flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group cursor-pointer border-blue-gray-800",
+              "flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group cursor-pointer",
               { "bg-blue-gray-100": popoverOpen },
-              { "bg-white": !popoverOpen }
+              { "bg-white border border-blue-gray-800": !popoverOpen }
             )}
           >
             <BiSearchAlt
@@ -91,7 +91,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
             />
           </div>
         </PopoverHandler>
-        <PopoverContent className="max-h-[70vh] lg:max-h-[75vh] bg-gray-400 w-[20rem]">
+        <PopoverContent className="max-h-[70vh] lg:max-h-[75vh] bg-gray-400 w-[20rem] overflow-y-scroll no-scrollbar">
           <div className="p-5 bg-white rounded-lg h-full w-full">
             <div
               className={classnames(
@@ -137,7 +137,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
                   user._id !== userId && (
                     <div
                       className="flex w-60 px-4 py-2 mb-5 items-center justify-between transition duration-100 
-                  ease-in-out rounded-lg shadow-md hover:scale-105 hover:rounded-lg cursor-pointer bg-[#E8E8E8] hover:bg-[#38b2acaf] group"
+                  ease-in-out rounded-lg shadow-md hover:scale-105 hover:rounded-lg cursor-pointer bg-[#E8E8E8] hover:bg-[#38b2accd] group"
                       onClick={() => handleAccessChat(user._id as string)}
                       key={user._id}
                     >

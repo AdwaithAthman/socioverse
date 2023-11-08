@@ -13,22 +13,38 @@ import { User } from "../../Types/loginUser";
 import ChatLoading from "../Skeletons/ChatLoading";
 import { TOAST_ACTION } from "../../Constants/common";
 import { fetchOtherUserChat } from "../../API/Chat";
+import { useDispatch, useSelector } from "react-redux";
+import { setChats, setSelectedChat } from "../../Redux/ChatSlice";
+import { StoreType } from "../../Redux/Store";
+import { BiSearchAlt } from "react-icons/bi";
 
 const SideDrawer = ({ userId }: { userId: string }) => {
+  const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingChat, setLoadingChat] = useState<boolean>(false);
-  const [selectedChat, setSelectedChat] = useState<any>();
+  const dispatch = useDispatch();
+  const chats = useSelector((state: StoreType) => state.chat.chats);
+
+  const handlePopoverOpen = () => {
+    console.log("popover open: ", popoverOpen);
+    setPopoverOpen((prev) => !prev);
+  };
 
   const handleSearch = async () => {
     try {
       setLoading(true);
       const response = await searchUsers(search);
       setLoading(false);
+      if (response.users.length === 0) {
+        toast.dismiss();
+        toast.error("No user found", TOAST_ACTION);
+      }
       setSearchResult(response.users);
     } catch (error) {
       console.log(error);
+      toast.dismiss();
       toast.error("Failed to load search results", TOAST_ACTION);
     }
   };
@@ -37,22 +53,53 @@ const SideDrawer = ({ userId }: { userId: string }) => {
     try {
       setLoadingChat(true);
       const response = await fetchOtherUserChat(otherUserId);
-      setSelectedChat(response.chat);
+      if (!chats.find((chat) => chat._id === response.chat._id))
+        dispatch(setChats([response.chat, ...chats]));
+      dispatch(setSelectedChat(response.chat));
+      closePopover();
       setLoadingChat(false);
     } catch (err) {
       toast.error("Error fetching the chat", TOAST_ACTION);
     }
   };
 
+  const closePopover = () => {
+    const popoverButton = document.getElementById("popover-button");
+    if (popoverButton) {
+      popoverButton.click();
+    }
+  };
+
   return (
     <>
-      <Popover placement="bottom-end">
-        <PopoverHandler>
-          <Button>Popover</Button>
+      <Popover placement="bottom-start" dismiss={{ enabled: false }}>
+        <PopoverHandler onClick={handlePopoverOpen}>
+          <div
+            id="popover-button"
+            className={classnames(
+              "flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group cursor-pointer border-blue-gray-800",
+              { "bg-blue-gray-100": popoverOpen },
+              { "bg-white": !popoverOpen }
+            )}
+          >
+            <BiSearchAlt
+              className={classnames(
+                "group-hover:text-blue-gray-800 text-2xl font-bold",
+                { "text-blue-gray-800": popoverOpen },
+                { "text-blue-gray-500": !popoverOpen }
+              )}
+            />
+          </div>
         </PopoverHandler>
-        <PopoverContent className="h-[80vh] bg-black bg-opacity-20 w-[20rem]">
+        <PopoverContent className="max-h-[70vh] lg:max-h-[75vh] bg-gray-400 w-[20rem]">
           <div className="p-5 bg-white rounded-lg h-full w-full">
-            <div className="relative flex w-full mb-4">
+            <div
+              className={classnames(
+                "relative flex w-full",
+                { "mb-4": searchResult.length > 0 },
+                { "mb-0": searchResult.length === 0 }
+              )}
+            >
               <Input
                 type="text"
                 label="Search User"
@@ -78,7 +125,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
             </div>
             {loading ? (
               <div className="overflow-y-hidden flex flex-col gap-4">
-                {Array(7)
+                {Array(5)
                   .fill(0)
                   .map((_, index) => (
                     <ChatLoading key={index} />

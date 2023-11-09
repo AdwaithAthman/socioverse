@@ -45,7 +45,7 @@ const MyChats = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex flex-col justify-between p-4 gap-10">
+    <div className="flex flex-col justify-between p-4 gap-8">
       <header className="flex items-center justify-between">
         <h1 className="font-bold text-2xl">My Chats</h1>
         <div className="flex items-center justify-between gap-3">
@@ -85,7 +85,45 @@ const MyChats = ({ userId }: { userId: string }) => {
               onClick={() => handleSelectChat(chat)}
             >
               {chat.isGroupChat ? (
-                <div>Hello</div>
+                <div className="s) => setLimt-3 flex items-center space-x-2 ">
+                  <img
+                    className="inline-block h-12 w-12 rounded-full"
+                    src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                    alt="group dp"
+                  />
+                  <span className="flex flex-col">
+                    <span
+                      className={classnames(
+                        "text-[14px] group-hover:font-bold group-hover:text-white",
+                        {
+                          "text-white font-bold":
+                            selectedChat?._id === chat._id,
+                        },
+                        {
+                          "text-gray-900 font-medium":
+                            selectedChat?._id !== chat._id,
+                        }
+                      )}
+                    >
+                      {chat.chatName}
+                    </span>
+                    <span
+                      className={classnames(
+                        "text-[11px] group-hover:font-bold group-hover:text-white",
+                        {
+                          "text-white font-bold":
+                            selectedChat?._id === chat._id,
+                        },
+                        {
+                          "text-gray-500 font-medium":
+                            selectedChat?._id !== chat._id,
+                        }
+                      )}
+                    >
+                      message
+                    </span>
+                  </span>
+                </div>
               ) : (
                 <div className="s) => setLimt-3 flex items-center space-x-2 ">
                   <img

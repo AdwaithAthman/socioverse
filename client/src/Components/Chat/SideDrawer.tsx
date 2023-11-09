@@ -77,9 +77,9 @@ const SideDrawer = ({ userId }: { userId: string }) => {
           <div
             id="popover-button"
             className={classnames(
-              "flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group cursor-pointer",
-              { "bg-blue-gray-100": popoverOpen },
-              { "bg-white border border-blue-gray-800": !popoverOpen }
+              "flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group cursor-pointer border border-blue-gray-800 hover:border-2",
+              { "bg-blue-gray-100 border-2": popoverOpen },
+              { "bg-white border": !popoverOpen }
             )}
           >
             <BiSearchAlt
@@ -104,7 +104,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
                 type="text"
                 label="Search User"
                 value={search}
-                onChange={(e) => setSearch(e.target.value.trim())}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pr-20"
                 containerProps={{
                   className: "min-w-0",
@@ -112,7 +112,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
               />
               <Button
                 size="sm"
-                disabled={!search}
+                disabled={!search.trim()}
                 className={classnames(
                   "!absolute right-1 top-1 rounded",
                   { "bg-socioverse-400": search },

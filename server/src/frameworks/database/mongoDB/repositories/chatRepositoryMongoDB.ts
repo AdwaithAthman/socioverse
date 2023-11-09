@@ -82,7 +82,7 @@ export const chatRepositoryMongoDB = () => {
   const createGroupChat = async (users: string[], name: string) => {
     try {
       const groupChatData = {
-        chatName: "Group Chat",
+        chatName: name,
         isGroupChat: true,
         users: users,
         groupAdmin: users[0],

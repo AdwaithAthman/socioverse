@@ -201,7 +201,7 @@ function CreateGroupDialog({
             )}
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" onClick={handleSubmit} fullWidth>
+            <Button onClick={handleSubmit} className="float-right bg-socioverse-400 rounded-full">
               Create Chat
             </Button>
           </CardFooter>

@@ -87,6 +87,7 @@ const END_POINTS = {
     FETCH_OTHER_USER_CHAT: 'api/chat/createOrAccessChat',
     FETCH_CHATS: 'api/chat/fetchChats',
     CREATE_GROUP_CHAT: 'api/chat/createGroup',
+    UPDATE_GROUP: 'api/chat/updateGroup',
 }
 
 export default END_POINTS

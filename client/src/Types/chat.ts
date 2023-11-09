@@ -34,3 +34,8 @@ export interface CreateGroupResponse {
     status: string;
     groupChat: ChatInterface;
 }
+
+export interface UpdateGroupResponse {
+    status: string;
+    groupChat: ChatInterface;
+}

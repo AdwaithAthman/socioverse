@@ -1,4 +1,5 @@
 import { ChatRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/chatRepositoryMongoDB";
+import { EditChatInterface } from "../../types/chatInterface";
 
 export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) => {
     
@@ -17,6 +18,8 @@ export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) 
         const addToGroup = async(chatId: string, userId: string) => await repository.addToGroup(chatId, userId);
 
         const removeFromGroup = async(chatId: string, userId: string) => await repository.removeFromGroup(chatId, userId);
+
+        const updateGroup = async(chatId: string, data: EditChatInterface) => await repository.updateGroup(chatId, data);
     
         return {
             accessChat,
@@ -27,6 +30,7 @@ export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) 
             renameGroupChat,
             addToGroup,
             removeFromGroup,
+            updateGroup,
         }
 }
 

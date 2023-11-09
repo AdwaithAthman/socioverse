@@ -160,6 +160,20 @@ export const chatRepositoryMongoDB = () => {
     }
   };
 
+  const updateGroup = async (chatId: string, data: any) => {
+    try {
+      const updatedChat = await Chat.findByIdAndUpdate(chatId, data, {
+        new: true,
+      })
+        .populate("users", "-password -savedPosts -posts")
+        .populate("groupAdmin", "name dp username email _id");
+      return updatedChat;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error in updating group");
+    }
+  };
+
   return {
     accessChat,
     createChat,
@@ -169,6 +183,7 @@ export const chatRepositoryMongoDB = () => {
     renameGroupChat,
     addToGroup,
     removeFromGroup,
+    updateGroup,
   };
 };
 

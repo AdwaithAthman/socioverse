@@ -3,6 +3,7 @@ import AppError from "../../../utils/appError";
 
 //importing from types
 import { HttpStatus } from "../../../types/httpStatus";
+import { EditChatInterface } from "../../../types/chatInterface";
 
 export const handleAccessOrCreateChat = async (
   loggedInUserId: string,
@@ -106,4 +107,26 @@ export const handleRemoveFromGroup = async (
   }
 }
 
+export const handleUpdateGroup = async (
+  groupId: string,
+  data: EditChatInterface,
+  chatDbRepository: ReturnType<ChatDbRepository>
+) => {
+  try{
+    if(data.users){
+      if(data.users.length < 2) throw new AppError("Atleast 2 users are required to form a group chat", HttpStatus.BAD_REQUEST);
+    }
+    const updatedChat = await chatDbRepository.updateGroup(groupId, data);
+    return updatedChat;
+  }
+  catch(err){
+    if (err instanceof Error) {
+      console.log(err.message);
+      if (err.message === "Atleast 2 users are required to form a group chat") {
+        throw err;
+      }
+    }
+    throw new AppError("Error in updating group chat", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
 

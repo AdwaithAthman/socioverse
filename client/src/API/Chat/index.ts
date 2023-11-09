@@ -6,6 +6,7 @@ import {
     FetchOtherUserChatResponse,
     FetchUserChatsResponse,
     CreateGroupResponse,
+    UpdateGroupResponse,
 } from "../../Types/chat";
 import { User } from "../../Types/loginUser";
 
@@ -26,5 +27,15 @@ export const fetchChats = async (): Promise<FetchUserChatsResponse> => {
 
 export const createGroupChat = async(name: string, users: User[]): Promise<CreateGroupResponse> => {
     const response = await axiosUserInstance.post<CreateGroupResponse>(END_POINTS.CREATE_GROUP_CHAT, { name, users });
+    return response.data;
+}
+
+export const updateGroupChat = async( groupId: string, data: FormData): Promise<UpdateGroupResponse> => {
+    console.log("data for groupUpdate: ", data, groupId)
+    const response = await axiosUserInstance.patch<UpdateGroupResponse>(`${END_POINTS.UPDATE_GROUP}/${groupId}`, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
     return response.data;
 }

@@ -5,6 +5,7 @@ import { chatDbRepository } from '../../../application/repositories/chatDbReposi
 
 //importing middlewares
 import authMiddleware from '../middlewares/authMiddleware';
+import uploadToMulter from '../middlewares/multer';
 
 const chatRouter = () => {
     const router = Router();
@@ -21,6 +22,7 @@ const chatRouter = () => {
     router.put('/renameGroup', authMiddleware, controller.renameGroupChat);
     router.put('/addToGroup', authMiddleware, controller.addToGroup); 
     router.delete('/removeFromGroup', authMiddleware, controller.removeFromGroup);
+    router.patch('/updateGroup/:groupId', uploadToMulter.none(), authMiddleware, controller.updateGroup);
 
     return router;
 }

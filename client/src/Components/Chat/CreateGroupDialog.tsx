@@ -108,7 +108,7 @@ function CreateGroupDialog({
         className="bg-transparent shadow-none"
       >
         <ToastContainer />
-        <Card className="mx-auto w-full max-w-[24rem]">
+        <Card className="mx-auto w-full ">
           <CardBody className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <Typography variant="h4" color="blue-gray">
@@ -118,6 +118,7 @@ function CreateGroupDialog({
                 className="text-3xl cursor-pointer text-black"
                 onClick={(e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
                   e.stopPropagation();
+                  setSelectedUsers([]);
                   handleCreateGroupDialog();
                 }}
               />

@@ -2,10 +2,12 @@ import Chat from "../models/chatModel";
 import Message from "../models/messageModel";
 
 export const chatRepositoryMongoDB = () => {
+
   const accessChat = async (loggedInUserId: string, otherUserId: string) => {
     try {
       const chat = await Chat.findOne({
         isGroupChat: false,
+        isDeleted: false,
         $and: [
           {
             users: {
@@ -51,7 +53,7 @@ export const chatRepositoryMongoDB = () => {
 
   const getFullChat = async (chatId: string) => {
     try {
-      const fullChat = await Chat.findOne({ _id: chatId })
+      const fullChat = await Chat.findOne({ _id: chatId, isDeleted: false })
         .populate("users", "-password -savedPosts -posts")
         .populate("groupAdmin", "name dp username email _id");
 
@@ -64,6 +66,7 @@ export const chatRepositoryMongoDB = () => {
 
   const fetchChats = async (userId: string) => {
     const chats = await Chat.find({
+      isDeleted: false,
       users: {
         $elemMatch: {
           $eq: userId,
@@ -174,6 +177,20 @@ export const chatRepositoryMongoDB = () => {
     }
   };
 
+  const groupRemove = async (chatId: string) => {
+    try{
+      await Chat.findByIdAndUpdate(chatId, {
+        $set: {
+          isDeleted: true,
+        }
+      })
+    }
+    catch(err){
+      console.log(err);
+      throw new Error("Error in deleting group");
+    }
+  }
+
   return {
     accessChat,
     createChat,
@@ -184,6 +201,7 @@ export const chatRepositoryMongoDB = () => {
     addToGroup,
     removeFromGroup,
     updateGroup,
+    groupRemove,
   };
 };
 

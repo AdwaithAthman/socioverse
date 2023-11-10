@@ -130,3 +130,17 @@ export const handleUpdateGroup = async (
   }
 }
 
+export const handleGroupRemove = async (
+  chatId: string,
+  chatDbRepository: ReturnType<ChatDbRepository>
+) => {
+  try{
+    await chatDbRepository.groupRemove(chatId);
+  }
+  catch(err){
+    console.log(err);
+    throw new AppError("Error in deleting group chat", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+

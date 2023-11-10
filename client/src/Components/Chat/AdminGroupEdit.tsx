@@ -10,15 +10,19 @@ import { searchUsers } from "../../API/Profile";
 import UserCard from "./UserCard";
 import { updateGroupChat } from "../../API/Chat";
 import { setSelectedChat } from "../../Redux/ChatSlice";
+import { AxiosError, isAxiosError } from "axios";
+import { AxiosErrorData } from "../../Types/axiosErrorData";
 
 const AdminGroupEdit = ({
   updateGroup,
   setUpdateGroup,
   handleOpenOptions,
+  setDisableUpdate,
 }: {
   updateGroup: boolean;
   setUpdateGroup: React.Dispatch<React.SetStateAction<boolean>>;
   handleOpenOptions: () => void;
+  setDisableUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
@@ -36,6 +40,17 @@ const AdminGroupEdit = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<FormData>(new FormData());
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (
+      selectedChat?.chatName === groupChatName &&
+      selectedChat?.users === selectedUsers
+    ) {
+      setDisableUpdate(true);
+    } else {
+      setDisableUpdate(false);
+    }
+  }, [groupChatName, selectedUsers]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -92,9 +107,9 @@ const AdminGroupEdit = ({
         setData(new FormData());
         handleOpenOptions();
       }
-    } catch (err: any) {
+    } catch (error) {
       toast.dismiss();
-      toast.error(err.response.data.message, TOAST_ACTION);
+      toast.error("Failed to update group", TOAST_ACTION);
     }
   };
 
@@ -132,21 +147,24 @@ const AdminGroupEdit = ({
         onChange={(e) => setSearch(e.target.value)}
       />
       <div className="max-h-36 overflow-y-scroll flex items-center justify-center flex-wrap gap-2 no-scrollbar">
-        {selectedUsers.map((user) => (
-          <div key={`selected-${user._id}`}>
-            <Chip
-              variant="ghost"
-              animate={{
-                mount: { y: 0 },
-                unmount: { y: 50 },
-              }}
-              value={user.name}
-              onClose={() => handleDelete(user)}
-              className="rounded-full"
-              color="green"
-            />
-          </div>
-        ))}
+        {selectedUsers.map(
+          (user) =>
+            user._id !== userId && (
+              <div key={`selected-${user._id}`}>
+                <Chip
+                  variant="ghost"
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 50 },
+                  }}
+                  value={user.name}
+                  onClose={() => handleDelete(user)}
+                  className="rounded-full"
+                  color="green"
+                />
+              </div>
+            )
+        )}
       </div>
       {loading ? (
         <div className="overflow-y-hidden flex flex-col gap-4">

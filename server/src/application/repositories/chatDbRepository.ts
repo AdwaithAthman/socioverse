@@ -20,6 +20,8 @@ export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) 
         const removeFromGroup = async(chatId: string, userId: string) => await repository.removeFromGroup(chatId, userId);
 
         const updateGroup = async(chatId: string, data: EditChatInterface) => await repository.updateGroup(chatId, data);
+
+        const groupRemove = async(chatId: string) => await repository.groupRemove(chatId);
     
         return {
             accessChat,
@@ -31,6 +33,7 @@ export const chatDbRepository = (repository: ReturnType<ChatRepositoryMongoDB>) 
             addToGroup,
             removeFromGroup,
             updateGroup,
+            groupRemove,
         }
 }
 

@@ -23,6 +23,7 @@ const chatRouter = () => {
     router.put('/addToGroup', authMiddleware, controller.addToGroup); 
     router.delete('/removeFromGroup', authMiddleware, controller.removeFromGroup);
     router.patch('/updateGroup/:groupId', uploadToMulter.none(), authMiddleware, controller.updateGroup);
+    router.delete('/groupRemove/:groupId', authMiddleware, controller.groupRemove)
 
     return router;
 }

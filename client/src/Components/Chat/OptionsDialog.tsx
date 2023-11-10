@@ -8,13 +8,18 @@ import {
 } from "@material-tailwind/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../../Redux/Store";
 import { getSender } from "../../utils/Config/getSenderInChat";
 import { Link } from "react-router-dom";
 import UserCard from "./UserCard";
 import AdminGroupEdit from "./AdminGroupEdit";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { groupRemove, removeFromGroup } from "../../API/Chat";
+import { useDispatch } from "react-redux";
+import { setChats, setSelectedChat } from "../../Redux/ChatSlice";
+import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
+import { TOAST_ACTION } from "../../Constants/common";
 
 const OptionsDialog = ({
   openOptions,
@@ -27,7 +32,60 @@ const OptionsDialog = ({
     (state: StoreType) => state.chat.selectedChat
   );
   const userId = useSelector((state: StoreType) => state.auth.user?._id);
+  const chats = useSelector((state: StoreType) => state.chat.chats);
   const [updateGroup, setUpdateGroup] = useState<boolean>(false);
+  const [disableUpdate, setDisableUpdate] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  const handleRemoveFromGroup = async () => {
+    toast.dismiss();
+    toast(
+      <ConfirmDeleteToast
+        onDelete={confirmLeaveGroup}
+        message={"Are you sure you want to leave this Group?"}
+      />,
+      { ...TOAST_ACTION, closeButton: false }
+    );
+  };
+
+  const confirmLeaveGroup = async () => {
+    const response =
+      selectedChat &&
+      userId &&
+      (await removeFromGroup(selectedChat?._id, userId));
+    if (response && response?.status === "success") {
+      toast.dismiss();
+      dispatch(setSelectedChat(""));
+      dispatch(setChats(chats.filter((chat) => chat._id !== selectedChat?._id)));
+      toast.success("Successfully left the group");
+      handleOpenOptions();
+    }
+  };
+
+  const handleGroupRemove = async () => {
+    toast.dismiss();
+    toast(
+        <ConfirmDeleteToast
+          onDelete={confirmDeleteGroup}
+          message={"Are you sure you want to delete this group?"}
+        />,
+        { ...TOAST_ACTION, closeButton: false }
+      );
+  };
+
+  const confirmDeleteGroup = async () => {
+    const response =
+      selectedChat &&
+      (await groupRemove(selectedChat?._id));
+    if (response && response?.status === "success") {
+      toast.dismiss();
+      dispatch(setSelectedChat(""));
+      dispatch(setChats(chats.filter((chat) => chat._id !== selectedChat?._id)));
+      toast.success("Successfully deleted the group");
+      handleOpenOptions();
+    }
+  }
+
   return (
     <>
       <Dialog
@@ -87,7 +145,12 @@ const OptionsDialog = ({
                 </div>
               </div>
             ) : selectedChat?.groupAdmin._id === userId ? (
-              <AdminGroupEdit updateGroup={updateGroup} setUpdateGroup={setUpdateGroup} handleOpenOptions={handleOpenOptions} />
+              <AdminGroupEdit
+                updateGroup={updateGroup}
+                setUpdateGroup={setUpdateGroup}
+                handleOpenOptions={handleOpenOptions}
+                setDisableUpdate={setDisableUpdate}
+              />
             ) : (
               <div className="max-h-96 overflow-y-scroll overflow-x-hidden no-scrollbar mx-4">
                 <div className="flex gap-2 items-center mb-2">
@@ -132,11 +195,27 @@ const OptionsDialog = ({
           {selectedChat?.isGroupChat && (
             <CardFooter className="pt-0">
               {selectedChat.groupAdmin._id === userId ? (
-                <Button className="float-right bg-socioverse-400 rounded-full" onClick={() => setUpdateGroup(true)}>
-                  Update Group
-                </Button>
+                <div className="flex items-center justify-between gap-2 float-right">
+                  <Button
+                    className=" rounded-full text-black border-black hover:border-2 "
+                    variant="outlined"
+                    onClick={() => setUpdateGroup(true)}
+                    disabled={disableUpdate}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    className=" bg-socioverse-400 rounded-full"
+                    onClick={handleGroupRemove}
+                  >
+                    Leave
+                  </Button>
+                </div>
               ) : (
-                <Button className="float-right bg-socioverse-400 rounded-full" >
+                <Button
+                  className="float-right bg-socioverse-400 rounded-full"
+                  onClick={handleRemoveFromGroup}
+                >
                   Leave Group
                 </Button>
               )}

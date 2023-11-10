@@ -88,6 +88,8 @@ const END_POINTS = {
     FETCH_CHATS: 'api/chat/fetchChats',
     CREATE_GROUP_CHAT: 'api/chat/createGroup',
     UPDATE_GROUP: 'api/chat/updateGroup',
+    REMOVE_FROM_GROUP: 'api/chat/removeFromGroup',
+    GROUP_REMOVE: 'api/chat/groupRemove',
 }
 
 export default END_POINTS

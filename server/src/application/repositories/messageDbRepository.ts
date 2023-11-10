@@ -5,10 +5,12 @@ export const messageDbRepository = (repository: ReturnType<MessageRepositoryMong
 
     const sendMessage = async(newMessage: MessageInterface) => await repository.sendMessage(newMessage);
     const getFullMessage = async(messageId: string) => await repository.getFullMessage(messageId);
+    const getAllMessagesFromChat = async(chatId: string) => await repository.getAllMessagesFromChat(chatId);
 
     return {
         sendMessage,
         getFullMessage,
+        getAllMessagesFromChat,
     }
 }
 

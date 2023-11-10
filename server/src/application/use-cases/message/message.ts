@@ -34,3 +34,17 @@ export const handleSendMessage = async (
         throw new AppError("Error in sending message", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 };
+
+export const handleGetAllMessagesFromChat = async (
+    chatId: string,
+    messageDbRepository: ReturnType<MessageDbRepository>
+) => {
+    try{
+        const messages = await messageDbRepository.getAllMessagesFromChat(chatId);
+        return messages;
+    }
+    catch(err){
+        console.log(err);
+        throw new AppError("Error in getting messages", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

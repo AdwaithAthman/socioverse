@@ -31,9 +31,24 @@ export const messageRepositoryMongoDB = () => {
     }
   };
 
+  const getAllMessagesFromChat = async (chatId: string) => {
+    try{
+        const messages = await Message.find({chat: chatId})
+         .populate("sender", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+         .populate("chat");
+
+         return messages;
+    }
+    catch(err){
+      console.log(err);
+      throw new Error("Error in getting messages");
+  }
+}
+
   return {
     sendMessage,
     getFullMessage,
+    getAllMessagesFromChat,
   };
 };
 

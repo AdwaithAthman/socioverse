@@ -39,3 +39,8 @@ export interface UpdateGroupResponse {
     status: string;
     groupChat: ChatInterface;
 }
+
+export interface RemoveFromGroupResponse {
+    status: string;
+    updatedChat: ChatInterface; 
+}

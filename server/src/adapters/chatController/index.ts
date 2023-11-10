@@ -11,6 +11,7 @@ import {
     handleAddToGroup,
     handleRemoveFromGroup,
     handleUpdateGroup,
+    handleGroupRemove,
 } from '../../application/use-cases/chat/chat';
 
 
@@ -69,7 +70,7 @@ const chatController = (
     });
 
     const removeFromGroup = asyncHandler(async (req: Request, res: Response) => {
-        const { chatId, removeUserId }: { chatId: string, removeUserId: string } = req.body;
+        const { chatId, removeUserId } = req.query as unknown as { chatId: string, removeUserId: string };
         const updatedChat = await handleRemoveFromGroup(chatId, removeUserId, chatDbRepository);
         res.status(200).json({
             status: "success",
@@ -89,6 +90,14 @@ const chatController = (
 
     });
 
+    const groupRemove = asyncHandler(async (req: Request, res: Response) => {
+        const { groupId } = req.params as unknown as { groupId: string };
+        await handleGroupRemove(groupId, chatDbRepository);
+        res.status(200).json({
+            status: "success",
+        });
+    });
+
     return {
         createOrAccessChat,
         fetchChats,
@@ -97,6 +106,7 @@ const chatController = (
         addToGroup,
         removeFromGroup,
         updateGroup,
+        groupRemove,
     }
 }
 

@@ -6,6 +6,7 @@ interface ChatInterface extends Document {
   users: Schema.Types.ObjectId[];
   latestMessage: Schema.Types.ObjectId;
   groupAdmin: Schema.Types.ObjectId;
+  isDeleted: boolean;
 }
 
 const chatSchema = new Schema<ChatInterface>(
@@ -32,6 +33,10 @@ const chatSchema = new Schema<ChatInterface>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

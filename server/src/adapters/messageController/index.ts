@@ -5,7 +5,7 @@ import { ChatRepositoryMongoDB } from "../../frameworks/database/mongoDB/reposit
 import { MessageRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/messageRepositoryMongoDB";
 import { MessageDbRepository } from "../../application/repositories/messageDbRepository";
 
-import { handleSendMessage } from "../../application/use-cases/message/message";
+import { handleSendMessage, handleGetAllMessagesFromChat } from "../../application/use-cases/message/message";
 
 const messageController = (
   chatDbRepositoryImpl: ChatRepositoryMongoDB,
@@ -32,8 +32,18 @@ const messageController = (
     });
   });
 
+  const getAllMessagesFromChat = asyncHandler(async(req: Request, res: Response) => {
+    const { chatId } = req.params as unknown as { chatId: string };
+    const messages = await handleGetAllMessagesFromChat(chatId, messageDbRepository);
+    res.status(200).json({
+      status: "success",
+      messages,
+    });
+  })
+
   return {
     sendMessage,
+    getAllMessagesFromChat,
   };
 };
 

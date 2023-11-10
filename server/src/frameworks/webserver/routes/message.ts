@@ -20,6 +20,7 @@ const messageRouter = () => {
 
     //routes
     router.post("/", authMiddleware, controller.sendMessage);
+    router.get('/:chatId', authMiddleware, controller.getAllMessagesFromChat)
 
     return router;
 };

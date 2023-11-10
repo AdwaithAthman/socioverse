@@ -55,7 +55,7 @@ const ChatPage = () => {
       <div className="flex justify-between items-center w-full h-full p-2 gap-5">
         <div
           className={classnames(
-            "md:block md:w-5/12 h-full bg-white border border-blue-gray-500 rounded-xl",
+            "md:block md:w-4/12 h-full bg-white border border-blue-gray-500 rounded-xl",
             { "w-full": !selectedChat },
             { hidden: selectedChat }
           )}
@@ -64,7 +64,7 @@ const ChatPage = () => {
         </div>
         <div
           className={classnames(
-            "md:block md:w-7/12 h-full bg-white border border-blue-gray-500 rounded-xl",
+            "md:block md:w-8/12 h-full bg-white border border-blue-gray-500 rounded-xl",
             { "w-full block": selectedChat },
             { "hidden": !selectedChat }
           )}

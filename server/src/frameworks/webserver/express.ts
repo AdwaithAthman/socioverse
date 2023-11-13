@@ -18,7 +18,6 @@ const expressConfig = (app: Application) => {
 
   const corsOptions = {
     origin: ['*', "http://localhost:5173"],
-
   };
 
   app.use(cors({ credentials: true, ...corsOptions }));

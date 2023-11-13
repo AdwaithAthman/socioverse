@@ -549,6 +549,7 @@ function CommentBoxTextarea({
         theme="auto"
         fontSize={14}
         fontFamily="sans-serif"
+        keepOpened={true}
         searchMention={async (text) => {
           return ["no user"].filter((user) => user.includes(text));
         }}

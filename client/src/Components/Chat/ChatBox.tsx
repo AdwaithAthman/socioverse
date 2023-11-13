@@ -7,6 +7,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { setSelectedChat } from "../../Redux/ChatSlice";
 import { useState } from "react";
 import OptionsDialog from "./OptionsDialog";
+import ChatBoxContent from "./ChatBoxContent";
 
 const ChatBox = () => {
   const selectedChat = useSelector(
@@ -71,7 +72,9 @@ const ChatBox = () => {
             </div>
           </div>
         </header>
-        <div className=" h-full w-full flex flex-col gap-4 overflow-y-scroll no-scrollbar bg-blue-gray-300/50 rounded-xl"></div>
+        <div className=" h-full w-full flex flex-col gap-4 overflow-y-scroll no-scrollbar bg-blue-gray-300/50 rounded-xl">
+          <ChatBoxContent />
+        </div>
       </div>
       <OptionsDialog
         openOptions={openOptions}

@@ -4,7 +4,7 @@ export interface MessageInterface {
     _id: string;
     sender: User;
     content: string;
-    chat: string;
+    chat: ChatInterface;
     createdAt: string;
     updatedAt: string;
 }

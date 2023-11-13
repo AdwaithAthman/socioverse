@@ -137,7 +137,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
                   user._id !== userId && (
                     <div
                       className="flex w-60 px-4 py-2 mb-5 items-center justify-between transition duration-100 
-                  ease-in-out rounded-lg shadow-md hover:scale-105 hover:rounded-lg cursor-pointer bg-[#E8E8E8] hover:bg-[#38b2accd] group"
+                  ease-in-out rounded-lg shadow-md hover:scale-105 hover:rounded-lg cursor-pointer bg-[#E8E8E8] hover:bg-blue-gray-600 group"
                       onClick={() => handleAccessChat(user._id as string)}
                       key={user._id}
                     >

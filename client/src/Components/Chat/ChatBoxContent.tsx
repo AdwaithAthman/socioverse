@@ -75,26 +75,59 @@ const ChatBoxContent = () => {
                   { "justify-start": message.sender._id !== user?._id }
                 )}
               >
-                <div
-                  className={classnames(
-                    "inline p-4 rounded-xl shadow-lg max-w-[25rem] break-words",
-                    {
-                      "bg-gray-100 text-black":
-                        message.sender._id !== user?._id,
-                    },
-                    {
-                      "bg-blue-gray-500/80 text-white":
-                        message.sender._id === user?._id,
-                    }
-                  )}
-                >
-                  <div className="flex flex-col">
-                    <h1 className="text-sm mb-1 font-normal text-left">
-                      {message.content}
-                    </h1>
-                    <h6 className="text-[0.65rem] font-thin opacity-80 text-right">
-                      {moment(message.createdAt).format("LT")}
-                    </h6>
+                <div className="flex items-start justify-between gap-2">
+                  {selectedChat?.isGroupChat &&
+                    user &&
+                    message.sender._id !== user._id && (
+                      <img
+                        className="inline-block h-12 w-12 rounded-full"
+                        src={
+                          message.sender.dp
+                            ? message.sender.dp
+                            : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                        }
+                        alt="user dp"
+                      />
+                    )}
+                  <div
+                    className={classnames(
+                      "inline rounded-xl shadow-lg max-w-[25rem] break-words",
+                      {
+                        "bg-gray-100 text-black":
+                          message.sender._id !== user?._id,
+                      },
+                      {
+                        "bg-blue-gray-500/80 text-white":
+                          message.sender._id === user?._id,
+                      }
+                    )}
+                  >
+                    {selectedChat?.isGroupChat &&
+                      user &&
+                      message.sender._id !== user._id && (
+                        <h6 className="text-[0.65rem] font-thin text-left px-1 pt-1">
+                          ~ {message.sender.name}
+                        </h6>
+                      )}
+                    <div
+                      className={classnames(
+                        "flex flex-col",
+                        { "p-4": !selectedChat?.isGroupChat || message.sender._id === user?._id },
+                        {
+                          "px-4 pb-2":
+                            selectedChat?.isGroupChat &&
+                            user &&
+                            message.sender._id !== user?._id,
+                        },
+                      )}
+                    >
+                      <h1 className="text-sm my-1 font-normal text-left">
+                        {message.content}
+                      </h1>
+                      <h6 className="text-[0.65rem] font-thin opacity-80 text-right">
+                        {moment(message.createdAt).format("LT")}
+                      </h6>
+                    </div>
                   </div>
                 </div>
               </div>

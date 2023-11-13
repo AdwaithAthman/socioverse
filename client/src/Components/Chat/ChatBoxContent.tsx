@@ -9,6 +9,8 @@ import { getAllMessagesFromChat, sendMessage } from "../../API/Message";
 import { MessageInterface } from "../../Types/chat";
 import classnames from "classnames";
 import moment from "moment";
+import io from "socket.io-client";
+import common from "../../Constants/common"
 
 const ChatBoxContent = () => {
   const selectedChat = useSelector(
@@ -19,6 +21,11 @@ const ChatBoxContent = () => {
   const [messages, setMessages] = useState<MessageInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState<string>("");
+  let socket, selectedChatCompare;
+
+  useEffect(() => {
+    socket = io(common.API_BASE_URL)
+  }, [])
 
   useEffect(() => {
     fetchMessages();

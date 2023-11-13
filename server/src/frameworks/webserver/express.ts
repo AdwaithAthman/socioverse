@@ -5,6 +5,7 @@ import passport from 'passport';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import configKeys from '../../config';
 
 const expressConfig = (app: Application) => {
   app.use(express.json());
@@ -17,7 +18,7 @@ const expressConfig = (app: Application) => {
   app.use(cookieParser());
 
   const corsOptions = {
-    origin: ['*', "http://localhost:5173"],
+    origin: ['*', configKeys.CLIENT_URL],
   };
 
   app.use(cors({ credentials: true, ...corsOptions }));

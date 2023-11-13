@@ -29,7 +29,8 @@
     "otp-generator": "^4.0.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
-    "redis": "^4.6.7"
+    "redis": "^4.6.7",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

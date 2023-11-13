@@ -17,12 +17,12 @@ export const messageRepositoryMongoDB = () => {
       const fullMessage = await Message.findOne({ _id: messageId })
         .populate(
           "sender",
-          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt -followers -following"
         )
         .populate("chat")
         .populate(
           "chat.users",
-          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt -followers -following"
         );
         return fullMessage;
     } catch (err) {
@@ -34,7 +34,7 @@ export const messageRepositoryMongoDB = () => {
   const getAllMessagesFromChat = async (chatId: string) => {
     try{
         const messages = await Message.find({chat: chatId})
-         .populate("sender", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+         .populate("sender", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt -followers -following")
          .populate("chat");
 
          return messages;

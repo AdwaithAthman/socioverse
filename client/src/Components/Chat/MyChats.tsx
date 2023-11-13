@@ -78,8 +78,8 @@ const MyChats = ({ userId }: { userId: string }) => {
             <div
               key={chat._id}
               className={classnames(
-                "flex items-center justify-between py-2 px-2 md:px-4 rounded-xl cursor-pointer shadow-sm hover:bg-[#38b2accd]  group",
-                { "bg-[#38b2accd] ": selectedChat?._id === chat._id },
+                "flex items-center justify-between py-2 px-2 md:px-4 rounded-xl cursor-pointer shadow-sm hover:bg-blue-gray-600  group",
+                { "bg-blue-gray-600/90 ": selectedChat?._id === chat._id },
                 { "bg-gray-100": selectedChat?._id !== chat._id }
               )}
               onClick={() => handleSelectChat(chat)}

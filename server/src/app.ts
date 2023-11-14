@@ -9,6 +9,7 @@ import serverConfig from './frameworks/webserver/server';
 import connection from './frameworks/database/redis/connection';
 import { Server } from "socket.io";
 import configKeys from './config';
+import socketConfig from './frameworks/webSocket/socketConfig';
 
 const app: Application = express();
 const server = http.createServer(app);
@@ -28,9 +29,7 @@ const io = new Server(server, {
     }
 })
 
-io.on('connection', (socket) => {
-    console.log("connected to socket.io");
-})
+socketConfig(io);
 
 expressConfig(app);
 

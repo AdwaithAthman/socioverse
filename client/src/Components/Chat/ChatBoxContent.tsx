@@ -6,30 +6,55 @@ import { TOAST_ACTION } from "../../Constants/common";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store";
 import { getAllMessagesFromChat, sendMessage } from "../../API/Message";
-import { MessageInterface } from "../../Types/chat";
+import { ChatInterface, MessageInterface } from "../../Types/chat";
 import classnames from "classnames";
 import moment from "moment";
-import io from "socket.io-client";
-import common from "../../Constants/common"
+import io, { Socket } from "socket.io-client";
+import common from "../../Constants/common";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+
+let socket: Socket, selectedChatCompare: ChatInterface;
 
 const ChatBoxContent = () => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
   const user = useSelector((state: StoreType) => state.auth.user);
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
+
+  //socket io connection
+  useEffect(() => {
+    socket = io(common.API_BASE_URL);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+  
+    return () => {
+      socket.off("connected");
+      socket.off("setup");
+    };
+  }, []);
 
   const [messages, setMessages] = useState<MessageInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState<string>("");
-  let socket, selectedChatCompare;
-
-  useEffect(() => {
-    socket = io(common.API_BASE_URL)
-  }, [])
 
   useEffect(() => {
     fetchMessages();
+    selectedChatCompare = selectedChat as ChatInterface;
   }, [selectedChat]);
+
+  useEffect(() => {
+      socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessageRecieved.chat._id
+        ) {
+          //show notification
+        } else {
+          setMessages([...messages, newMessageRecieved]);
+        }
+      });
+  });
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -39,8 +64,12 @@ const ChatBoxContent = () => {
       console.log("messages: ", response.messages);
       setMessages(response.messages);
       setLoading(false);
+      if (socket) {
+        socket.emit("join room", selectedChat._id);
+      }
     } catch (error) {
       toast.dismiss();
+      console.log("error fetching messages: ", error);
       toast.error("Error fetching messages", TOAST_ACTION);
     }
   };
@@ -51,8 +80,10 @@ const ChatBoxContent = () => {
       const response =
         selectedChat && (await sendMessage(newMessage, selectedChat._id));
       console.log("send message response: ", response);
+      response && socket.emit("new message", response.message);
       response && setMessages((cur) => [...cur, response.message]);
     } catch (err) {
+      console.log("error sending message: ", err);
       toast.dismiss();
       toast.error("Error sending message", TOAST_ACTION);
     }
@@ -119,13 +150,17 @@ const ChatBoxContent = () => {
                     <div
                       className={classnames(
                         "flex flex-col",
-                        { "p-4": !selectedChat?.isGroupChat || message.sender._id === user?._id },
+                        {
+                          "p-4":
+                            !selectedChat?.isGroupChat ||
+                            message.sender._id === user?._id,
+                        },
                         {
                           "px-4 pb-2":
                             selectedChat?.isGroupChat &&
                             user &&
                             message.sender._id !== user?._id,
-                        },
+                        }
                       )}
                     >
                       <h1 className="text-sm my-1 font-normal text-left">

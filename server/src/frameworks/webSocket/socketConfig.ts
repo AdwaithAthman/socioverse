@@ -18,6 +18,14 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
             console.log("user joined the room " + room);
         })
 
+        socket.on('typing', (room: string) => {
+            socket.in(room).emit('typing', room)
+        })
+
+        socket.on('stop typing', (room: string) => {
+            socket.in(room).emit('stop typing')
+        })
+
         socket.on('new message', (newMessageRecieved: RecievedMessageInterface) => {
             const chat = newMessageRecieved.chat
             if(!chat.users) return console.log("chat.users is not defined");
@@ -25,6 +33,10 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
                 if(userId === newMessageRecieved.sender._id) return;
                 socket.in(userId).emit('message recieved', newMessageRecieved)
             })
+        })
+
+        socket.off('setup', (userData: UserDataInterface) => {
+            socket.leave(userData._id as string)
         })
 
     })

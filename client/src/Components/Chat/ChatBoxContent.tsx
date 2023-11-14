@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReactComponent as Loader } from "../../assets/Loader.svg";
 import InputEmoji from "react-input-emoji";
 import { toast } from "react-toastify";
@@ -11,7 +11,6 @@ import classnames from "classnames";
 import moment from "moment";
 import io, { Socket } from "socket.io-client";
 import common from "../../Constants/common";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -21,13 +20,14 @@ const ChatBoxContent = () => {
   );
   const user = useSelector((state: StoreType) => state.auth.user);
   const [socketConnected, setSocketConnected] = useState<boolean>(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   //socket io connection
   useEffect(() => {
     socket = io(common.API_BASE_URL);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-  
+
     return () => {
       socket.off("connected");
       socket.off("setup");
@@ -44,17 +44,21 @@ const ChatBoxContent = () => {
   }, [selectedChat]);
 
   useEffect(() => {
-      socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessageRecieved.chat._id
-        ) {
-          //show notification
-        } else {
-          setMessages([...messages, newMessageRecieved]);
-        }
-      });
+    socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        //show notification
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
   });
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -174,6 +178,7 @@ const ChatBoxContent = () => {
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef}></div>
           </div>
           <div className=" mx-4 mb-4">
             <InputEmoji

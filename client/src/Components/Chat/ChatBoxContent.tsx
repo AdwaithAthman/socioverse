@@ -20,17 +20,23 @@ const ChatBoxContent = () => {
   );
   const user = useSelector((state: StoreType) => state.auth.user);
   const [socketConnected, setSocketConnected] = useState<boolean>(false);
+  const [room, setRoom] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [typing, setTyping] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   //socket io connection
   useEffect(() => {
     socket = io(common.API_BASE_URL);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
+    
 
     return () => {
       socket.off("connected");
       socket.off("setup");
+      // socket.off("typing");
+      // socket.off("stop typing");
     };
   }, []);
 
@@ -39,10 +45,13 @@ const ChatBoxContent = () => {
   const [newMessage, setNewMessage] = useState<string>("");
 
   useEffect(() => {
+    setNewMessage("");
     fetchMessages();
     selectedChatCompare = selectedChat as ChatInterface;
   }, [selectedChat]);
 
+
+//useEffects for handling socket events
   useEffect(() => {
     socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
       if (
@@ -54,11 +63,18 @@ const ChatBoxContent = () => {
         setMessages([...messages, newMessageRecieved]);
       }
     });
+
+    socket.on("typing", (room) => {
+      setRoom(room);
+      setIsTyping(true);
+    });
+
+    socket.on("stop typing", () => setIsTyping(false));
   });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -80,6 +96,7 @@ const ChatBoxContent = () => {
 
   const handleSendMessage = async () => {
     try {
+      socket.emit("stop typing", selectedChat?._id);
       setNewMessage("");
       const response =
         selectedChat && (await sendMessage(newMessage, selectedChat._id));
@@ -97,6 +114,24 @@ const ChatBoxContent = () => {
     setNewMessage(value);
 
     //typing indicator logic
+    if (!socketConnected) return;
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat?._id);
+    }
+    const lastTypingTime = new Date().getTime();
+    const timerLength = 3000;
+    console.log("typing status outside setTimeout:", typing)
+
+    setTimeout(() => {
+      const timeNow = new Date().getTime();
+      const timeDiff = timeNow - lastTypingTime;
+      console.log("typing status of typing:", typing)
+      if (timeDiff >= timerLength) {
+        socket.emit("stop typing", selectedChat?._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -122,7 +157,7 @@ const ChatBoxContent = () => {
                     user &&
                     message.sender._id !== user._id && (
                       <img
-                        className="inline-block h-12 w-12 rounded-full"
+                        className="inline-block h-8 w-8 md:h-12 md:w-12 rounded-full"
                         src={
                           message.sender.dp
                             ? message.sender.dp
@@ -178,7 +213,11 @@ const ChatBoxContent = () => {
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef}></div>
+            <div ref={messagesEndRef} className="h-10">
+              {isTyping && selectedChat?._id === room && (
+                <div>Loading ....</div>
+              )}
+            </div>
           </div>
           <div className=" mx-4 mb-4">
             <InputEmoji

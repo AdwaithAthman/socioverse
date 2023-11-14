@@ -21,7 +21,7 @@ const ChatBox = () => {
 
   return selectedChat ? (
     <>
-      <div className="flex flex-col justify-between p-4 gap-8 h-full w-full">
+      <div className="flex flex-col justify-between p-2 md:p-4 gap-4 md:gap-8 h-full w-full">
         <header className="flex items-center justify-between">
           {/* <h1 className="font-medium text-2xl">
           {selectedChat.isGroupChat

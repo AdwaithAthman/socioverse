@@ -11,6 +11,9 @@ import classnames from "classnames";
 import moment from "moment";
 import io, { Socket } from "socket.io-client";
 import common from "../../Constants/common";
+import Lottie from "lottie-react";
+import typingAnimation from "../../assets/animations/typing.json";
+import './index.css'
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -24,6 +27,7 @@ const ChatBoxContent = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [typing, setTyping] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
+
 
   //socket io connection
   useEffect(() => {
@@ -147,7 +151,7 @@ const ChatBoxContent = () => {
               <div
                 key={message._id}
                 className={classnames(
-                  "flex mx-4 text-sm p-2",
+                  "flex md:mx-4 mx-1 text-sm p-2",
                   { "justify-end": message.sender._id === user?._id },
                   { "justify-start": message.sender._id !== user?._id }
                 )}
@@ -213,13 +217,13 @@ const ChatBoxContent = () => {
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef} className="h-10">
+            <div ref={messagesEndRef} className="h-10 md:mx-4 mx-1">
               {isTyping && selectedChat?._id === room && (
-                <div>Loading ....</div>
+                <div className="w-24"><Lottie animationData={typingAnimation} loop={true}/></div>
               )}
             </div>
           </div>
-          <div className=" mx-4 mb-4">
+          <div className=" md:mx-4 mx-1 md:mb-4 mb-2">
             <InputEmoji
               value={newMessage}
               onChange={typingHandler}
@@ -228,6 +232,7 @@ const ChatBoxContent = () => {
               placeholder="Enter a message..."
               theme="auto"
               fontSize={14}
+              onResize={(height) => console.log("height: ", height)}
               fontFamily="sans-serif"
               keepOpened={true}
               searchMention={async (text) => {

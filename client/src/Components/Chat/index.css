@@ -1,0 +1,29 @@
+.react-emoji-picker--wrapper {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 435px;
+    width: 352px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* For tablets */
+@media (max-width: 768px) {
+    .react-emoji-picker--wrapper {
+        transform: scale(0.8);
+        transform-origin: bottom right;
+        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}
+
+/* For mobile phones */
+@media (max-width: 480px) {
+    .react-emoji-picker--wrapper {
+        transform: scale(0.7);
+        transform-origin: bottom right;
+        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}

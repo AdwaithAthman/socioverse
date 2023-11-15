@@ -1,16 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import store, { StoreType } from "../Redux/Store";
 import ChatBox from "../Components/Chat/ChatBox";
 import MyChats from "../Components/Chat/MyChats";
-import SideDrawer from "../Components/Chat/SideDrawer";
 import { getUserInfo } from "../API/Profile";
 import { isAxiosError } from "axios";
 import { AxiosErrorData } from "../Types/axiosErrorData";
 import { setCredentials } from "../Redux/AuthSlice";
 import { ToastContainer } from "react-toastify";
 import classnames from "classnames";
+import { Socket, io } from "socket.io-client";
+import { ChatInterface, MessageInterface } from "../Types/chat";
+import common from "../Constants/common";
+import { setNotification } from "../Redux/ChatSlice";
+
+let socket: Socket, selectedChatCompare: ChatInterface;
 
 const ChatPage = () => {
   const user = useSelector((state: StoreType) => state.auth.user);
@@ -19,6 +24,27 @@ const ChatPage = () => {
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  //for socket purpose
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
+  const notification = useSelector(
+    (state: StoreType) => state.chat.notification
+  );
+  const [fetchUserChatsAgain, setFetchUserChatsAgain] =
+    useState<boolean>(false);
+
+  //socket io connection
+  useEffect(() => {
+    socket = io(common.API_BASE_URL);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+
+    return () => {
+      socket.off("connected");
+      socket.off("setup");
+    };
+  }, []);
+
   useEffect(() => {
     if (!user) {
       const userData = userInfo();
@@ -27,6 +53,30 @@ const ChatPage = () => {
       }
     }
   }, [navigate, user]);
+
+  useEffect(() => {
+    selectedChatCompare = selectedChat as ChatInterface;
+  }, [selectedChat]);
+
+  //useEffects for handling socket events
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
+      console.log("new message recieved: ", newMessageRecieved);
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        //show notification
+        if (!notification.includes(newMessageRecieved)) {
+          console.log("notification s/m is working");
+          dispatch(
+            setNotification([newMessageRecieved, ...notification])
+          );
+          setFetchUserChatsAgain(true);
+        }
+      }
+    });
+  });
 
   const userInfo = async () => {
     try {
@@ -60,16 +110,20 @@ const ChatPage = () => {
             { hidden: selectedChat }
           )}
         >
-          <MyChats userId={(user && user._id) as string} />
+          <MyChats
+            userId={(user && user._id) as string}
+            fetchUserChatsAgain={fetchUserChatsAgain}
+            setFetchUserChatsAgain={setFetchUserChatsAgain}
+          />
         </div>
         <div
           className={classnames(
             "md:block md:w-8/12 h-full bg-white border border-blue-gray-500 rounded-xl",
             { "w-full block": selectedChat },
-            { "hidden": !selectedChat }
+            { hidden: !selectedChat }
           )}
         >
-          <ChatBox />
+          <ChatBox socket={socket} socketConnected={socketConnected} />
         </div>
       </div>
     </div>

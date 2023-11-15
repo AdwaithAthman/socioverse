@@ -1,15 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store";
 import { ReactComponent as ChatSvg } from "../../assets/ChatSvg.svg";
-import { getSender } from "../../utils/Config/getSenderInChat";
+import { getSender } from "../../utils/Config/chatMethods";
 import { FaArrowLeft } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
 import { setSelectedChat } from "../../Redux/ChatSlice";
 import { useState } from "react";
 import OptionsDialog from "./OptionsDialog";
 import ChatBoxContent from "./ChatBoxContent";
+import { Socket } from "socket.io-client";
 
-const ChatBox = () => {
+const ChatBox = ({
+  socket,
+  socketConnected,
+}: {
+  socket: Socket;
+  socketConnected: boolean;
+}) => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
@@ -73,7 +80,7 @@ const ChatBox = () => {
           </div>
         </header>
         <div className=" h-full w-full flex flex-col gap-4 overflow-y-scroll no-scrollbar bg-blue-gray-300/50 rounded-xl">
-          <ChatBoxContent />
+          <ChatBoxContent socket={socket} socketConnected={socketConnected} />
         </div>
       </div>
       <OptionsDialog

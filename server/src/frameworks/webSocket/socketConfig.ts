@@ -9,7 +9,7 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
         console.log("connected to socket.io");
 
         socket.on('setup', (userData: UserDataInterface) => {
-            socket.join(userData._id as string)
+            userData && socket.join(userData._id as string)
             socket.emit('connected')
         });
 

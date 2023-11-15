@@ -10,7 +10,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../../Redux/Store";
-import { getSender } from "../../utils/Config/getSenderInChat";
+import { getSender } from "../../utils/Config/chatMethods";
 import { Link } from "react-router-dom";
 import UserCard from "./UserCard";
 import AdminGroupEdit from "./AdminGroupEdit";

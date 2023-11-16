@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setChats, setSelectedChat } from "../../Redux/ChatSlice";
+import { setChats, setFetchUserChatsAgain, setSelectedChat } from "../../Redux/ChatSlice";
 import { TOAST_ACTION } from "../../Constants/common";
 import { toast } from "react-toastify";
 import { fetchChats } from "../../API/Chat";
@@ -9,7 +9,7 @@ import SideDrawer from "./SideDrawer";
 import { Button } from "@material-tailwind/react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import ChatLoading from "../Skeletons/ChatLoading";
-import { getSender } from "../../utils/Config/chatMethods";
+import { getSender, truncate } from "../../utils/Config/chatMethods";
 
 //importing types
 import { StoreType } from "../../Redux/Store";
@@ -18,26 +18,23 @@ import CreateGroupDialog from "./CreateGroupDialog";
 
 const MyChats = ({
   userId,
-  fetchUserChatsAgain,
-  setFetchUserChatsAgain,
 }: {
   userId: string;
-  fetchUserChatsAgain: boolean;
-  setFetchUserChatsAgain: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const dispatch = useDispatch();
   const chats = useSelector((state: StoreType) => state.chat.chats);
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
+  const fetchUserChatsAgain = useSelector((state: StoreType) => state.chat.fetchUserChatsAgain);
   const [openCreateGroupDialog, SetOpenCreateGroupDialog] =
     useState<boolean>(false);
   const handleCreateGroupDialog = () => SetOpenCreateGroupDialog((cur) => !cur);
 
   useEffect(() => {
     fetchUserChats();
-    if(fetchUserChatsAgain){
-      setFetchUserChatsAgain(false);
+    if (fetchUserChatsAgain) {
+      dispatch(setFetchUserChatsAgain(false));
     }
   }, [fetchUserChatsAgain]);
 
@@ -132,7 +129,16 @@ const MyChats = ({
                           }
                         )}
                       >
-                        message
+                        {chat.latestMessage ? (
+                          <>
+                            {/* <span className="font-bold">
+                              {chat.latestMessage.sender?.name} :{" "}
+                            </span> */}
+                            {truncate(chat.latestMessage.content, 20)}
+                          </>
+                        ) : (
+                          " no message"
+                        )}
                       </span>
                     </span>
                   </div>
@@ -176,7 +182,9 @@ const MyChats = ({
                           }
                         )}
                       >
-                        message
+                        {chat.latestMessage
+                          ? truncate(chat.latestMessage.content, 20)
+                          : " no message"}
                       </span>
                     </span>
                   </div>

@@ -27,6 +27,12 @@ export const chatRepositoryMongoDB = () => {
         .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
         .populate("latestMessage")
         .populate("latestMessage.sender", "name username email dp");
+        // .populate({
+        //   path: 'latestMessage',
+        //   populate: {
+        //     path: 'sender'
+        //   }
+        // })
 
       return chat;
     } catch (err) {

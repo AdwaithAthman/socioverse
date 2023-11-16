@@ -13,7 +13,7 @@ import classnames from "classnames";
 import { Socket, io } from "socket.io-client";
 import { ChatInterface, MessageInterface } from "../Types/chat";
 import common from "../Constants/common";
-import { setNotification } from "../Redux/ChatSlice";
+import { setFetchUserChatsAgain, setNotification } from "../Redux/ChatSlice";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -30,8 +30,10 @@ const ChatPage = () => {
   const notification = useSelector(
     (state: StoreType) => state.chat.notification
   );
-  const [fetchUserChatsAgain, setFetchUserChatsAgain] =
-    useState<boolean>(false);
+  //
+  const fetchUserChatsAgain = useSelector(
+    (state: StoreType) => state.chat.fetchUserChatsAgain
+  );
 
   //socket io connection
   useEffect(() => {
@@ -43,7 +45,7 @@ const ChatPage = () => {
       socket.off("connected");
       socket.off("setup");
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!user) {
@@ -58,24 +60,23 @@ const ChatPage = () => {
     selectedChatCompare = selectedChat as ChatInterface;
   }, [selectedChat]);
 
-  //useEffects for handling socket events
+  // useEffects for handling socket events
   useEffect(() => {
-    socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
-      console.log("new message recieved: ", newMessageRecieved);
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageRecieved.chat._id
-      ) {
-        //show notification
-        if (!notification.includes(newMessageRecieved)) {
-          console.log("notification s/m is working");
-          dispatch(
-            setNotification([newMessageRecieved, ...notification])
-          );
-          setFetchUserChatsAgain(true);
+    if (socket) {
+      socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
+        console.log("new message recieved1: ", newMessageRecieved);
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessageRecieved.chat._id
+        ) {
+          //show notification
+          if(!notification.some((message) => message._id === newMessageRecieved._id)) {
+            dispatch(setNotification(newMessageRecieved));
+            dispatch(setFetchUserChatsAgain(true));
+          }
         }
-      }
-    });
+      });
+    }
   });
 
   const userInfo = async () => {
@@ -98,6 +99,10 @@ const ChatPage = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("fetchUserChatsAgain", fetchUserChatsAgain);
+  });
+
   return (
     <div className="w-full h-[80vh] lg:h-[85vh] ">
       {/* <SideDrawer userId={(user && user._id) as string} /> */}
@@ -110,11 +115,7 @@ const ChatPage = () => {
             { hidden: selectedChat }
           )}
         >
-          <MyChats
-            userId={(user && user._id) as string}
-            fetchUserChatsAgain={fetchUserChatsAgain}
-            setFetchUserChatsAgain={setFetchUserChatsAgain}
-          />
+          <MyChats userId={(user && user._id) as string} />
         </div>
         <div
           className={classnames(

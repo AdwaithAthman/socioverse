@@ -80,7 +80,10 @@ const ChatBox = ({
           </div>
         </header>
         <div className=" h-full w-full flex flex-col gap-4 overflow-y-scroll no-scrollbar bg-blue-gray-300/50 rounded-xl">
-          <ChatBoxContent socket={socket} socketConnected={socketConnected} />
+          <ChatBoxContent
+            socket={socket}
+            socketConnected={socketConnected}
+          />
         </div>
       </div>
       <OptionsDialog

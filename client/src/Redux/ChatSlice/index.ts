@@ -4,13 +4,15 @@ import { ChatInterface, MessageInterface } from "../../Types/chat";
 interface ChatState {
     selectedChat: ChatInterface | null,
     chats: ChatInterface[],
-    notification: MessageInterface[]
+    notification: MessageInterface[],
+    fetchUserChatsAgain: boolean
 }
 
 const initialState: ChatState = {
     selectedChat: null,
     chats: [],
-    notification: []
+    notification: [],
+    fetchUserChatsAgain: false
 }
 
 const chatSlice = createSlice({
@@ -23,11 +25,15 @@ const chatSlice = createSlice({
         setChats: (state, action) => {
             state.chats = action.payload;
         },
-        setNotification: (state, action) => {
-            state.notification = action.payload;
+        setNotification: (state, action: { payload: MessageInterface}) => {
+            if(state.notification.some((message) => message._id === action.payload._id)) return ;
+            state.notification = [action.payload, ...state.notification]
+        },
+        setFetchUserChatsAgain: (state, action) => {
+            state.fetchUserChatsAgain = action.payload;
         }
     }
 });
 
-export const { setSelectedChat, setChats, setNotification } = chatSlice.actions;
+export const { setSelectedChat, setChats, setNotification, setFetchUserChatsAgain } = chatSlice.actions;
 export default chatSlice.reducer;

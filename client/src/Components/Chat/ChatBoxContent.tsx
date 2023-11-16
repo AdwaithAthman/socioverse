@@ -14,7 +14,11 @@ import common from "../../Constants/common";
 import Lottie from "lottie-react";
 import typingAnimation from "../../assets/animations/typing.json";
 import "./index.css";
-import { setChats, setNotification } from "../../Redux/ChatSlice";
+import {
+  setChats,
+  setFetchUserChatsAgain,
+  setNotification,
+} from "../../Redux/ChatSlice";
 import { fetchChats } from "../../API/Chat";
 import { groupByDate } from "../../utils/Config/chatMethods";
 
@@ -30,6 +34,12 @@ const ChatBoxContent = ({
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
+  const fetchUserChatsAgain = useSelector(
+    (state: StoreType) => state.chat.fetchUserChatsAgain
+  );
+  const notification = useSelector(
+    (state: StoreType) => state.chat.notification
+  );
 
   const user = useSelector((state: StoreType) => state.auth.user);
   const [room, setRoom] = useState<string>("");
@@ -39,6 +49,7 @@ const ChatBoxContent = ({
   const [messages, setMessages] = useState<MessageInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState<string>("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setNewMessage("");
@@ -48,21 +59,30 @@ const ChatBoxContent = ({
 
   //useEffects for handling socket events
   useEffect(() => {
-    socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
-      if (
-        selectedChatCompare &&
-        selectedChatCompare._id === newMessageRecieved.chat._id
-      ) {
-        setMessages([...messages, newMessageRecieved]);
-      }
-    });
+    if (socket) {
+      socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
+        console.log("selectedChatCompare: ", selectedChatCompare);
+        console.log(
+          "comparison: ",
+          !selectedChatCompare ||
+            selectedChatCompare._id !== newMessageRecieved.chat._id
+        );
+        if (
+          selectedChatCompare &&
+          selectedChatCompare._id === newMessageRecieved.chat._id
+        ) {
+          setMessages([...messages, newMessageRecieved]);
+          dispatch(setFetchUserChatsAgain(true));
+        }
+      });
 
-    socket.on("typing", (room) => {
-      setRoom(room);
-      setIsTyping(true);
-    });
+      socket.on("typing", (room) => {
+        setRoom(room);
+        setIsTyping(true);
+      });
 
-    socket.on("stop typing", () => setIsTyping(false));
+      socket.on("stop typing", () => setIsTyping(false));
+    }
   });
 
   useEffect(() => {
@@ -78,6 +98,7 @@ const ChatBoxContent = ({
       setMessages(response.messages);
       setLoading(false);
       if (socket) {
+        console.log("joined room");
         socket.emit("join room", selectedChat._id);
       }
     } catch (error) {
@@ -93,6 +114,7 @@ const ChatBoxContent = ({
       setNewMessage("");
       const response =
         selectedChat && (await sendMessage(newMessage, selectedChat._id));
+      dispatch(setFetchUserChatsAgain(true));
       response && socket.emit("new message", response.message);
       response && setMessages((cur) => [...cur, response.message]);
     } catch (err) {
@@ -101,6 +123,8 @@ const ChatBoxContent = ({
       toast.error("Error sending message", TOAST_ACTION);
     }
   };
+
+  let typingTimeout: NodeJS.Timeout;
 
   const typingHandler = (value: string) => {
     setNewMessage(value);
@@ -111,18 +135,38 @@ const ChatBoxContent = ({
       setTyping(true);
       socket.emit("typing", selectedChat?._id);
     }
-    const lastTypingTime = new Date().getTime();
+
     const timerLength = 3000;
 
-    setTimeout(() => {
-      const timeNow = new Date().getTime();
-      const timeDiff = timeNow - lastTypingTime;
-      if (timeDiff >= timerLength) {
-        socket.emit("stop typing", selectedChat?._id);
-        setTyping(false);
-      }
+    // Clear the previous timeout
+    clearTimeout(typingTimeout);
+
+    // Set a new timeout
+    typingTimeout = setTimeout(() => {
+      socket.emit("stop typing", selectedChat?._id);
+      setTyping(false);
     }, timerLength);
   };
+
+  // const typingHandler = (value: string) => {
+  //   setNewMessage(value);
+  //   if (!socketConnected) return;
+  //   if (!typing) {
+  //     setTyping(true);
+  //     socket.emit("typing", selectedChat?._id);
+  //   }
+  //   const lastTypingTime = new Date().getTime();
+  //   const timerLength = 3000;
+
+  //   setTimeout(() => {
+  //     const timeNow = new Date().getTime();
+  //     const timeDiff = timeNow - lastTypingTime;
+  //     if (timeDiff >= timerLength) {
+  //       socket.emit("stop typing", selectedChat?._id);
+  //       setTyping(false);
+  //     }
+  //   }, timerLength);
+  // };
 
   return (
     <>
@@ -134,17 +178,16 @@ const ChatBoxContent = ({
         <>
           <div className="overflow-y-scroll flex flex-col h-full mt-4 no-scrollbar gap-2 w-full">
             {Object.entries(groupByDate(messages)).map(([date, messages]) => (
-              <div key={`date${date}`}>
+              <div key={`date+${date}`}>
                 <div className="flex justify-center mt-8 mb-4">
                   <h1 className="bg-socioverse-100 rounded-xl px-2 py-1 text-xs font-thin text-blue-gray-900">
                     {date}
                   </h1>
                 </div>
                 <div className="flex flex-col gap-2">
-                {messages.map((message) => (
-                  <>
+                  {messages.map((message) => (
                     <div
-                      key={`message${message._id}`}
+                      key={`message+${date}+${message._id}`}
                       className={classnames(
                         "flex md:mx-4 mx-1 text-sm p-2",
                         { "justify-end": message.sender._id === user?._id },
@@ -211,8 +254,7 @@ const ChatBoxContent = ({
                         </div>
                       </div>
                     </div>
-                  </>
-                ))}
+                  ))}
                 </div>
               </div>
             ))}

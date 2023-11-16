@@ -1,21 +1,39 @@
 import { Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 //import { useNavigate, useLocation } from "react-router-dom";
 
 //imports from Components
 import ComplexNavbar from "./Components/Header";
 import Footer from "./Components/Footer";
+import { StoreType } from "./Redux/Store";
+import AccountVerificationPopup from "./Components/AccountVerificationPopup";
 
 const App = () => {
-  // const location = useLocation();
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if(location.pathname === "/") {
-  //     navigate("/home");
-  //   }
-  // },[]);
-  // const token = localStorage.getItem("token");
-  // (!token)? navigate("/login") : navigate("/home");
+  const user = useSelector((state: StoreType) => state.auth.user);
+
+  const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
+  const [accountVerifyPopupOpen, setAccountVerifyPopupOpen] =
+    useState<boolean>(false);
+  useEffect(() => {
+    if (user) {
+      setIsAccountVerified(user.isAccountVerified);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!isAccountVerified) {
+      setAccountVerifyPopupOpen(true);
+    } else {
+      setAccountVerifyPopupOpen(false);
+    }
+  }, [isAccountVerified]);
+
+  const handleAccountVerifyPopup = () => {
+    setAccountVerifyPopupOpen((prev) => !prev);
+  };
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -29,11 +47,18 @@ const App = () => {
         >
           <ComplexNavbar />
           <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 lg:px-10 no-scollbar">
-          <Outlet />
+            <Outlet />
           </div>
           <Footer />
         </motion.div>
       </AnimatePresence>
+
+      {/* popup windows */}
+      <AccountVerificationPopup
+        handleAccountVerifyPopup={handleAccountVerifyPopup}
+        accountVerifyPopupOpen={accountVerifyPopupOpen}
+        setIsAccountVerified={setIsAccountVerified}
+      />
     </>
   );
 };

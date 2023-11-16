@@ -149,7 +149,7 @@ export const handleUpdateProfile = async (
   dbUserRepository: ReturnType<UserDbInterface>
 ) => {
   try {
-    if (profileInfo?.email) {
+    if (profileInfo.email) {
       const existingEmail = await dbUserRepository.getUserByEmail(
         profileInfo.email
       );
@@ -159,7 +159,7 @@ export const handleUpdateProfile = async (
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       } else {
-        await dbUserRepository.changeIsAccountUnverified(profileInfo.email);
+      profileInfo.userId && await dbUserRepository.changeIsAccountUnverified(profileInfo.userId);
       }
     }
     if (profileInfo?.username) {

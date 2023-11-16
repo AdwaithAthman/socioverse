@@ -34,9 +34,6 @@ const HomeLarge = ({ user }: { user: User }) => {
     null
   );
   const [postEdited, setPostEdited] = useState<PostDataInterface | null>(null);
-  const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
-  const [accountVerifyPopupOpen, setAccountVerifyPopupOpen] =
-    useState<boolean>(false);
   const [isUsernameAvailable, setIsUsernameAvailable] =
     useState<boolean>(false);
   const [usernameInputPopupOpen, setUsernameInputPopupOpen] =
@@ -46,18 +43,9 @@ const HomeLarge = ({ user }: { user: User }) => {
 
   useEffect(() => {
     if (user) {
-      setIsAccountVerified(user.isAccountVerified);
       setIsUsernameAvailable(user.username ? true : false);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (!isAccountVerified) {
-      setAccountVerifyPopupOpen(true);
-    } else {
-      setAccountVerifyPopupOpen(false);
-    }
-  }, [isAccountVerified]);
 
   useEffect(() => {
     if (!isUsernameAvailable) {
@@ -66,10 +54,6 @@ const HomeLarge = ({ user }: { user: User }) => {
       setUsernameInputPopupOpen(false);
     }
   }, [isUsernameAvailable]);
-
-  const handleAccountVerifyPopup = () => {
-    setAccountVerifyPopupOpen((prev) => !prev);
-  };
 
   const handleUsernameInputPopup = () => {
     setUsernameInputPopupOpen((prev) => !prev);
@@ -240,11 +224,6 @@ const HomeLarge = ({ user }: { user: User }) => {
           />
         </aside>
       </div>
-      <AccountVerificationPopup
-        handleAccountVerifyPopup={handleAccountVerifyPopup}
-        accountVerifyPopupOpen={accountVerifyPopupOpen}
-        setIsAccountVerified={setIsAccountVerified}
-      />
       <UsernameInputPopup
         handleUsernameInputPopup={handleUsernameInputPopup}
         usernameInputPopupOpen={usernameInputPopupOpen}
@@ -256,42 +235,3 @@ const HomeLarge = ({ user }: { user: User }) => {
 
 export default HomeLarge;
 
-{
-  /* <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.6, opacity: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              >
-                <Card className="mb-12 overflow-hidden">
-                  <img
-                    alt="nature"
-                    className="h-[32rem] w-full object-cover object-center"
-                    src="https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2717&q=80"
-                  />
-                </Card>
-                <Typography variant="h2" color="blue-gray" className="mb-2">
-                  What is Material Tailwind
-                </Typography>
-                <Typography color="gray" className="font-normal">
-                  Can you help me out? you will get a lot of free exposure doing
-                  this can my website be in english?. There is too much white
-                  space do less with more, so that will be a conversation piece
-                  can you rework to make the pizza look more delicious other
-                  agencies charge much lesser can you make the blue bluer?. I
-                  think we need to start from scratch can my website be in
-                  english?, yet make it sexy i&apos;ll pay you in a week we
-                  don&apos;t need to pay upfront i hope you understand can you
-                  make it stand out more?. Make the font bigger can you help me
-                  out? you will get a lot of free exposure doing this
-                  that&apos;s going to be a chunk of change other agencies
-                  charge much lesser. Are you busy this weekend? I have a new
-                  project with a tight deadline that&apos;s going to be a chunk
-                  of change. There are more projects lined up charge extra the
-                  next time.
-                </Typography>
-              </motion.div>
-            </AnimatePresence> */
-}

@@ -58,7 +58,7 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
 
     const changeIsAccountVerified = async(email: string) => await repository.changeIsAccountVerified(email)
 
-    const changeIsAccountUnverified = async(email: string) => await repository.changeIsAccountUnverified(email)
+    const changeIsAccountUnverified = async(userId: string) => await repository.changeIsAccountUnverified(userId)
     
     const getAllUsers = async() => await repository.getAllUsers()
 

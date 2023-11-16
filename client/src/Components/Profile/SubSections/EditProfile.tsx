@@ -115,9 +115,9 @@ const EditProfile = () => {
         toast.success("Profile updated successfully!", TOAST_ACTION);
         if (result) {
           dispatch(setCredentials({ result: result.user, accessToken }));
-          // setTimeout(() => {
-          //   navigate(`/profile/${result.user._id}`);
-          // }, 2000)
+          setTimeout(() => {
+            navigate(`/profile/${result.user._id}`);
+          }, 2000)
         }
       } catch (error) {
         if (isAxiosError(error)) {

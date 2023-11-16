@@ -362,9 +362,9 @@ export const userRepositoryMongoDB = () => {
     }
   }
 
-  const changeIsAccountUnverified = async (email: string) => {
+  const changeIsAccountUnverified = async (userId: string) => {
     try {
-      await User.updateOne({ email }, {
+      await User.updateOne({ _id: userId }, {
         $set: {
           isAccountVerified: false
         }

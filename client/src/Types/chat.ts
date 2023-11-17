@@ -16,6 +16,7 @@ export interface ChatInterface {
     users: User[];
     latestMessage: MessageInterface;
     groupAdmin: User;
+    groupDp: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -43,4 +44,9 @@ export interface UpdateGroupResponse {
 export interface RemoveFromGroupResponse {
     status: string;
     updatedChat: ChatInterface; 
+}
+
+export interface AddGroupDpResponse {
+    status: string;
+    groupChat: ChatInterface;   
 }

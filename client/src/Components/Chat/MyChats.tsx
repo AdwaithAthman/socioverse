@@ -54,7 +54,7 @@ const MyChats = ({
 
   return (
     <>
-      <div className="flex flex-col justify-between p-4 gap-8">
+      <div className="flex flex-col justify-between p-4 gap-8 h-full">
         <header className="flex items-center justify-between">
           <h1 className="font-bold text-2xl">My Chats</h1>
           <div className="flex items-center justify-between gap-3">
@@ -73,7 +73,7 @@ const MyChats = ({
             <SideDrawer userId={userId} />
           </div>
         </header>
-        <div className="flex flex-col gap-4 overflow-y-scroll no-scrollbar">
+        <div className="flex flex-col gap-4 h-full overflow-y-scroll no-scrollbar ">
           {chats.length === 0 ? (
             <div className="overflow-y-hidden flex flex-col gap-4 w-full">
               {Array(6)
@@ -97,7 +97,7 @@ const MyChats = ({
                   <div className="s) => setLimt-3 flex items-center space-x-2 ">
                     <img
                       className="inline-block h-12 w-12 rounded-full"
-                      src={common.DEFAULT_IMG}
+                      src={chat.groupDp}
                       alt="group dp"
                     />
                     <span className="flex flex-col">

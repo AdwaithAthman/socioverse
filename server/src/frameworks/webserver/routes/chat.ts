@@ -2,6 +2,8 @@ import { Router } from 'express';
 import chatController from '../../../adapters/chatController';
 import { chatRepositoryMongoDB } from '../../database/mongoDB/repositories/chatRepositoryMongoDB';
 import { chatDbRepository } from '../../../application/repositories/chatDbRepository';
+import { cloudinaryService } from "../../services/cloudinaryService";
+import { cloudinaryServiceInterface } from "../../../application/services/cloudinaryServiceInterface";
 
 //importing middlewares
 import authMiddleware from '../middlewares/authMiddleware';
@@ -13,6 +15,8 @@ const chatRouter = () => {
     const controller = chatController(
         chatRepositoryMongoDB,
         chatDbRepository,
+        cloudinaryService,
+        cloudinaryServiceInterface
     );
 
     //routes
@@ -24,6 +28,7 @@ const chatRouter = () => {
     router.delete('/removeFromGroup', authMiddleware, controller.removeFromGroup);
     router.patch('/updateGroup/:groupId', uploadToMulter.none(), authMiddleware, controller.updateGroup);
     router.delete('/groupRemove/:groupId', authMiddleware, controller.groupRemove)
+    router.patch('/addGroupDp/:groupId', uploadToMulter.single('groupDp'), authMiddleware, controller.addGroupDp);
 
     return router;
 }

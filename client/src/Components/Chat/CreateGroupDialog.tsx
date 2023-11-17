@@ -19,8 +19,9 @@ import common, { TOAST_ACTION } from "../../Constants/common";
 import ChatLoading from "../Skeletons/ChatLoading";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store";
-import { createGroupChat } from "../../API/Chat";
+import { addGroupDp, createGroupChat } from "../../API/Chat";
 import { setChats } from "../../Redux/ChatSlice";
+import { CgProfile } from "react-icons/cg";
 
 function CreateGroupDialog({
   openCreateGroupDialog,
@@ -31,12 +32,14 @@ function CreateGroupDialog({
 }) {
   const dispatch = useDispatch();
   const userId = useSelector((state: StoreType) => state.auth.user?._id);
+  const [data, setData] = useState<FormData>(new FormData());
   const [groupChatName, setGroupChatName] = useState<string>("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const chats = useSelector((state: StoreType) => state.chat.chats);
+  const [imgFile, setImgFile] = useState<File>();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -83,16 +86,32 @@ function CreateGroupDialog({
       return;
     }
     try {
+      if (imgFile) {
+        data.append("groupDp", imgFile);
+      }
       const response = await createGroupChat(groupChatName, selectedUsers);
-      dispatch(setChats([response.groupChat, ...chats]));
+      if (imgFile) {
+        console.log("imgaeFile: ", imgFile)
+        const imageResponse = await addGroupDp(response.groupChat._id, data);
+        dispatch(setChats([imageResponse.groupChat, ...chats]));
+      } else {
+        dispatch(setChats([response.groupChat, ...chats]));
+      }
       toast.dismiss();
       toast.success("Group created successfully", TOAST_ACTION);
+      setImgFile(undefined);
       setGroupChatName("");
       setSelectedUsers([]);
       handleCreateGroupDialog();
     } catch (err) {
       toast.dismiss();
-      toast.error("Failed to create group", TOAST_ACTION);
+      toast.error("Error in creating group chat", TOAST_ACTION);
+    }
+  };
+
+  const handleGroupDp = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImgFile(e.target.files[0]);
     }
   };
 
@@ -105,7 +124,7 @@ function CreateGroupDialog({
         }}
         open={openCreateGroupDialog}
         handler={handleCreateGroupDialog}
-        className="bg-transparent shadow-none"
+        className="bg-transparent shadow-none max-h-[90vh] overflow-y-scroll no-scrollbar"
       >
         <ToastContainer />
         <Card className="mx-auto w-full ">
@@ -118,10 +137,33 @@ function CreateGroupDialog({
                 className="text-3xl cursor-pointer text-black"
                 onClick={(e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
                   e.stopPropagation();
+                  setImgFile(undefined);
                   setSelectedUsers([]);
                   handleCreateGroupDialog();
                 }}
               />
+            </div>
+            <Typography className="-mb-2" variant="h6">
+              Add Image
+            </Typography>
+            <div className="mx-auto">
+              <input
+                type="file"
+                accept="image/*"
+                id="image-input"
+                className="hidden"
+                onChange={handleGroupDp}
+              />
+              <label htmlFor="image-input">
+                <img
+                  src={
+                    imgFile instanceof File
+                      ? URL.createObjectURL(imgFile)
+                      : imgFile || common.DEFAULT_IMG
+                  }
+                  className="h-36 w-36 rounded-full border-4 border-gray-500 border-dashed bg-white m-2 flex items-center justify-center cursor-pointer p-2"
+                />
+              </label>
             </div>
             <Typography className="-mb-2" variant="h6">
               Group Name
@@ -179,11 +221,7 @@ function CreateGroupDialog({
                         <div className="s) => setLimt-3 flex items-center space-x-2">
                           <img
                             className="inline-block h-12 w-12 rounded-full"
-                            src={
-                              user.dp
-                                ? user.dp
-                                : common.DEFAULT_IMG
-                            }
+                            src={user.dp ? user.dp : common.DEFAULT_IMG}
                             alt="user dp"
                           />
                           <span className="flex flex-col">
@@ -202,7 +240,10 @@ function CreateGroupDialog({
             )}
           </CardBody>
           <CardFooter className="pt-0">
-            <Button onClick={handleSubmit} className="float-right bg-socioverse-400 rounded-full">
+            <Button
+              onClick={handleSubmit}
+              className="float-right bg-socioverse-400 rounded-full"
+            >
               Create Chat
             </Button>
           </CardFooter>

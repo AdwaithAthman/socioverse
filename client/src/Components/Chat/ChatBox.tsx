@@ -9,6 +9,7 @@ import { useState } from "react";
 import OptionsDialog from "./OptionsDialog";
 import ChatBoxContent from "./ChatBoxContent";
 import { Socket } from "socket.io-client";
+import common from "../../Constants/common";
 
 const ChatBox = ({
   socket,
@@ -39,7 +40,7 @@ const ChatBox = ({
             <div className="flex items-center justify-between gap-4">
               <img
                 className="inline-block h-10 w-10 md:h-12 md:w-12 rounded-full"
-                src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                src={common.DEFAULT_IMG}
                 alt="group dp"
               />
               <h1 className="font-medium text-lg md:text-2xl">
@@ -53,7 +54,7 @@ const ChatBox = ({
                 src={
                   userId && getSender(userId, selectedChat.users).dp
                     ? getSender(userId, selectedChat.users).dp
-                    : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                    : common.DEFAULT_IMG
                 }
                 alt="dp"
               />

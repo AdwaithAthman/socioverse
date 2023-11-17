@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setChats, setFetchUserChatsAgain, setSelectedChat } from "../../Redux/ChatSlice";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { toast } from "react-toastify";
 import { fetchChats } from "../../API/Chat";
 import classnames from "classnames";
@@ -97,7 +97,7 @@ const MyChats = ({
                   <div className="s) => setLimt-3 flex items-center space-x-2 ">
                     <img
                       className="inline-block h-12 w-12 rounded-full"
-                      src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                      src={common.DEFAULT_IMG}
                       alt="group dp"
                     />
                     <span className="flex flex-col">
@@ -149,7 +149,7 @@ const MyChats = ({
                       src={
                         getSender(userId, chat.users).dp
                           ? getSender(userId, chat.users).dp
-                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                          : common.DEFAULT_IMG
                       }
                       alt="dp"
                     />

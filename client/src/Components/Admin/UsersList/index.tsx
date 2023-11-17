@@ -31,7 +31,7 @@ import { toast } from "react-toastify";
 
 //importing types
 import { User } from "../../../Types/loginUser";
-import { TOAST_ACTION } from "../../../Constants/common";
+import common, { TOAST_ACTION } from "../../../Constants/common";
 
 const TABLE_HEAD = [
   "User",
@@ -250,7 +250,7 @@ const UsersList = () => {
                           <Avatar src={dp} alt={name} size="sm" />
                         ) : (
                           <Avatar
-                            src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                            src={common.DEFAULT_IMG}
                             alt={name}
                             size="sm"
                           />

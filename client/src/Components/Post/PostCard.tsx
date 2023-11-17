@@ -8,7 +8,7 @@ import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import {
   deletePost,
   likePost,
@@ -237,7 +237,7 @@ function PostCard({
                 src={
                   post.user?.dp
                     ? post.user?.dp
-                    : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                    : common.DEFAULT_IMG
                 }
                 alt="Profile Picture"
               />

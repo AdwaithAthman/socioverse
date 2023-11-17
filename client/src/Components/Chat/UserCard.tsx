@@ -1,3 +1,4 @@
+import common from "../../Constants/common";
 import { User } from "../../Types/loginUser";
 
 const UserCard = ({ user }: { user: User }) => {
@@ -13,7 +14,7 @@ const UserCard = ({ user }: { user: User }) => {
           src={
             user.dp
               ? user.dp
-              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+              : common.DEFAULT_IMG
           }
           alt="user dp"
         />

@@ -15,7 +15,7 @@ import classnames from "classnames";
 import ImageCropper from "../Crop/ImageCropper";
 import { useSelector } from "react-redux";
 import { usePostUploadMutation } from "../../utils/hooks/usePostUploadMutation";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { toast, ToastContainer } from "react-toastify";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch } from "react-redux";
@@ -182,7 +182,7 @@ const PostDialogBox = ({
                       src={
                         user.dp
                           ? user.dp
-                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                          : common.DEFAULT_IMG
                       }
                       alt="user dp"
                     />

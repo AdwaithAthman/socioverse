@@ -33,7 +33,7 @@ import { useSelector } from "react-redux";
 import { StoreType } from "../Redux/Store";
 import { logoutUser } from "../API/Auth";
 import { toast } from "react-toastify";
-import { TOAST_ACTION } from "../Constants/common";
+import common, { TOAST_ACTION } from "../Constants/common";
 import SearchInputDialog from "./Search";
 import { enableSearchMode, disableSearchMode } from "../Redux/PostSlice";
 import { deleteNotification, setSelectedChat } from "../Redux/ChatSlice";
@@ -214,10 +214,10 @@ function ProfileMenu() {
                                 group-hover:scale-95 group-hover:p-[0.15rem] group-hover:ring group-hover:ring-blue-gray-500"
                                 src={
                                   notif.chat.isGroupChat
-                                    ? "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                                    ? common.DEFAULT_IMG
                                     : notif.sender.dp
                                     ? notif.sender.dp
-                                    : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                                    : common.DEFAULT_IMG
                                 }
                                 alt="dp"
                               />
@@ -296,7 +296,7 @@ function ProfileMenu() {
               src={
                 userInfo?.dp
                   ? userInfo.dp
-                  : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                  : common.DEFAULT_IMG
               }
             />
             <ChevronDownIcon

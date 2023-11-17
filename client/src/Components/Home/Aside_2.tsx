@@ -15,7 +15,7 @@ import {
   unfollowUser,
 } from "../../API/User";
 import { ToastContainer, toast } from "react-toastify";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { getUserInfo } from "../../API/Profile";
 import { RiUserUnfollowFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -137,7 +137,7 @@ function AsideTwo({
                           src={
                             userProfile.dp
                               ? userProfile.dp
-                              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                              : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />
@@ -259,7 +259,7 @@ function AsideTwo({
                       src={
                         userProfile.dp
                           ? userProfile.dp
-                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                          : common.DEFAULT_IMG
                       }
                       alt="user dp"
                     />

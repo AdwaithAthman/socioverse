@@ -203,7 +203,7 @@ const ChatBoxContent = ({
                               src={
                                 message.sender.dp
                                   ? message.sender.dp
-                                  : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                                  : common.DEFAULT_IMG
                               }
                               alt="user dp"
                             />

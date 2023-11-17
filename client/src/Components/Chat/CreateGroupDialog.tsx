@@ -15,7 +15,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { User } from "../../Types/loginUser";
 import { searchUsers } from "../../API/Profile";
 import { ToastContainer, toast } from "react-toastify";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import ChatLoading from "../Skeletons/ChatLoading";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store";
@@ -182,7 +182,7 @@ function CreateGroupDialog({
                             src={
                               user.dp
                                 ? user.dp
-                                : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                                : common.DEFAULT_IMG
                             }
                             alt="user dp"
                           />

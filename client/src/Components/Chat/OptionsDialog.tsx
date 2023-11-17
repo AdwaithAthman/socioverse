@@ -19,7 +19,7 @@ import { groupRemove, removeFromGroup } from "../../API/Chat";
 import { useDispatch } from "react-redux";
 import { setChats, setSelectedChat } from "../../Redux/ChatSlice";
 import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 
 const OptionsDialog = ({
   openOptions,
@@ -120,7 +120,7 @@ const OptionsDialog = ({
                   src={
                     userId && getSender(userId, selectedChat.users).dp
                       ? getSender(userId, selectedChat.users).dp
-                      : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                      : common.DEFAULT_IMG
                   }
                   alt="user dp"
                   className="z-0 h-full w-full rounded-md object-cover"

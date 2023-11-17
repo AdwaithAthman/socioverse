@@ -26,6 +26,7 @@ import { User } from "../../Types/loginUser";
 import { Link } from "react-router-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ToastContainer } from "react-toastify";
+import common from "../../Constants/common";
 
 function AsideOne({
   newFollowing,
@@ -122,7 +123,7 @@ function AsideOne({
                           src={
                             userProfile.dp
                               ? userProfile.dp
-                              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                              : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />
@@ -221,7 +222,7 @@ function AsideOne({
                           src={
                             userProfile.dp
                               ? userProfile.dp
-                              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                              : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />
@@ -316,7 +317,7 @@ function AsideOne({
                       src={
                         userProfile.dp
                           ? userProfile.dp
-                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                          : common.DEFAULT_IMG
                       }
                       alt="user dp"
                     />
@@ -375,7 +376,7 @@ function AsideOne({
                       src={
                         userProfile.dp
                           ? userProfile.dp
-                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                          : common.DEFAULT_IMG
                       }
                       alt="user dp"
                     />

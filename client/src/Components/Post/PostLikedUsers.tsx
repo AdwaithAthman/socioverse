@@ -9,6 +9,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 
 //importing types
 import { User } from "../../Types/loginUser";
+import common from "../../Constants/common";
 
 const PostLikedUsers = ({
   likedUsers,
@@ -55,7 +56,7 @@ const PostLikedUsers = ({
                       src={
                         userProfile.dp
                           ? userProfile.dp
-                          : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                          : common.DEFAULT_IMG
                       }
                       alt="user dp"
                     />

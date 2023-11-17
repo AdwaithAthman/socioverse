@@ -24,6 +24,7 @@ import { resetHashtagSearch } from "../../Redux/PostSlice";
 import { User } from "../../Types/loginUser";
 import { PostDataInterface } from "../../Types/post";
 import { StoreType } from "../../Redux/Store";
+import common from "../../Constants/common";
 
 const SearchInputDialog = ({
   handleSearchDialog,
@@ -237,7 +238,7 @@ const SearchInputDialog = ({
                           src={
                             user.dp
                               ? user.dp
-                              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                              : common.DEFAULT_IMG
                           }
                           alt="dp"
                         />

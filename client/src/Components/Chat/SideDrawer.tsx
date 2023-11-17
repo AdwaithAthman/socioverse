@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { searchUsers } from "../../API/Profile";
 import { User } from "../../Types/loginUser";
 import ChatLoading from "../Skeletons/ChatLoading";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { fetchOtherUserChat } from "../../API/Chat";
 import { useDispatch, useSelector } from "react-redux";
 import { setChats, setSelectedChat } from "../../Redux/ChatSlice";
@@ -147,7 +147,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
                           src={
                             user.dp
                               ? user.dp
-                              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                              : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />

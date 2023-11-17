@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 
 //importing types
 import { User } from "../../../Types/loginUser";
-import { TOAST_ACTION } from "../../../Constants/common";
+import common, { TOAST_ACTION } from "../../../Constants/common";
 import { ReplyInterface } from "../../../Types/post";
 import { StoreType } from "../../../Redux/Store";
 
@@ -243,7 +243,7 @@ const ReportedRepliesList = () => {
                           <Avatar src={user.dp} alt={user.name} size="sm" />
                         ) : (
                           <Avatar
-                            src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                            src={common.DEFAULT_IMG}
                             alt={user?.name}
                             size="sm"
                           />
@@ -321,7 +321,7 @@ const ReportedRepliesList = () => {
                                     src={
                                       user?.dp
                                         ? user?.dp
-                                        : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                                        : common.DEFAULT_IMG
                                     }
                                     alt={user?.name}
                                     size="sm"

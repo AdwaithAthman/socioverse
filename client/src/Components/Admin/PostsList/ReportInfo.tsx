@@ -7,6 +7,7 @@ import {
 } from "@material-tailwind/react";
 import { ReportInfoInterface } from "../../../Types/admin";
 import { useEffect, useState } from "react";
+import common from "../../../Constants/common";
  
  
 const TABLE_HEAD = ["Reported By", "Reason"];
@@ -68,7 +69,7 @@ const ReportInfo = ({report} : {report: ReportInfoInterface[]}) => {
                   <tr key={index}>
                     <td className={classes}>
                       <div className="flex items-center gap-3">
-                        <Avatar src={report.reports.user?.dp ? report.reports.user?.dp : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"} alt={report.reports.user?.name} size="sm" />
+                        <Avatar src={report.reports.user?.dp ? report.reports.user?.dp : common.DEFAULT_IMG} alt={report.reports.user?.name} size="sm" />
                         <div className="flex flex-col">
                           <Typography
                             variant="small"

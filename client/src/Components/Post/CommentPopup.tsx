@@ -27,7 +27,7 @@ import { SlOptions } from "react-icons/sl";
 import { BiEditAlt, BiShareAlt } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import InputEmoji from "react-input-emoji";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { toast, ToastContainer } from "react-toastify";
 import {
   addComment,
@@ -214,7 +214,7 @@ const CommentPopup = ({
                           src={
                             postDetails?.user.dp
                               ? postDetails?.user.dp
-                              : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                              : common.DEFAULT_IMG
                           }
                           alt="Profile Picture"
                         />
@@ -781,7 +781,7 @@ function Comment({
               ) : (
                 <img
                   className="inline-block h-10 w-10 rounded-full"
-                  src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                  src={common.DEFAULT_IMG}
                   alt="user dp"
                 />
               )}
@@ -1046,7 +1046,7 @@ const Reply = ({
               ) : (
                 <img
                   className="inline-block h-10 w-10 rounded-full"
-                  src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                  src={common.DEFAULT_IMG}
                   alt="Profile Picture"
                 />
               )}

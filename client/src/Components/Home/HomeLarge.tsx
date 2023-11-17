@@ -21,6 +21,7 @@ import store from "../../Redux/Store";
 import { PostDataInterface } from "../../Types/post";
 import UsernameInputPopup from "../UsernameInputPopup";
 import { useNavigate } from "react-router-dom";
+import common from "../../Constants/common";
 
 const HomeLarge = ({ user }: { user: User }) => {
   const dispatch = useDispatch();
@@ -183,7 +184,7 @@ const HomeLarge = ({ user }: { user: User }) => {
               src={
                 user && user.dp
                   ? user.dp
-                  : "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                  : common.DEFAULT_IMG
               } 
               onClick={() => navigate(`/profile/${user && user._id}`)}
             />

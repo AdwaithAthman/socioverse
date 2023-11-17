@@ -31,7 +31,7 @@ import PostInfo from "./PostInfo";
 import ReportInfo from "./ReportInfo";
 
 //importing types
-import { TOAST_ACTION } from "../../../Constants/common";
+import common, { TOAST_ACTION } from "../../../Constants/common";
 import { PostDataInterface } from "../../../Types/post";
 import { ReportInfoInterface } from "../../../Types/admin";
 
@@ -256,7 +256,7 @@ const PostList = () => {
                           />
                         ) : (
                           <Avatar
-                            src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
+                            src={common.DEFAULT_IMG}
                             alt={post.user.name}
                             size="sm"
                           />

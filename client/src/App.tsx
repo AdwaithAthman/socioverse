@@ -14,7 +14,7 @@ import { StoreType } from "./Redux/Store";
 
 const App = () => {
   const user = useSelector((state: StoreType) => state.auth.user);
-  const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
+  const [isAccountVerified, setIsAccountVerified] = useState<boolean>(true);
   const [accountVerifyPopupOpen, setAccountVerifyPopupOpen] =
     useState<boolean>(false);
    

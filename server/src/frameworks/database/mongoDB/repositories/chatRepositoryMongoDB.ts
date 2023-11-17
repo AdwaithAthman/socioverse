@@ -1,7 +1,6 @@
 import Chat from "../models/chatModel";
 
 export const chatRepositoryMongoDB = () => {
-
   const accessChat = async (loggedInUserId: string, otherUserId: string) => {
     try {
       const chat = await Chat.findOne({
@@ -24,15 +23,18 @@ export const chatRepositoryMongoDB = () => {
           },
         ],
       })
-        .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+        .populate(
+          "users",
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+        )
         .populate("latestMessage")
         .populate("latestMessage.sender", "name username email dp");
-        // .populate({
-        //   path: 'latestMessage',
-        //   populate: {
-        //     path: 'sender'
-        //   }
-        // })
+      // .populate({
+      //   path: 'latestMessage',
+      //   populate: {
+      //     path: 'sender'
+      //   }
+      // })
 
       return chat;
     } catch (err) {
@@ -59,7 +61,10 @@ export const chatRepositoryMongoDB = () => {
   const getFullChat = async (chatId: string) => {
     try {
       const fullChat = await Chat.findOne({ _id: chatId, isDeleted: false })
-        .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+        .populate(
+          "users",
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+        )
         .populate("groupAdmin", "name dp username email _id");
 
       return fullChat;
@@ -78,8 +83,14 @@ export const chatRepositoryMongoDB = () => {
         },
       },
     })
-      .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
-      .populate("groupAdmin", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+      .populate(
+        "users",
+        "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+      )
+      .populate(
+        "groupAdmin",
+        "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+      )
       .populate("latestMessage")
       .populate("latestMessage.sender", "name username email dp")
       .sort({ updatedAt: -1 });
@@ -114,7 +125,10 @@ export const chatRepositoryMongoDB = () => {
           new: true,
         }
       )
-        .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+        .populate(
+          "users",
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+        )
         .populate("groupAdmin", "name dp username email _id");
 
       return updatedChat;
@@ -137,7 +151,10 @@ export const chatRepositoryMongoDB = () => {
           new: true,
         }
       )
-        .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+        .populate(
+          "users",
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+        )
         .populate("groupAdmin", "name dp username email _id");
       return updatedChat;
     } catch (err) {
@@ -159,7 +176,10 @@ export const chatRepositoryMongoDB = () => {
           new: true,
         }
       )
-        .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+        .populate(
+          "users",
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+        )
         .populate("groupAdmin", "name dp username email _id");
       return updatedChat;
     } catch (err) {
@@ -173,7 +193,10 @@ export const chatRepositoryMongoDB = () => {
       const updatedChat = await Chat.findByIdAndUpdate(chatId, data, {
         new: true,
       })
-        .populate("users", "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt")
+        .populate(
+          "users",
+          "-password -savedPosts -posts -refreshToken -refreshTokenExpiresAt"
+        )
         .populate("groupAdmin", "name dp username email _id");
       return updatedChat;
     } catch (err) {
@@ -187,28 +210,46 @@ export const chatRepositoryMongoDB = () => {
       await Chat.findByIdAndUpdate(chatId, {
         $set: {
           isDeleted: true,
-        }
-      })
-    }
-    catch (err) {
+        },
+      });
+    } catch (err) {
       console.log(err);
       throw new Error("Error in deleting group");
     }
-  }
+  };
 
   const setLatestMessage = async (chatId: string, messageId: string) => {
-    try{
+    try {
       await Chat.findByIdAndUpdate(chatId, {
         $set: {
           latestMessage: messageId,
-        }
-      })
-    }
-    catch(err){
+        },
+      });
+    } catch (err) {
       console.log(err);
       throw new Error("Error in setting latest message");
     }
-  }
+  };
+
+  const addGroupDp = async (chatId: string, groupDp: string) => {
+    try {
+      const response = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+          $set: {
+            groupDp,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      return response;
+    } catch (err) {
+      console.log(err);
+      throw new Error("Error in adding group dp");
+    }
+  };
 
   return {
     accessChat,
@@ -222,6 +263,7 @@ export const chatRepositoryMongoDB = () => {
     updateGroup,
     groupRemove,
     setLatestMessage,
+    addGroupDp,
   };
 };
 

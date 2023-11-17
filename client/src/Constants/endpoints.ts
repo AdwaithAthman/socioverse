@@ -90,6 +90,7 @@ const END_POINTS = {
     UPDATE_GROUP: 'api/chat/updateGroup',
     REMOVE_FROM_GROUP: 'api/chat/removeFromGroup',
     GROUP_REMOVE: 'api/chat/groupRemove',
+    ADD_GROUP_DP: 'api/chat/addGroupDp',
     SEND_MESSAGE: 'api/message',
     GET_ALL_MESSAGES_FROM_CHAT: 'api/message',
 }

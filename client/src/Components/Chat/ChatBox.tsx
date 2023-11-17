@@ -40,7 +40,7 @@ const ChatBox = ({
             <div className="flex items-center justify-between gap-4">
               <img
                 className="inline-block h-10 w-10 md:h-12 md:w-12 rounded-full"
-                src={common.DEFAULT_IMG}
+                src={selectedChat.groupDp}
                 alt="group dp"
               />
               <h1 className="font-medium text-lg md:text-2xl">

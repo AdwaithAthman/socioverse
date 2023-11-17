@@ -6,6 +6,7 @@ interface ChatInterface extends Document {
   users: Schema.Types.ObjectId[];
   latestMessage: Schema.Types.ObjectId;
   groupAdmin: Schema.Types.ObjectId;
+  groupDp: string;
   isDeleted: boolean;
 }
 
@@ -32,6 +33,10 @@ const chatSchema = new Schema<ChatInterface>(
     groupAdmin: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    groupDp: {
+      type: String,
+      default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     },
     isDeleted: {
       type: Boolean,

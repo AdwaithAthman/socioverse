@@ -7,7 +7,8 @@ import {
   FetchUserChatsResponse,
   CreateGroupResponse,
   UpdateGroupResponse,
-  RemoveFromGroupResponse
+  RemoveFromGroupResponse,
+  AddGroupDpResponse
 } from "../../Types/chat";
 import { User } from "../../Types/loginUser";
 
@@ -34,7 +35,7 @@ export const createGroupChat = async (
 ): Promise<CreateGroupResponse> => {
   const response = await axiosUserInstance.post<CreateGroupResponse>(
     END_POINTS.CREATE_GROUP_CHAT,
-    { name, users }
+    { name, users },
   );
   return response.data;
 };
@@ -60,16 +61,33 @@ export const removeFromGroup = async (
   removeUserId: string
 ): Promise<RemoveFromGroupResponse> => {
   const response = await axiosUserInstance.delete<RemoveFromGroupResponse>(
-    `${END_POINTS.REMOVE_FROM_GROUP}?chatId=${chatId}&removeUserId=${removeUserId}`,
+    `${END_POINTS.REMOVE_FROM_GROUP}?chatId=${chatId}&removeUserId=${removeUserId}`
   );
   return response.data;
 };
 
 export const groupRemove = async (
-  chatId: string,
+  chatId: string
 ): Promise<{ status: string }> => {
   const response = await axiosUserInstance.delete<{ status: string }>(
-    `${END_POINTS.GROUP_REMOVE}/${chatId}`,
+    `${END_POINTS.GROUP_REMOVE}/${chatId}`
   );
   return response.data;
-}
+};
+
+export const addGroupDp = async (
+  groupId: string,
+  data: FormData
+): Promise<AddGroupDpResponse> => {
+  console.log("data at addGroupDp API: ", data)
+  const response = await axiosUserInstance.patch<AddGroupDpResponse>(
+    `${END_POINTS.ADD_GROUP_DP}/${groupId}`,
+    data,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};

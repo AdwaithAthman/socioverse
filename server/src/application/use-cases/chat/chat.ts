@@ -4,6 +4,7 @@ import AppError from "../../../utils/appError";
 //importing from types
 import { HttpStatus } from "../../../types/httpStatus";
 import { EditChatInterface } from "../../../types/chatInterface";
+import { CloudinaryServiceInterface } from "../../services/cloudinaryServiceInterface";
 
 export const handleAccessOrCreateChat = async (
   loggedInUserId: string,
@@ -143,4 +144,23 @@ export const handleGroupRemove = async (
   }
 }
 
+export const handleAddGroupDp = async (
+  chatId: string,
+  buffer: WithImplicitCoercion<ArrayBuffer | SharedArrayBuffer>,
+  mimetype: string,
+  chatDbRepository: ReturnType<ChatDbRepository>,
+  cloudinaryService: ReturnType<CloudinaryServiceInterface>
+) => {
+  try{
+    const b64 = Buffer.from(buffer).toString("base64");
+    let dataURI = "data:" + mimetype + ";base64," + b64;
+    const cldRes = await cloudinaryService.handleUpload(dataURI);
+    const updatedChat = await chatDbRepository.addGroupDp(chatId, cldRes.secure_url);
+    return updatedChat;
+  }
+  catch(err){
+    console.log("error at handleAddGroupDp: ", err);
+    throw new AppError("Error in adding group dp", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
 

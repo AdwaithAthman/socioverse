@@ -15,11 +15,8 @@ import Lottie from "lottie-react";
 import typingAnimation from "../../assets/animations/typing.json";
 import "./index.css";
 import {
-  setChats,
   setFetchUserChatsAgain,
-  setNotification,
 } from "../../Redux/ChatSlice";
-import { fetchChats } from "../../API/Chat";
 import { groupByDate } from "../../utils/Config/chatMethods";
 
 let selectedChatCompare: ChatInterface;
@@ -33,12 +30,6 @@ const ChatBoxContent = ({
 }) => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
-  );
-  const fetchUserChatsAgain = useSelector(
-    (state: StoreType) => state.chat.fetchUserChatsAgain
-  );
-  const notification = useSelector(
-    (state: StoreType) => state.chat.notification
   );
 
   const user = useSelector((state: StoreType) => state.auth.user);

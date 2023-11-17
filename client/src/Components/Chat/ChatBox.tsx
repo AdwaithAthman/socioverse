@@ -90,6 +90,7 @@ const ChatBox = ({
       <OptionsDialog
         openOptions={openOptions}
         handleOpenOptions={handleOpenOptions}
+        socket={socket}
       />
     </>
   ) : (

@@ -22,13 +22,16 @@ import { StoreType } from "../../Redux/Store";
 import { addGroupDp, createGroupChat } from "../../API/Chat";
 import { setChats } from "../../Redux/ChatSlice";
 import { CgProfile } from "react-icons/cg";
+import { Socket } from "socket.io-client";
 
 function CreateGroupDialog({
   openCreateGroupDialog,
   handleCreateGroupDialog,
+  socket,
 }: {
   openCreateGroupDialog: boolean;
   handleCreateGroupDialog: () => void;
+  socket: Socket;
 }) {
   const dispatch = useDispatch();
   const userId = useSelector((state: StoreType) => state.auth.user?._id);
@@ -93,8 +96,10 @@ function CreateGroupDialog({
       if (imgFile) {
         const imageResponse = await addGroupDp(response.groupChat._id, data);
         dispatch(setChats([imageResponse.groupChat, ...chats]));
+        socket.emit("group updation", imageResponse.groupChat);
       } else {
         dispatch(setChats([response.groupChat, ...chats]));
+        socket.emit("group updation", response.groupChat)
       }
       toast.dismiss();
       toast.success("Group created successfully", TOAST_ACTION);

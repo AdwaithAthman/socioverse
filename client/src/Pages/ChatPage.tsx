@@ -10,42 +10,21 @@ import { AxiosErrorData } from "../Types/axiosErrorData";
 import { setCredentials } from "../Redux/AuthSlice";
 import { ToastContainer } from "react-toastify";
 import classnames from "classnames";
-import { Socket, io } from "socket.io-client";
-import { ChatInterface, MessageInterface } from "../Types/chat";
-import common from "../Constants/common";
-import { setFetchUserChatsAgain, setNotification } from "../Redux/ChatSlice";
+import { Socket } from "socket.io-client";
 
-let socket: Socket, selectedChatCompare: ChatInterface;
-
-const ChatPage = () => {
+const ChatPage = ({
+  socket,
+  socketConnected,
+}: {
+  socket: Socket;
+  socketConnected: boolean;
+}) => {
   const user = useSelector((state: StoreType) => state.auth.user);
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  //for socket purpose
-  const [socketConnected, setSocketConnected] = useState<boolean>(false);
-  const notification = useSelector(
-    (state: StoreType) => state.chat.notification
-  );
-  //
-  const fetchUserChatsAgain = useSelector(
-    (state: StoreType) => state.chat.fetchUserChatsAgain
-  );
-
-  //socket io connection
-  useEffect(() => {
-    socket = io(common.API_BASE_URL);
-    socket.emit("setup", user);
-    socket.on("connected", () => setSocketConnected(true));
-
-    return () => {
-      socket.off("connected");
-      socket.off("setup");
-    };
-  }, [user]);
 
   useEffect(() => {
     if (!user) {
@@ -55,29 +34,6 @@ const ChatPage = () => {
       }
     }
   }, [navigate, user]);
-
-  useEffect(() => {
-    selectedChatCompare = selectedChat as ChatInterface;
-  }, [selectedChat]);
-
-  // useEffects for handling socket events
-  useEffect(() => {
-    if (socket) {
-      socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
-        console.log("new message recieved1: ", newMessageRecieved);
-        if (
-          !selectedChatCompare ||
-          selectedChatCompare._id !== newMessageRecieved.chat._id
-        ) {
-          //show notification
-          if(!notification.some((message) => message._id === newMessageRecieved._id)) {
-            dispatch(setNotification(newMessageRecieved));
-            dispatch(setFetchUserChatsAgain(true));
-          }
-        }
-      });
-    }
-  });
 
   const userInfo = async () => {
     try {
@@ -98,10 +54,6 @@ const ChatPage = () => {
       }
     }
   };
-
-  useEffect(() => {
-    console.log("fetchUserChatsAgain", fetchUserChatsAgain);
-  });
 
   return (
     <div className="w-full h-[80vh] lg:h-[85vh] ">

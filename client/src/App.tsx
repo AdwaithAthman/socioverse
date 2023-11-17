@@ -7,15 +7,17 @@ import { useSelector } from "react-redux";
 //imports from Components
 import ComplexNavbar from "./Components/Header";
 import Footer from "./Components/Footer";
-import { StoreType } from "./Redux/Store";
 import AccountVerificationPopup from "./Components/AccountVerificationPopup";
+
+//importing types
+import { StoreType } from "./Redux/Store";
 
 const App = () => {
   const user = useSelector((state: StoreType) => state.auth.user);
-
   const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
   const [accountVerifyPopupOpen, setAccountVerifyPopupOpen] =
     useState<boolean>(false);
+   
   useEffect(() => {
     if (user) {
       setIsAccountVerified(user.isAccountVerified);

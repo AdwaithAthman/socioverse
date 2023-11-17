@@ -3,6 +3,7 @@ import { ToastOptions } from "react-toastify";
 const CONSTANTS_COMMON = {
   API_BASE_URL: "http://localhost:8000",
   CLIENT_BASE_URL: "http://localhost:5173",
+  DEFAULT_IMG: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
 };
 
 export const TOAST_ACTION: ToastOptions = {

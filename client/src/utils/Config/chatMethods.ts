@@ -18,6 +18,9 @@ export const groupByDate  = (messages: MessageInterface[]) => {
 }
 
 export const truncate = (str: string, num: number) => {
+    if (!str || typeof str !== 'string') {
+        return ;
+    }
     if (str.length <= num) {
         return str;
       }

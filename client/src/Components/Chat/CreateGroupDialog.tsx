@@ -91,7 +91,6 @@ function CreateGroupDialog({
       }
       const response = await createGroupChat(groupChatName, selectedUsers);
       if (imgFile) {
-        console.log("imgaeFile: ", imgFile)
         const imageResponse = await addGroupDp(response.groupChat._id, data);
         dispatch(setChats([imageResponse.groupChat, ...chats]));
       } else {

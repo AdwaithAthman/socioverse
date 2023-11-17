@@ -5,13 +5,12 @@ import { useEffect, useState } from "react";
 import { User } from "../../Types/loginUser";
 import ChatLoading from "../Skeletons/ChatLoading";
 import { toast } from "react-toastify";
-import { TOAST_ACTION } from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { searchUsers } from "../../API/Profile";
 import UserCard from "./UserCard";
-import { updateGroupChat } from "../../API/Chat";
-import { setSelectedChat } from "../../Redux/ChatSlice";
-import { AxiosError, isAxiosError } from "axios";
-import { AxiosErrorData } from "../../Types/axiosErrorData";
+import { addGroupDp, updateGroupChat } from "../../API/Chat";
+import { setFetchUserChatsAgain, setSelectedChat } from "../../Redux/ChatSlice";
+import { ReactComponent as Loader } from "../../assets/Loader.svg";
 
 const AdminGroupEdit = ({
   updateGroup,
@@ -36,9 +35,11 @@ const AdminGroupEdit = ({
   const [selectedUsers, setSelectedUsers] = useState<User[]>(
     selectedChat?.users ?? []
   );
+  const [imgFile, setImgFile] = useState<File>();
   const [searchResult, setSearchResult] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<FormData>(new FormData());
+  const [imageData, setImageData] = useState<FormData>(new FormData());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,7 +51,11 @@ const AdminGroupEdit = ({
     } else {
       setDisableUpdate(false);
     }
-  }, [groupChatName, selectedUsers]);
+
+    if (imgFile) {
+      setDisableUpdate(false);
+    }
+  }, [groupChatName, selectedUsers, imgFile]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -84,9 +89,9 @@ const AdminGroupEdit = ({
   }, [setUpdateGroup, updateGroup]);
 
   const handleUpdate = async () => {
-    if (!groupChatName.trim() || selectedUsers.length === 0) {
+    if (groupChatName.trim().length === 0 && selectedUsers.length === 0) {
       toast.dismiss();
-      toast.error("Fields cannot be empty", TOAST_ACTION);
+      toast.error("Group name and members cannot be empty", TOAST_ACTION);
       return;
     }
     if (groupChatName !== selectedChat?.chatName) {
@@ -96,17 +101,29 @@ const AdminGroupEdit = ({
       const userIds = selectedUsers.map((user) => user._id);
       data.append("users", JSON.stringify(userIds));
     }
+    if (imgFile) [imageData.append("groupDp", imgFile)];
     try {
-      const response =
-        selectedChat && (await updateGroupChat(selectedChat?._id, data));
-      if (response && response.status === "success") {
-        toast.dismiss();
-        toast.success("Group updated successfully", TOAST_ACTION);
-        dispatch(setSelectedChat(response.groupChat));
-        setUpdateGroup(false);
-        setData(new FormData());
-        handleOpenOptions();
+      let response;
+      toast.info("Updating group...", {...TOAST_ACTION, autoClose: false })
+      if (
+        groupChatName !== selectedChat?.chatName ||
+        selectedUsers !== selectedChat?.users
+      ) {
+        response =
+          selectedChat && (await updateGroupChat(selectedChat?._id, data));
       }
+      if (imgFile) {
+        response =
+          selectedChat && (await addGroupDp(selectedChat._id, imageData));
+      }
+      response && dispatch(setSelectedChat(response.groupChat));
+      dispatch(setFetchUserChatsAgain(true));
+      toast.dismiss();
+      setUpdateGroup(false);
+      toast.success("Group updated successfully", TOAST_ACTION);
+      setImageData(new FormData());
+      setData(new FormData());
+      handleOpenOptions();
     } catch (error) {
       toast.dismiss();
       toast.error("Failed to update group", TOAST_ACTION);
@@ -127,8 +144,36 @@ const AdminGroupEdit = ({
     }
   };
 
+  const handleGroupDp = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImgFile(e.target.files[0]);
+    }
+  };
+
   return (
     <>
+      <Typography className="-mb-2" variant="h6">
+        Add Image
+      </Typography>
+      <div className="mx-auto">
+        <input
+          type="file"
+          accept="image/*"
+          id="image-input"
+          className="hidden"
+          onChange={handleGroupDp}
+        />
+        <label htmlFor="image-input">
+          <img
+            src={
+              imgFile instanceof File
+                ? URL.createObjectURL(imgFile)
+                : selectedChat?.groupDp
+            }
+            className="h-36 w-36 rounded-full border-4 border-gray-500 border-dashed bg-white m-2 flex items-center justify-center cursor-pointer p-2"
+          />
+        </label>
+      </div>
       <Typography className="-mb-2" variant="h6">
         Group Name
       </Typography>

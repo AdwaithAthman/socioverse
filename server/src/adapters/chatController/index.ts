@@ -116,7 +116,9 @@ const chatController = (
   const updateGroup = asyncHandler(async (req: Request, res: Response) => {
     const data = req.body;
     const { groupId } = req.params as unknown as { groupId: string };
-    data.users = JSON.parse(data.users);
+    if (data.users) {
+      data.users = JSON.parse(data.users);
+    }
     const groupChat = await handleUpdateGroup(groupId, data, chatDbRepository);
     res.status(200).json({
       status: "success",
@@ -134,7 +136,7 @@ const chatController = (
 
   const addGroupDp = asyncHandler(async (req: Request, res: Response) => {
     const { groupId } = req.params as unknown as { groupId: string };
-    console.log("req.file of addGroupDp: ", req.file)
+    console.log("req.file of addGroupDp: ", req.file);
     const {
       buffer,
       mimetype,

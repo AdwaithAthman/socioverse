@@ -20,13 +20,16 @@ import { useDispatch } from "react-redux";
 import { setChats, setSelectedChat } from "../../Redux/ChatSlice";
 import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
 import common, { TOAST_ACTION } from "../../Constants/common";
+import { Socket } from "socket.io-client";
 
 const OptionsDialog = ({
   openOptions,
   handleOpenOptions,
+  socket
 }: {
   openOptions: boolean;
   handleOpenOptions: () => void;
+  socket: Socket;
 }) => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
@@ -56,7 +59,9 @@ const OptionsDialog = ({
     if (response && response?.status === "success") {
       toast.dismiss();
       dispatch(setSelectedChat(""));
-      dispatch(setChats(chats.filter((chat) => chat._id !== selectedChat?._id)));
+      dispatch(
+        setChats(chats.filter((chat) => chat._id !== selectedChat?._id))
+      );
       toast.success("Successfully left the group");
       handleOpenOptions();
     }
@@ -65,26 +70,26 @@ const OptionsDialog = ({
   const handleGroupRemove = async () => {
     toast.dismiss();
     toast(
-        <ConfirmDeleteToast
-          onDelete={confirmDeleteGroup}
-          message={"Are you sure you want to delete this group?"}
-        />,
-        { ...TOAST_ACTION, closeButton: false }
-      );
+      <ConfirmDeleteToast
+        onDelete={confirmDeleteGroup}
+        message={"Are you sure you want to delete this group?"}
+      />,
+      { ...TOAST_ACTION, closeButton: false }
+    );
   };
 
   const confirmDeleteGroup = async () => {
-    const response =
-      selectedChat &&
-      (await groupRemove(selectedChat?._id));
+    const response = selectedChat && (await groupRemove(selectedChat?._id));
     if (response && response?.status === "success") {
       toast.dismiss();
       dispatch(setSelectedChat(""));
-      dispatch(setChats(chats.filter((chat) => chat._id !== selectedChat?._id)));
+      dispatch(
+        setChats(chats.filter((chat) => chat._id !== selectedChat?._id))
+      );
       toast.success("Successfully deleted the group");
       handleOpenOptions();
     }
-  }
+  };
 
   return (
     <>
@@ -150,9 +155,14 @@ const OptionsDialog = ({
                 setUpdateGroup={setUpdateGroup}
                 handleOpenOptions={handleOpenOptions}
                 setDisableUpdate={setDisableUpdate}
+                socket={socket}
               />
             ) : (
               <div className="max-h-96 overflow-y-scroll overflow-x-hidden no-scrollbar mx-4">
+                <img
+                  src={selectedChat?.groupDp}
+                  className="h-48 w-48 rounded-full border-4 border-gray-500 border-dashed bg-white mx-auto flex items-center justify-center p-2"
+                />
                 <div className="flex gap-2 items-center mb-2">
                   <h1 className="text-lg font-medium">Admin</h1>
                   <span

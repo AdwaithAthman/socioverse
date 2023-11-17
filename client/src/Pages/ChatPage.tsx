@@ -67,7 +67,7 @@ const ChatPage = ({
             { hidden: selectedChat }
           )}
         >
-          <MyChats userId={(user && user._id) as string} />
+          <MyChats userId={(user && user._id) as string} socket={socket} />
         </div>
         <div
           className={classnames(

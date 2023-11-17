@@ -14,9 +14,7 @@ import common from "../../Constants/common";
 import Lottie from "lottie-react";
 import typingAnimation from "../../assets/animations/typing.json";
 import "./index.css";
-import {
-  setFetchUserChatsAgain,
-} from "../../Redux/ChatSlice";
+import { setFetchUserChatsAgain } from "../../Redux/ChatSlice";
 import { groupByDate } from "../../utils/Config/chatMethods";
 
 let selectedChatCompare: ChatInterface;

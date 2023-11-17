@@ -10,18 +10,20 @@ import { searchUsers } from "../../API/Profile";
 import UserCard from "./UserCard";
 import { addGroupDp, updateGroupChat } from "../../API/Chat";
 import { setFetchUserChatsAgain, setSelectedChat } from "../../Redux/ChatSlice";
-import { ReactComponent as Loader } from "../../assets/Loader.svg";
+import { Socket } from "socket.io-client";
 
 const AdminGroupEdit = ({
   updateGroup,
   setUpdateGroup,
   handleOpenOptions,
   setDisableUpdate,
+  socket,
 }: {
   updateGroup: boolean;
   setUpdateGroup: React.Dispatch<React.SetStateAction<boolean>>;
   handleOpenOptions: () => void;
   setDisableUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  socket: Socket;
 }) => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
@@ -118,6 +120,7 @@ const AdminGroupEdit = ({
       }
       response && dispatch(setSelectedChat(response.groupChat));
       dispatch(setFetchUserChatsAgain(true));
+      response && socket.emit("group updation", response.groupChat)
       toast.dismiss();
       setUpdateGroup(false);
       toast.success("Group updated successfully", TOAST_ACTION);

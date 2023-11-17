@@ -15,11 +15,14 @@ import { getSender, truncate } from "../../utils/Config/chatMethods";
 import { StoreType } from "../../Redux/Store";
 import { ChatInterface } from "../../Types/chat";
 import CreateGroupDialog from "./CreateGroupDialog";
+import { Socket } from "socket.io-client";
 
 const MyChats = ({
   userId,
+  socket
 }: {
   userId: string;
+  socket: Socket;
 }) => {
   const dispatch = useDispatch();
   const chats = useSelector((state: StoreType) => state.chat.chats);
@@ -37,6 +40,14 @@ const MyChats = ({
       dispatch(setFetchUserChatsAgain(false));
     }
   }, [fetchUserChatsAgain]);
+
+  useEffect(() => {
+    if(socket){
+    socket.on("group updated", () => {
+      fetchUserChats();
+    })
+  }
+  })
 
   const fetchUserChats = async () => {
     try {
@@ -69,6 +80,7 @@ const MyChats = ({
             <CreateGroupDialog
               openCreateGroupDialog={openCreateGroupDialog}
               handleCreateGroupDialog={handleCreateGroupDialog}
+              socket={socket}
             />
             <SideDrawer userId={userId} />
           </div>

@@ -39,7 +39,16 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
     socket.off("setup", (userData: UserDataInterface) => {
       socket.leave(userData._id as string);
     });
+
+    socket.on("group updation", (newChat: any) => {
+      newChat.users.forEach((userId: string) => {
+        if(userId === newChat.groupAdmin._id) return;
+        socket.in(userId).emit("group updated");
+      });
+    });
+
   });
+
 };
 
 export default socketConfig;

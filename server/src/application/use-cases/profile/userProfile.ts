@@ -79,6 +79,7 @@ export const handleUserInfo = async (
       followers: userData?.followers,
       following: userData?.following,
       isAccountVerified: userData?.isAccountVerified,
+      notifications: userData?.notifications,
     };
     return user;
   } catch (err) {

@@ -48,3 +48,19 @@ export const handleGetAllMessagesFromChat = async (
         throw new AppError("Error in getting messages", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+
+export const handleFetchNotifications = async (
+    Ids: string[],
+    messageDbRepository: ReturnType<MessageDbRepository>
+  ) => {
+    try{
+      const notifications = await messageDbRepository.fetchNotifications(Ids);
+      return notifications;
+    }
+    catch(error){
+      throw new AppError(
+        "Error fetching notifications!",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }

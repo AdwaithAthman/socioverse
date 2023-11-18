@@ -1,3 +1,4 @@
+import { MessageInterface } from "./chat";
 import { User } from "./loginUser";
 
 export interface UploadCoverPhotoResponse {
@@ -87,4 +88,10 @@ export interface GetSearchUsersInterface {
 export interface AddUsernameResponse {
     status: string, 
     message: string,
+}
+
+export interface FetchNotificationsResponse {
+    status: string,
+    message: string,
+    notifications: MessageInterface[]
 }

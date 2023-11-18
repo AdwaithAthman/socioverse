@@ -454,6 +454,24 @@ export const userRepositoryMongoDB = () => {
     }
   }
 
+  const addNotification = async (userId: string, messageId: string) => {
+    try{
+      await User.updateOne({ _id: userId }, { $addToSet: { notifications: messageId } });
+    }
+    catch(err){
+      throw new Error("Error adding notification");
+    }
+  }
+
+  const deleteNotification = async (userId: string, messageId: string) => {
+    try{
+      await User.updateOne({ _id: userId }, { $pull: { notifications: messageId } });
+    }
+    catch(err){
+      throw new Error("Error deleting notification");
+    }
+  }
+
   return {
     addUser,
     getAllUsers,
@@ -490,6 +508,8 @@ export const userRepositoryMongoDB = () => {
     getMonthlyUserSignups,
     getUsersCountOnSearch,
     getUsersOnSearch,
+    addNotification,
+    deleteNotification,
   };
 };
 

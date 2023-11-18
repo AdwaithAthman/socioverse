@@ -6,6 +6,7 @@ import {
     SendMessageResponse,
     GetAllMessagesFromChatResponse,
  } from "../../Types/message";
+import { FetchNotificationsResponse } from "../../Types/userProfile";
 
 export const sendMessage = async (
   content: string,
@@ -29,3 +30,12 @@ export const getAllMessagesFromChat = async (
   );
   return response.data;
 };
+
+export const fetchNotifications = async(
+  notificationIds: string[]
+): Promise<FetchNotificationsResponse> => {
+  const response = await axiosUserInstance.get<FetchNotificationsResponse>(
+    `${END_POINTS.FETCH_NOTIFICATIONS}?Ids=${encodeURIComponent(JSON.stringify(notificationIds))}`
+  );
+  return response.data;
+} 

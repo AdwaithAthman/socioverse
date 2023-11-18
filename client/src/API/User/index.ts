@@ -46,3 +46,22 @@ export const getFollowing = async (): Promise<GetFollowingResponse> => {
   );
   return response.data;
 }
+
+export const addNotification = async (
+  messageId: string,
+): Promise<{status: string}> => {
+  const response = await axiosUserInstance.post<{status: string}>(
+    END_POINTS.ADD_NOTIFICATION,
+    {messageId}
+  );
+  return response.data;
+} 
+
+export const deleteNotificationFromDB = async (
+  messageId: string,
+): Promise<{status: string}> => {
+  const response = await axiosUserInstance.delete<{status: string}>(
+    `${END_POINTS.DELETE_NOTIFICATION}/${messageId}`
+  );
+  return response.data;
+}

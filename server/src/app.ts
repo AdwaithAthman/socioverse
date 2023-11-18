@@ -25,7 +25,7 @@ const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
         origin: configKeys.CLIENT_URL,
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "DELETE"],
     }
 })
 

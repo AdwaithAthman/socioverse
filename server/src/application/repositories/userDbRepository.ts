@@ -76,6 +76,10 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
 
     const getUsersOnSearch = async(searchQuery: string, skip: number, limit: number) => await repository.getUsersOnSearch(searchQuery, skip, limit);
 
+    const addNotification = async(userId: string, messageId: string) => await repository.addNotification(userId, messageId);
+
+    const deleteNotification = async(userId: string, messageId: string) => await repository.deleteNotification(userId, messageId);
+
     return {
         addUser,
         getUserById,
@@ -112,6 +116,8 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
         getMonthlyUserSignups,
         getUsersCountOnSearch,
         getUsersOnSearch,
+        addNotification,
+        deleteNotification,
     }
 }
 

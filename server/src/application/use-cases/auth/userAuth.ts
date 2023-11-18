@@ -72,6 +72,7 @@ export const userLogin = async (
     following: user?.following,
     isAccountVerified: user.isAccountVerified,
     isBlock: user.isBlock,
+    notifications: user.notifications
   };
   const refreshToken = authService.generateRefreshToken({ userId: user._id.toString(), role: "client" });
   const accessToken = authService.generateAccessToken({ userId: user._id.toString(), role: "client" });
@@ -112,6 +113,7 @@ export const userLoginUsingGoogle = async (
       isAccountVerified: isExistingEmail.isAccountVerified,
       isGoogleSignIn: isExistingEmail.isGoogleSignIn,
       isBlock: isExistingEmail.isBlock,
+      notifications: isExistingEmail.notifications
     };
     await dbUserRepository.addRefreshTokenAndExpiry(user.email, refreshToken);
     return { userDetails, refreshToken, accessToken };
@@ -147,6 +149,7 @@ export const userLoginUsingGoogle = async (
       isAccountVerified: newUserData.isAccountVerified,
       isGoogleSignIn: true,
       isBlock: newUserData.isBlock,
+      notifications: newUserData.notifications
     };
     await dbUserRepository.addRefreshTokenAndExpiry(
       newUserData.email,

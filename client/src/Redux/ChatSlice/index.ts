@@ -25,6 +25,9 @@ const chatSlice = createSlice({
     setChats: (state, action) => {
       state.chats = action.payload;
     },
+    initializeNotification: (state, action) => {
+      state.notification = action.payload;
+    },
     setNotification: (state, action: { payload: MessageInterface }) => {
       if (
         state.notification.some((message) => message._id === action.payload._id)
@@ -53,5 +56,6 @@ export const {
   setNotification,
   setFetchUserChatsAgain,
   deleteNotification,
+  initializeNotification,
 } = chatSlice.actions;
 export default chatSlice.reducer;

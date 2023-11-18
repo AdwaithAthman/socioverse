@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { ChatInterface, MessageInterface } from "../Types/chat";
 import common from "../Constants/common";
-import { setFetchUserChatsAgain, setNotification } from "../Redux/ChatSlice";
+import { initializeNotification, setFetchUserChatsAgain, setNotification } from "../Redux/ChatSlice";
+import { addNotification } from "../API/User";
+import { fetchNotifications } from "../API/Message";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -26,6 +28,24 @@ const MainPage = () => {
   const notification = useSelector(
     (state: StoreType) => state.chat.notification
   );
+
+  useEffect(() => {
+    if (
+      notification.length === 0 &&
+      user &&
+      user.notifications && 
+      user.notifications.length > 0
+    ) {
+      fetchNotifs();
+    }
+  }, [user]);
+
+  const fetchNotifs = async() => {
+    const response = user && await fetchNotifications(user.notifications as string[]);
+    if(response){
+      dispatch(initializeNotification(response.notifications))
+    }
+  }
 
   //socket io connection
   useEffect(() => {
@@ -47,7 +67,6 @@ const MainPage = () => {
   useEffect(() => {
     if (socket) {
       socket.on("message recieved", (newMessageRecieved: MessageInterface) => {
-        console.log("new message recieved1: ", newMessageRecieved);
         if (
           !selectedChatCompare ||
           selectedChatCompare._id !== newMessageRecieved.chat._id
@@ -60,11 +79,16 @@ const MainPage = () => {
           ) {
             dispatch(setNotification(newMessageRecieved));
             dispatch(setFetchUserChatsAgain(true));
+            addNotif(newMessageRecieved._id);
           }
         }
       });
     }
   });
+
+  const addNotif = async (messageId: string) => {
+    await addNotification(messageId);
+  };
 
   return (
     <>
@@ -77,7 +101,9 @@ const MainPage = () => {
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
           {section === "home" && <HomePage />}
-          {section === "message" && <ChatPage socket={socket} socketConnected={socketConnected} />}
+          {section === "message" && (
+            <ChatPage socket={socket} socketConnected={socketConnected} />
+          )}
         </motion.div>
       </AnimatePresence>
     </>

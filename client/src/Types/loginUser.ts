@@ -22,6 +22,7 @@ export interface User {
     isAccountVerified: boolean;
     isGoogleSignIn: boolean;
     isBlock: boolean;
+    notifications?: string[];
     createdAt?: string;
 }
 

@@ -85,6 +85,10 @@ const userSchema = new Schema (
         }],
         savedPosts: [{
             type: mongoose.Types.ObjectId,
+        }],
+        notifications: [{
+            type: mongoose.Types.ObjectId,
+            ref: "Message"
         }]
     },
     {

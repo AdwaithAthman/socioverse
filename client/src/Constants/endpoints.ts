@@ -49,6 +49,8 @@ const END_POINTS = {
     GET_REST_OF_ALL_USERS: `api/user/getRestOfAllUsers`,
     GET_FOLLOWERS: `api/user/getFollowers`,
     GET_FOLLOWING: `api/user/getFollowing`,
+    ADD_NOTIFICATION: 'api/user/addNotification',
+    DELETE_NOTIFICATION: 'api/user/deleteNotification',
     ADMIN_LOGIN: 'api/admin/login',
     REFRESH_ADMIN_TOKEN: 'api/admin/refresh',
     GET_USERS: 'api/admin/getUsers',
@@ -91,8 +93,10 @@ const END_POINTS = {
     REMOVE_FROM_GROUP: 'api/chat/removeFromGroup',
     GROUP_REMOVE: 'api/chat/groupRemove',
     ADD_GROUP_DP: 'api/chat/addGroupDp',
-    SEND_MESSAGE: 'api/message',
-    GET_ALL_MESSAGES_FROM_CHAT: 'api/message',
+    SEND_MESSAGE: 'api/message/sendMessage',
+    GET_ALL_MESSAGES_FROM_CHAT: 'api/message/getAllMessagesFromChat',
+    FETCH_NOTIFICATIONS: 'api/message/fetchNotifications',
+
 }
 
 export default END_POINTS

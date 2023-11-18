@@ -38,6 +38,8 @@ import SearchInputDialog from "./Search";
 import { enableSearchMode, disableSearchMode } from "../Redux/PostSlice";
 import { deleteNotification, setSelectedChat } from "../Redux/ChatSlice";
 import { MessageInterface } from "../Types/chat";
+import { deleteNotificationFromDB } from "../API/User";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 // profile menu component
 const profileMenuItems = [
@@ -133,13 +135,19 @@ function ProfileMenu() {
     setNotificationPanelOpen((prev) => !prev);
   };
 
-  const handleNotificationOnClick = (notif: MessageInterface) => {
+  const handleNotificationOnClick = async (notif: MessageInterface) => {
     dispatch(setSelectedChat(notif.chat));
     dispatch(deleteNotification(notif));
+    await deleteNotificationFromDB(notif._id);
     closeNotificationPanel();
     if (location.pathname !== "/message") {
       navigate("/message");
     }
+  };
+
+  const handleCloseNotification = async (notif: MessageInterface) => {
+    dispatch(deleteNotification(notif));
+    await deleteNotificationFromDB(notif._id);
   };
 
   const closeNotificationPanel = () => {
@@ -202,43 +210,51 @@ function ProfileMenu() {
                     {notification.length > 0 ? (
                       notification.map((notif) => (
                         <div
-                          className="w-full rounded-lg border shadow-lg bg-white hover:scale-95 cursor-pointer 
+                          className="w-full rounded-lg border shadow-lg bg-white hover:scale-95 
                           transition duration-100 ease-in-out group"
                           key={notif._id}
-                          onClick={() => handleNotificationOnClick(notif)}
                         >
                           <div className=" flex flex-col justify-center w-full h-fit rounded-t-lg p-3 gap-3">
-                            <div className="s) => setLimt-3 flex items-center space-x-2 ">
-                              <img
-                                className="inline-block h-12 w-12 rounded-full 
+                            <div className="flex items-start justify-between ">
+                              <div
+                                className="s) => setLimt-3 flex items-center space-x-2 cursor-pointer "
+                                onClick={() => handleNotificationOnClick(notif)}
+                              >
+                                <img
+                                  className="inline-block h-12 w-12 rounded-full 
                                 group-hover:scale-95 group-hover:p-[0.15rem] group-hover:ring group-hover:ring-blue-gray-500"
-                                src={
-                                  notif.chat.isGroupChat
-                                    ? common.DEFAULT_IMG
-                                    : notif.sender.dp
-                                    ? notif.sender.dp
-                                    : common.DEFAULT_IMG
-                                }
-                                alt="dp"
+                                  src={
+                                    notif.chat.isGroupChat
+                                      ? notif.chat.groupDp
+                                      : notif.sender.dp
+                                      ? notif.sender.dp
+                                      : common.DEFAULT_IMG
+                                  }
+                                  alt="dp"
+                                />
+                                <span className="flex flex-col">
+                                  <span
+                                    className={classnames(
+                                      "text-[14px] group-hover:font-bold group-hover:scale-95"
+                                    )}
+                                  >
+                                    {notif.chat.isGroupChat
+                                      ? notif.chat.chatName
+                                      : notif.sender.name}
+                                  </span>
+                                  <span
+                                    className={classnames(
+                                      "text-[11px] group-hover:font-bold group-hover:scale-95"
+                                    )}
+                                  >
+                                    New unread message!
+                                  </span>
+                                </span>
+                              </div>
+                              <AiOutlineCloseCircle
+                                className="h-5 w-5 hover:scale-110 hover:text-socioverse-400 z-40 cursor-pointer"
+                                onClick={() => handleCloseNotification(notif)}
                               />
-                              <span className="flex flex-col">
-                                <span
-                                  className={classnames(
-                                    "text-[14px] group-hover:font-bold group-hover:scale-95"
-                                  )}
-                                >
-                                  {notif.chat.isGroupChat
-                                    ? notif.chat.chatName
-                                    : notif.sender.name}
-                                </span>
-                                <span
-                                  className={classnames(
-                                    "text-[11px] group-hover:font-bold group-hover:scale-95"
-                                  )}
-                                >
-                                  New unread message!
-                                </span>
-                              </span>
                             </div>
                           </div>
                         </div>
@@ -293,11 +309,7 @@ function ProfileMenu() {
               size="sm"
               alt="user dp"
               className="border border-blue-500 p-0.5"
-              src={
-                userInfo?.dp
-                  ? userInfo.dp
-                  : common.DEFAULT_IMG
-              }
+              src={userInfo?.dp ? userInfo.dp : common.DEFAULT_IMG}
             />
             <ChevronDownIcon
               strokeWidth={2.5}

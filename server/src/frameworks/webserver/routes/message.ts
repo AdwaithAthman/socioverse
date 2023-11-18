@@ -19,8 +19,9 @@ const messageRouter = () => {
         );
 
     //routes
-    router.post("/", authMiddleware, controller.sendMessage);
-    router.get('/:chatId', authMiddleware, controller.getAllMessagesFromChat)
+    router.post("/sendMessage", authMiddleware, controller.sendMessage);
+    router.get('/getAllMessagesFromChat/:chatId', authMiddleware, controller.getAllMessagesFromChat)
+    router.get('/fetchNotifications', authMiddleware, controller.fetchNotifications);
 
     return router;
 };

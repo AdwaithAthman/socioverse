@@ -20,11 +20,11 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
     });
 
     socket.on("typing", (room: string) => {
-      socket.in(room).emit("typing", room);
+      socket.broadcast.to(room).emit("typing", room);
     });
 
     socket.on("stop typing", (room: string) => {
-      socket.in(room).emit("stop typing");
+      socket.broadcast.to(room).emit("stop typing");
     });
 
     socket.on("new message", (newMessageRecieved: RecievedMessageInterface) => {

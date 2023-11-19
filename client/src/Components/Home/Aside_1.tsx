@@ -17,16 +17,18 @@ import { RiUserFollowFill } from "react-icons/ri";
 import { RiUserUnfollowFill } from "react-icons/ri";
 import { MdVideoCall } from "react-icons/md";
 import { BiSolidMessageDetail } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getFollowers, getFollowing } from "../../API/User";
 
 //importing types
 import { StoreType } from "../../Redux/Store";
 import { User } from "../../Types/loginUser";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ToastContainer } from "react-toastify";
 import common from "../../Constants/common";
+import { setSelectedChat } from "../../Redux/ChatSlice";
+import { fetchOtherUserChat } from "../../API/Chat";
 
 function AsideOne({
   newFollowing,
@@ -39,6 +41,9 @@ function AsideOne({
   removeFollowing: boolean;
   handleFollowingRemove: (boolValue: boolean) => void;
 }) {
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [userFollowingProfiles, setUserFollowingProfiles] = useState<
     User[] | []
   >([]);
@@ -79,7 +84,13 @@ function AsideOne({
     handleFollowingRemove(false);
   }
 
-  console.log("userFollowingProfiles: ", userFollowingProfiles);
+  const handleMessageClick = async (userId: string) => {
+    const response = await fetchOtherUserChat(userId);
+    dispatch(setSelectedChat(response.chat));
+    if (location.pathname !== "/message") {
+      navigate("/message");
+    }
+  };
 
   return (
     <>
@@ -121,9 +132,7 @@ function AsideOne({
                         <img
                           className="inline-block h-12 w-12 rounded-full"
                           src={
-                            userProfile.dp
-                              ? userProfile.dp
-                              : common.DEFAULT_IMG
+                            userProfile.dp ? userProfile.dp : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />
@@ -138,7 +147,12 @@ function AsideOne({
                       </div>
                     </Link>
                     <div className="flex items-center gap-2">
-                      <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group">
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleMessageClick(userProfile._id as string)
+                        }
+                      >
                         <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
                       </div>
                       <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group">
@@ -220,9 +234,7 @@ function AsideOne({
                         <img
                           className="inline-block h-12 w-12 rounded-full"
                           src={
-                            userProfile.dp
-                              ? userProfile.dp
-                              : common.DEFAULT_IMG
+                            userProfile.dp ? userProfile.dp : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />
@@ -238,7 +250,12 @@ function AsideOne({
                     </Link>
                     <div className="flex items-center gap-2">
                       <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group">
-                        <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
+                        <BiSolidMessageDetail
+                          className="text-md text-socioverse-500 group-hover:text-green-500"
+                          onClick={() =>
+                            handleMessageClick(userProfile._id as string)
+                          }
+                        />
                       </div>
                       <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group">
                         <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
@@ -314,11 +331,7 @@ function AsideOne({
                   <div className="mt-3 flex items-center space-x-2">
                     <img
                       className="inline-block h-12 w-12 rounded-full"
-                      src={
-                        userProfile.dp
-                          ? userProfile.dp
-                          : common.DEFAULT_IMG
-                      }
+                      src={userProfile.dp ? userProfile.dp : common.DEFAULT_IMG}
                       alt="user dp"
                     />
                     <span className="flex flex-col">
@@ -373,11 +386,7 @@ function AsideOne({
                   <div className="mt-3 flex items-center space-x-2">
                     <img
                       className="inline-block h-12 w-12 rounded-full"
-                      src={
-                        userProfile.dp
-                          ? userProfile.dp
-                          : common.DEFAULT_IMG
-                      }
+                      src={userProfile.dp ? userProfile.dp : common.DEFAULT_IMG}
                       alt="user dp"
                     />
                     <span className="flex flex-col">

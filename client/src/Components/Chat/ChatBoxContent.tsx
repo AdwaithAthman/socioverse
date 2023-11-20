@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ReactComponent as Loader } from "../../assets/Loader.svg";
 import InputEmoji from "react-input-emoji";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ import {
 import { ChatInterface, MessageInterface } from "../../Types/chat";
 import classnames from "classnames";
 import moment from "moment";
-import io, { Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import common from "../../Constants/common";
 import Lottie from "lottie-react";
 import typingAnimation from "../../assets/animations/typing.json";
@@ -23,6 +23,7 @@ import { groupByDate } from "../../utils/Config/chatMethods";
 import { ImAttachment } from "react-icons/im";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { SendMessageResponse } from "../../Types/message";
+import ImageViewer from "react-simple-image-viewer";
 
 let selectedChatCompare: ChatInterface;
 
@@ -46,6 +47,8 @@ const ChatBoxContent = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState<string>("");
   const [img, setImg] = useState<File | null>(null);
+  const [isViewerOpen, setIsViewerOpen] = useState<boolean>(false);
+  const [viewImage, setViewImage] = useState<string[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -189,6 +192,15 @@ const ChatBoxContent = ({
     // formData.append("image", file);
   };
 
+  //image viewer
+  const closeImageViewer = () => {
+    setIsViewerOpen(false);
+  };
+  const openImageViewer = useCallback((image: string) => {
+    setViewImage([image]);
+    setIsViewerOpen(true);
+  }, []);
+
   return (
     <>
       {loading ? (
@@ -265,11 +277,14 @@ const ChatBoxContent = ({
                               }
                             )}
                           >
-                            {
-                              message.image && (
-                                <img src={message.image} alt="image" className="mb-2 rounded-lg" />
-                              )
-                            }
+                            {message.image && (
+                              <img
+                                src={message.image}
+                                alt="image"
+                                className="mb-2 rounded-lg cursor-pointer"
+                                onClick={() => openImageViewer(message.image)}
+                              />
+                            )}
                             <h1 className="text-sm my-1 font-normal text-left">
                               {message.content && message.content}
                             </h1>
@@ -305,7 +320,7 @@ const ChatBoxContent = ({
               />
             </div>
           )}
-          <div className=" md:mx-4 mx-1 md:mb-4 mb-2 flex items-center justify-between">
+          <div className=" md:mx-4 mx-1 md:mb-4 mb-2 flex items-center justify-between z-0">
             <InputEmoji
               value={newMessage}
               onChange={typingHandler}
@@ -333,6 +348,35 @@ const ChatBoxContent = ({
               </label>
             </div>
           </div>
+          {isViewerOpen && (
+            <>
+              <div className="hidden lg:block">
+                <ImageViewer
+                  src={viewImage}
+                  currentIndex={0}
+                  disableScroll={false}
+                  closeOnClickOutside={true}
+                  onClose={closeImageViewer}
+                  backgroundStyle={{
+                    backgroundColor: "rgba(0,0,0,0.8)",
+                    padding: "8rem 4rem 4rem 4rem",
+                  }}
+                />
+              </div>
+              <div className="block lg:hidden">
+                <ImageViewer
+                  src={viewImage}
+                  currentIndex={0}
+                  disableScroll={false}
+                  closeOnClickOutside={true}
+                  onClose={closeImageViewer}
+                  backgroundStyle={{
+                    backgroundColor: "rgba(0,0,0,0.8)",
+                  }}
+                />
+              </div>
+            </>
+          )}
         </>
       )}
     </>

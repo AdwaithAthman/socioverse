@@ -4,6 +4,7 @@ export interface MessageInterface {
     _id: string;
     sender: User;
     content: string;
+    image: string;
     chat: ChatInterface;
     createdAt: string;
     updatedAt: string;

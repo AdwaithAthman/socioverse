@@ -94,6 +94,7 @@ const END_POINTS = {
     GROUP_REMOVE: 'api/chat/groupRemove',
     ADD_GROUP_DP: 'api/chat/addGroupDp',
     SEND_MESSAGE: 'api/message/sendMessage',
+    SEND_MESSAGE_WITH_IMG: 'api/message/sendMessageWithImg',
     GET_ALL_MESSAGES_FROM_CHAT: 'api/message/getAllMessagesFromChat',
     FETCH_NOTIFICATIONS: 'api/message/fetchNotifications',
 

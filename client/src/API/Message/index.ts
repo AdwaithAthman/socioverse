@@ -22,6 +22,21 @@ export const sendMessage = async (
   return response.data;
 };
 
+export const sendMessageWithImg = async (
+  formData: FormData,
+): Promise<SendMessageResponse> => {
+  const response = await axiosUserInstance.post<SendMessageResponse>(
+    END_POINTS.SEND_MESSAGE_WITH_IMG,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+}
+
 export const getAllMessagesFromChat = async (
   chatId: string
 ): Promise<GetAllMessagesFromChatResponse> => {

@@ -11,6 +11,7 @@ import { setCredentials } from "../Redux/AuthSlice";
 import { ToastContainer } from "react-toastify";
 import classnames from "classnames";
 import { Socket } from "socket.io-client";
+import { setSelectedChat } from "../Redux/ChatSlice";
 
 const ChatPage = ({
   socket,
@@ -32,6 +33,10 @@ const ChatPage = ({
       if (!userData) {
         navigate("/error");
       }
+    }
+
+    return () => {
+      dispatch(setSelectedChat(null));
     }
   }, [navigate, user]);
 

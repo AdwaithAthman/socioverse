@@ -5,7 +5,11 @@ import { toast } from "react-toastify";
 import { TOAST_ACTION } from "../../Constants/common";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreType } from "../../Redux/Store";
-import { getAllMessagesFromChat, sendMessage } from "../../API/Message";
+import {
+  getAllMessagesFromChat,
+  sendMessage,
+  sendMessageWithImg,
+} from "../../API/Message";
 import { ChatInterface, MessageInterface } from "../../Types/chat";
 import classnames from "classnames";
 import moment from "moment";
@@ -16,6 +20,9 @@ import typingAnimation from "../../assets/animations/typing.json";
 import "./index.css";
 import { setFetchUserChatsAgain } from "../../Redux/ChatSlice";
 import { groupByDate } from "../../utils/Config/chatMethods";
+import { ImAttachment } from "react-icons/im";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { SendMessageResponse } from "../../Types/message";
 
 let selectedChatCompare: ChatInterface;
 
@@ -38,6 +45,7 @@ const ChatBoxContent = ({
   const [messages, setMessages] = useState<MessageInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState<string>("");
+  const [img, setImg] = useState<File | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -95,11 +103,28 @@ const ChatBoxContent = ({
     try {
       socket.emit("stop typing", selectedChat?._id);
       setNewMessage("");
-      const response =
-        selectedChat && (await sendMessage(newMessage, selectedChat._id));
+      let response: SendMessageResponse | null;
+      if (img) {
+        setImg(null);
+        const formData = new FormData();
+        formData.append("image", img);
+        formData.append("chat", selectedChat?._id as string);
+        if (newMessage) {
+          formData.append("content", newMessage);
+        }
+        response = selectedChat && (await sendMessageWithImg(formData));
+      } else {
+        response =
+          selectedChat && (await sendMessage(newMessage, selectedChat._id));
+      }
       dispatch(setFetchUserChatsAgain(true));
-      response && socket.emit("new message", response.message);
-      response && setMessages((cur) => [...cur, response.message]);
+      if (response && response.message) {
+        const newMessage = response.message;
+        response && socket.emit("new message", newMessage);
+        response &&
+          response.message &&
+          setMessages((cur) => [...cur, newMessage]);
+      }
     } catch (err) {
       console.log("error sending message: ", err);
       toast.dismiss();
@@ -150,6 +175,19 @@ const ChatBoxContent = ({
   //     }
   //   }, timerLength);
   // };
+
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.dismiss();
+      toast.error("Only image files are allowed", TOAST_ACTION);
+      return;
+    }
+    setImg(file);
+    // const formData = new FormData();
+    // formData.append("image", file);
+  };
 
   return (
     <>
@@ -249,7 +287,20 @@ const ChatBoxContent = ({
               )}
             </div>
           </div>
-          <div className=" md:mx-4 mx-1 md:mb-4 mb-2">
+          {img && (
+            <div className="md:mx-4 mx-1 relative h-36 w-36 overflow-hidden">
+              <img
+                src={URL.createObjectURL(img)}
+                alt="img"
+                className="h-full w-full rounded-lg object-cover"
+              />
+              <AiOutlineCloseCircle
+                className="text-xl cursor-pointer text-white hover:scale-105 absolute top-0 right-0 "
+                onClick={() => setImg(null)}
+              />
+            </div>
+          )}
+          <div className=" md:mx-4 mx-1 md:mb-4 mb-2 flex items-center justify-between">
             <InputEmoji
               value={newMessage}
               onChange={typingHandler}
@@ -264,6 +315,18 @@ const ChatBoxContent = ({
                 return ["no user"].filter((user) => user.includes(text));
               }}
             />
+            <div className="mx-auto">
+              <input
+                type="file"
+                accept="image/*"
+                id="image-input"
+                className="hidden"
+                onChange={handleImage}
+              />
+              <label htmlFor="image-input">
+                <ImAttachment className="text-2xl text-[#858585] cursor-pointer hover:text-[#128b7e]" />
+              </label>
+            </div>
           </div>
         </>
       )}

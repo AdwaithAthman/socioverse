@@ -4,6 +4,7 @@ interface MessageInterface extends Document {
   sender: Schema.Types.ObjectId;
   content: string;
   chat: Schema.Types.ObjectId;
+  image: string;
 }
 
 const messageSchema = new Schema<MessageInterface>(
@@ -20,6 +21,9 @@ const messageSchema = new Schema<MessageInterface>(
             type: Schema.Types.ObjectId,
             ref: "Chat",
         },
+        image: {
+            type: String,
+        }
     },
     { timestamps: true }
 );

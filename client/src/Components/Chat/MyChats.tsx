@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setChats, setFetchUserChatsAgain, setSelectedChat } from "../../Redux/ChatSlice";
+import {
+  setChats,
+  setFetchUserChatsAgain,
+  setSelectedChat,
+} from "../../Redux/ChatSlice";
 import common, { TOAST_ACTION } from "../../Constants/common";
 import { toast } from "react-toastify";
 import { fetchChats } from "../../API/Chat";
@@ -17,19 +21,15 @@ import { ChatInterface } from "../../Types/chat";
 import CreateGroupDialog from "./CreateGroupDialog";
 import { Socket } from "socket.io-client";
 
-const MyChats = ({
-  userId,
-  socket
-}: {
-  userId: string;
-  socket: Socket;
-}) => {
+const MyChats = ({ userId, socket }: { userId: string; socket: Socket }) => {
   const dispatch = useDispatch();
   const chats = useSelector((state: StoreType) => state.chat.chats);
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
-  const fetchUserChatsAgain = useSelector((state: StoreType) => state.chat.fetchUserChatsAgain);
+  const fetchUserChatsAgain = useSelector(
+    (state: StoreType) => state.chat.fetchUserChatsAgain
+  );
   const [openCreateGroupDialog, SetOpenCreateGroupDialog] =
     useState<boolean>(false);
   const handleCreateGroupDialog = () => SetOpenCreateGroupDialog((cur) => !cur);
@@ -42,12 +42,12 @@ const MyChats = ({
   }, [fetchUserChatsAgain]);
 
   useEffect(() => {
-    if(socket){
-    socket.on("group updated", () => {
-      fetchUserChats();
-    })
-  }
-  })
+    if (socket) {
+      socket.on("group updated", () => {
+        fetchUserChats();
+      });
+    }
+  });
 
   const fetchUserChats = async () => {
     try {
@@ -146,7 +146,10 @@ const MyChats = ({
                             {/* <span className="font-bold">
                               {chat.latestMessage.sender?.name} :{" "}
                             </span> */}
-                            {truncate(chat.latestMessage.content, 20)}
+
+                            {chat.latestMessage.image
+                              ? "📷"
+                              : truncate(chat.latestMessage.content, 20)}
                           </>
                         ) : (
                           " no message"
@@ -195,7 +198,9 @@ const MyChats = ({
                         )}
                       >
                         {chat.latestMessage
-                          ? truncate(chat.latestMessage.content, 20)
+                          ? chat.latestMessage.image
+                            ? "📷"
+                            : truncate(chat.latestMessage.content, 20)
                           : " no message"}
                       </span>
                     </span>

@@ -265,8 +265,13 @@ const ChatBoxContent = ({
                               }
                             )}
                           >
+                            {
+                              message.image && (
+                                <img src={message.image} alt="image" className="mb-2 rounded-lg" />
+                              )
+                            }
                             <h1 className="text-sm my-1 font-normal text-left">
-                              {message.content}
+                              {message.content && message.content}
                             </h1>
                             <h6 className="text-[0.65rem] font-thin opacity-80 text-right">
                               {moment(message.createdAt).format("LT")}

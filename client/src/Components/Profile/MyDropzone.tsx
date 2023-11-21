@@ -87,13 +87,13 @@ const MyDropzone = () => {
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {!isDragActive && (
-          <div className="h-80 cursor-pointer rounded-lg w-full bg-white border-4 border-gray-500 border-dashed flex items-center justify-center gap-10">
-            <AiFillPicture className="text-9xl text-gray-500" />
+          <div className=" h-44 md:h-60 lg:h-80 px-1 cursor-pointer rounded-lg w-full bg-white lg:border-4 border-2 border-gray-500 border-dashed flex items-center justify-center gap-10">
+            <AiFillPicture className="lg:text-9xl text-6xl text-gray-500" />
             <div className="flex flex-col justify-center items-start">
-              <h1 className="text-[1.125rem]">
+              <h1 className="lg:text-[1.125rem] text-base">
                 Drag the image here or click to select the file
               </h1>
-              <p className="text-gray-500 font-light">
+              <p className="text-gray-500 font-light lg:text-base text-sm">
                 Multiple files are not allowed
               </p>
             </div>

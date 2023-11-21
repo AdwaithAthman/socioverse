@@ -260,7 +260,7 @@ function PostCard({
                   variant="text"
                   className="focus:outline-none"
                 >
-                  <SlOptions className="text-xl transition duration-150 ease-in-out hover:scale-105" />
+                  <SlOptions className="lg:text-xl text-base transition duration-150 ease-in-out hover:scale-105" />
                 </Button>
               </MenuHandler>
               <MenuList className="z-50">
@@ -314,94 +314,6 @@ function PostCard({
               </MenuList>
             </Menu>
           )}
-          {/* <div className="group inline-block relative pr-3 cursor-pointer">
-            <Button
-              color="blue-gray"
-              size="sm"
-              variant="text"
-              className="focus:outline-none"
-              onClick={() => {
-                toggleMenuVisibility();
-                if (reportSubMenuVisible) setReportSubMenuVisible(false);
-              }}
-            >
-              <SlOptions className="text-xl transition duration-150 ease-in-out hover:scale-105" />
-            </Button>
-            {isMenuVisible && (
-              <div
-                className={`${
-                  isMenuVisible ? "block" : "hidden"
-                } absolute right-0 w-36 rounded-md z-10`}
-              >
-                <div
-                  className={`${
-                    isMenuVisible ? "block" : "hidden"
-                  } absolute right-0 mt-1 w-full bg-white border border-blue-gray-300/20 shadow-lg rounded-md z-10`}
-                >
-                  {post?.userId === userId ? (
-                    <>
-                      <button
-                        className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
-                        onClick={handlePostEdit}
-                      >
-                        <BiEditAlt className="mr-2 text-lg" />
-                        <p className="text-sm">Edit</p>
-                      </button>
-                      <button
-                        className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
-                        onClick={() => {
-                          handleDeletePost(post._id);
-                          setMenuVisible(false);
-                        }}
-                      >
-                        <RiDeleteBin6Line className="mr-2 text-md" />
-                        <p className="text-sm">Delete</p>
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
-                      onClick={() => {
-                        setReportSubMenuVisible(true);
-                        setMenuVisible(false);
-                      }}
-                    >
-                      <MdOutlineReportGmailerrorred className="mr-2 text-lg" />
-                      <p className="text-sm">Report</p>
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-            {reportSubMenuVisible && (
-              <div
-                className={`${
-                  reportSubMenuVisible ? "block" : "hidden"
-                } absolute right-0 w-60 rounded-md z-50`}
-              >
-                <div
-                  className={`${
-                    reportSubMenuVisible ? "block" : "hidden"
-                  } absolute right-0 mt-1 w-full bg-white border border-blue-gray-300/20 shadow-lg rounded-md z-10`}
-                >
-                  {reportReasons.map((label) => {
-                    return (
-                      <button
-                        key={label}
-                        className="flex text-sm items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
-                        onClick={() => {
-                          handleReport(label, post._id)
-                          setReportSubMenuVisible(false);
-                        }}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div> */}
         </div>
         <div className="w-full rounded-lg border shadow-lg">
           <div className=" flex flex-col justify-center w-full h-fit rounded-t-lg p-3 gap-3">
@@ -425,7 +337,7 @@ function PostCard({
               </div>
             </div>
             {post.image && post?.image.length > 0 && (
-              <div className="flex items-center justify-self-center px-1 w-full h-72">
+              <div className="flex items-center justify-self-center px-1 w-full lg:h-72 h-56">
                 {post.image.length > 1 ? (
                   <Carousel
                     className="w-full h-full"
@@ -449,7 +361,7 @@ function PostCard({
                       <img
                         src={image}
                         alt="post-image"
-                        className="h-full w-full object-cover rounded-lg"
+                        className="h-full w-full object-fill lg:object-cover rounded-lg"
                         key={index}
                       />
                     ))}
@@ -458,7 +370,7 @@ function PostCard({
                   <img
                     src={post.image[0]}
                     alt="Laptop"
-                    className="h-full w-full rounded-lg object-cover"
+                    className="h-full w-full rounded-lg object-fill lg:object-cover"
                   />
                 )}
               </div>
@@ -501,7 +413,7 @@ function PostCard({
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center justify-start gap-4 px-2">
                 <span
-                  className="text-[12px] font-medium text-gray-500 cursor-pointer"
+                  className="lg:text-[12px] text-[10px] font-medium text-gray-500 cursor-pointer"
                   onClick={() => {
                     handleGetLikedUsers(post._id);
                     setOpenLikedUsersDialog(true);
@@ -513,7 +425,7 @@ function PostCard({
                   {commentsLength} comments
                 </span>
               </div>
-              <span className="text-[12px] font-medium text-gray-500">
+              <span className="lg:text-[12px] text-[10px] font-medium text-gray-500">
                 {moment(post.createdAt).startOf("minutes").fromNow()}
                 {post.createdAt !== post.updatedAt && " ( Edited )"}
               </span>

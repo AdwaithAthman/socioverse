@@ -4,6 +4,10 @@ import {
   Dialog,
   DialogBody,
   DialogHeader,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
 } from "@material-tailwind/react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BiEditAlt } from "react-icons/bi";
@@ -27,6 +31,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import ImageCropper from "../Crop/ImageCropper";
 import { uploadProfilePhoto } from "../../API/Profile";
 import { followUser, unfollowUser } from "../../API/User";
+import { SlOptionsVertical } from "react-icons/sl";
 
 //importing types
 import { User } from "../../Types/loginUser";
@@ -211,7 +216,7 @@ const ProfileHeader = ({
             className="h-full rounded-lg w-full object-fit relative"
           />
           {!otherUser && (
-            <div className="absolute bottom-4 right-20">
+            <div className="absolute bottom-2 lg:bottom-4 right-4 lg:right-20">
               <div className="flex gap-3">
                 <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 border-blue-gray-700 hover:border-red-700 hover:bg-white hover:border-3 group opacity-70 hover:opacity-100">
                   <RiDeleteBin6Line
@@ -236,13 +241,13 @@ const ProfileHeader = ({
   const renderProfileImageSection = () => {
     if (dp) {
       return (
-        <div className="absolute -bottom-24 left-14 p-4 hover:scale-105 group">
+        <div className="absolute -bottom-24 lg:left-14 p-4 hover:scale-105 group">
           <img
-            className="h-40 w-40 rounded-full border-4 border-white"
+            className="h-32 w-32 md:h-36 md:w-36 lg:h-40 lg:w-40 rounded-full border-4 border-white"
             src={dp}
           />
           {!otherUser && (
-            <div className="absolute bottom-7 left-[5rem]">
+            <div className="absolute bottom-7 left-16 md:left-[4.5rem] lg:left-[5rem]">
               <div className="flex gap-3">
                 <div
                   className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 
@@ -261,8 +266,8 @@ const ProfileHeader = ({
     } else {
       if (otherUser) {
         return (
-          <div className="absolute -bottom-24 left-14 p-4 ">
-            <div className="h-40 w-40 rounded-full border-4 border-gray-500 border-dashed bg-white m-2 flex items-center justify-center">
+          <div className="absolute -bottom-24 lg:left-14 p-4 ">
+            <div className="h-32 w-32 md:h-36 md:w-36 lg:h-40 lg:w-40 rounded-full border-2 lg:border-4 border-gray-500 border-dashed bg-white m-2 flex items-center justify-center">
               <CgProfile className="text-5xl text-gray-500 inline-flex" />
             </div>
           </div>
@@ -270,7 +275,7 @@ const ProfileHeader = ({
       } else {
         return (
           <>
-            <div className="absolute -bottom-24 left-14 p-4 ">
+            <div className="absolute -bottom-24 lg:left-14 p-4 ">
               <input
                 type="file"
                 accept="image/*"
@@ -280,7 +285,7 @@ const ProfileHeader = ({
               />
               <label
                 htmlFor="image-input"
-                className="h-40 w-40 rounded-full border-4 border-gray-500 border-dashed bg-white m-2 flex items-center justify-center cursor-pointer"
+                className="h-32 w-32 md:h-36 md:w-36 lg:h-40 lg:w-40 rounded-full border-4 border-gray-500 border-dashed bg-white m-2 flex items-center justify-center cursor-pointer"
               >
                 <CgProfile className="text-5xl text-gray-500 inline-flex" />
               </label>
@@ -382,28 +387,28 @@ const ProfileHeader = ({
   return (
     <>
       <ToastContainer />
-      <div className="relative w-full h-80 px-10">
+      <div className="relative w-full h-44 md:h-60 lg:h-80 px-1 lg:px-10">
         {renderCoverPhotoSection()}
         {renderProfileImageSection()}
 
         {/* Name */}
-        <div className="flex flex-col justify-between items-start absolute left-64 -bottom-16">
-          <div className="flex items-center gap-2">
-            <h2 className="mt-2 text-xl font-bold text-black inline">
+        <div className="flex flex-col justify-between items-start absolute left-40 md:left-44 lg:left-64 -bottom-16">
+          <div className="flex md:flex-row flex-col md:items-center md:gap-2">
+            <h2 className="mt-2 lg:text-xl text-base font-bold text-black inline">
               {otherUser ? otherUserInfo?.name : userData?.name}
             </h2>
-            <p className="text-sm font-light text-gray-600 mt-2">
+            <p className="text-sm font-light text-gray-600 md:mt-2">
               @{otherUser ? otherUserInfo?.username : userData?.username}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-socioverse-500">
+            <span className="lg:text-sm text-xs font-bold text-socioverse-500">
               {otherUser
                 ? otherUserInfo?.following?.length
                 : userData?.following?.length}{" "}
               following
             </span>
-            <span className="text-sm font-bold text-socioverse-500">
+            <span className="lg:text-sm text-xs font-bold text-socioverse-500">
               {otherUser
                 ? otherUserInfo?.followers?.length
                 : userData?.followers?.length}{" "}
@@ -411,7 +416,7 @@ const ProfileHeader = ({
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-5 absolute -bottom-14 right-20">
+        <div className="md:flex items-center justify-between gap-5 absolute hidden md:-bottom-14 md:right-20">
           {!otherUser ? (
             <>
               <Button
@@ -458,6 +463,24 @@ const ProfileHeader = ({
               )}
             </>
           )}
+        </div>
+        <div className="flex md:hidden absolute right-0 -bottom-14">
+          <Menu placement="bottom-start">
+            <MenuHandler>
+              <Button
+                color="blue-gray"
+                size="sm"
+                variant="text"
+                className="focus:outline-none"
+              >
+                <SlOptionsVertical className="text-lg transition duration-150 ease-in-out hover:scale-105" />
+              </Button>
+            </MenuHandler>
+            <MenuList className="z-50">
+              <MenuItem onClick={handleSettings} className="hover:bg-blue-gray-50">Settings</MenuItem>
+              <MenuItem onClick={handleEditProfile} className="hover:bg-blue-gray-50">Edit Profile</MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
     </>

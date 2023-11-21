@@ -5,14 +5,6 @@ import Profile from "../Components/Profile";
 // import { StoreType } from "../Redux/Store";
 
 const ProfilePage = () => {
-  // const user = useSelector((state: StoreType) => state.auth.isAuthenticated);
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (!user) {
-  //     localStorage.setItem("lastLocation", window.location.pathname);
-  //     // navigate("/login");
-  //   }
-  // }, [navigate, user]);
   return (
     <>
       <Profile />

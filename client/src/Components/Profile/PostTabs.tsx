@@ -293,7 +293,7 @@ function PostTabs({ userId }: { userId?: string }) {
                 setCurrentTab(value);
               }}
             >
-              {label}
+              <h4 className="lg:text-base text-sm">{label}</h4>
             </Tab>
           )
         )}
@@ -312,7 +312,7 @@ function PostTabs({ userId }: { userId?: string }) {
               {typeof desc === "string" ? (
                 <h1 className="">{desc}</h1>
               ) : (
-                <div className="flex flex-col gap-5 w-[30rem] mx-auto">
+                <div className="flex flex-col gap-5 lg:w-[30rem] md:w-96 w-80 mx-auto">
                   {desc.map((post) => (
                     <>
                       {console.log("post_id+value: ", post._id + value)}

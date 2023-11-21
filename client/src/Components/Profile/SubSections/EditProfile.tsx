@@ -153,17 +153,17 @@ const EditProfile = () => {
         <div className="flex items-start justify-center w-full gap-8">
           <div>
             <div className="flex flex-col items-start">
-              <Typography variant="h4" color="blue-gray">
+              <Typography variant="h4" color="blue-gray" className="text-xl md:text-2xl">
                 Profile
               </Typography>
 
-              <Typography color="gray" className="mt-1 text-center font-normal">
+              <Typography color="gray" className="mt-1 text-center font-normal text-sm md:text-base">
                 Edit your profile
               </Typography>
             </div>
             {!isLoading ? (
               <form
-                className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+                className="mt-8 mb-2 w-[19rem] max-w-screen-lg md:w-96"
                 onSubmit={formik.handleSubmit}
               >
                 <div className="mb-4 flex flex-col gap-6">
@@ -223,7 +223,7 @@ const EditProfile = () => {
                     </div>
                   )}
 
-                  <div className="w-96">
+                  <div className="lg:w-96 w-full">
                     <Textarea
                       label="Bio"
                       name="bio"
@@ -233,7 +233,7 @@ const EditProfile = () => {
                     />
                   </div>
 
-                  <div className="w-96">
+                  <div className="lg:w-96 w-full">
                     <Select
                       label="Select Gender"
                       size="lg"
@@ -266,7 +266,7 @@ const EditProfile = () => {
               ""
             )}
           </div>
-          <div className="w-96 h-96">
+          <div className="w-96 h-96 hidden lg:block">
             <ProfileSvg />
           </div>
         </div>

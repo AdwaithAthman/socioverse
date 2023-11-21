@@ -28,7 +28,7 @@ const Profile = () => {
             ifOtherUser={ifOtherUser}
           />
         </div>
-        <div className="flex flex-col md:flex-row items-start w-full gap-5 ">
+        <div className="flex flex-col md:flex-row items-start w-full gap-5 md:h-[85vh] lg:h-[90vh]">
           <div
             className={classnames(
               "flex flex-col lg:px-10 px-2 w-full md:w-4/12 mt-8 sticky overflow-y-hidden md:h-[85vh]",
@@ -45,6 +45,7 @@ const Profile = () => {
           <div className={classnames("flex flex-col lg:pr-10 w-full md:w-8/12 mt-8 sticky overflow-y-auto",
           {"h-[55vh] md:h-[60vh]" : location.pathname === `/profile/${userInfo?._id}/settings`},
           {"h-[95vh] md:h-[90vh]" : location.pathname === `/profile/${userInfo?._id}/edit-profile`},
+          {"h-[80vh]" : location.pathname === `/profile/${userInfo?._id}`},
           )}>
             {location.pathname === `/profile/${userInfo?._id}/settings` &&
             userInfo ? (

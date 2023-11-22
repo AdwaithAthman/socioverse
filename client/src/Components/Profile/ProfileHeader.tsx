@@ -477,8 +477,46 @@ const ProfileHeader = ({
               </Button>
             </MenuHandler>
             <MenuList className="z-50">
-              <MenuItem onClick={handleSettings} className="hover:bg-blue-gray-50">Settings</MenuItem>
-              <MenuItem onClick={handleEditProfile} className="hover:bg-blue-gray-50">Edit Profile</MenuItem>
+              {!otherUser ? (
+                <>
+                  <MenuItem
+                    onClick={handleSettings}
+                    className="hover:bg-blue-gray-50"
+                  >
+                    Settings
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleEditProfile}
+                    className="hover:bg-blue-gray-50"
+                  >
+                    Edit Profile
+                  </MenuItem>
+                </>
+              ) : following ? (
+                <MenuItem
+                  onClick={() =>
+                    handleUnfollowingButton(
+                      id as string,
+                      otherUserInfo?.name as string
+                    )
+                  }
+                  className="hover:bg-blue-gray-50"
+                >
+                  Unfollow
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  onClick={() =>
+                    handleFollowingButton(
+                      id as string,
+                      otherUserInfo?.name as string
+                    )
+                  }
+                  className="hover:bg-blue-gray-50"
+                >
+                  Follow
+                </MenuItem>
+              )}
             </MenuList>
           </Menu>
         </div>

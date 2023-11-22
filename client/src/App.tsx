@@ -37,8 +37,8 @@ const App = () => {
   };
 
   return (
-    <>
-      <AnimatePresence mode="wait">
+    <div className="flex flex-col items-center">
+      {/* <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
           initial={{ scale: 0.6, opacity: 0 }}
@@ -46,14 +46,14 @@ const App = () => {
           exit={{ scale: 0.6, opacity: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="flex flex-col items-center"
-        >
+        > */}
           <ComplexNavbar />
           <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 no-scollbar">
             <Outlet />
           </div>
           <Footer />
-        </motion.div>
-      </AnimatePresence>
+        {/* </motion.div>
+      </AnimatePresence> */}
 
       {/* popup windows */}
       <AccountVerificationPopup
@@ -61,7 +61,7 @@ const App = () => {
         accountVerifyPopupOpen={accountVerifyPopupOpen}
         setIsAccountVerified={setIsAccountVerified}
       />
-    </>
+    </div>
   );
 };
 

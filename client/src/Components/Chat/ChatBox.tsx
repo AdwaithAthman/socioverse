@@ -65,26 +65,23 @@ const ChatBox = ({
           )}
           <div className="flex items-center justify-between gap-4">
             <div
-              className="flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 
+              className="flex justify-center items-center h-7 w-7 md:w-9 md:h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 
           ease-in-out group cursor-pointer border border-blue-gray-800 hover:border-2"
               onClick={() => dispatch(setSelectedChat(null))}
             >
-              <FaArrowLeft className="group-hover:text-blue-gray-800 text-xl font-bold text-blue-gray-500" />
+              <FaArrowLeft className="group-hover:text-blue-gray-800 md:text-xl font-bold text-blue-gray-500" />
             </div>
             <div
-              className="flex justify-center items-center w-9 h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 
+              className="flex justify-center items-center h-7 w-7 md:w-9 md:h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 
           ease-in-out group cursor-pointer border border-blue-gray-800 hover:border-2"
               onClick={handleOpenOptions}
             >
-              <SlOptionsVertical className="group-hover:text-blue-gray-800 text-xl font-bold text-blue-gray-500" />
+              <SlOptionsVertical className="group-hover:text-blue-gray-800 md:text-xl font-bold text-blue-gray-500" />
             </div>
           </div>
         </header>
         <div className=" h-full w-full flex flex-col gap-4 overflow-y-scroll no-scrollbar bg-blue-gray-300/50 rounded-xl">
-          <ChatBoxContent
-            socket={socket}
-            socketConnected={socketConnected}
-          />
+          <ChatBoxContent socket={socket} socketConnected={socketConnected} />
         </div>
       </div>
       <OptionsDialog

@@ -10,6 +10,8 @@ import OptionsDialog from "./OptionsDialog";
 import ChatBoxContent from "./ChatBoxContent";
 import { Socket } from "socket.io-client";
 import common from "../../Constants/common";
+import { MdVideoCall } from "react-icons/md";
+import VideoCallScreen from "./VideoCallScreen";
 
 const ChatBox = ({
   socket,
@@ -18,7 +20,6 @@ const ChatBox = ({
   socket: Socket;
   socketConnected: boolean;
 }) => {
-
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
@@ -27,6 +28,9 @@ const ChatBox = ({
 
   const [openOptions, setOpenOptions] = useState<boolean>(false);
   const handleOpenOptions = () => setOpenOptions((cur) => !cur);
+
+  const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
+  const handleOpenVideoCall = () => setOpenVideoCall((cur) => !cur);
 
   return selectedChat ? (
     <>
@@ -73,6 +77,13 @@ const ChatBox = ({
               <FaArrowLeft className="group-hover:text-blue-gray-800 md:text-xl font-bold text-blue-gray-500" />
             </div>
             <div
+              className="flex justify-center items-center h-7 w-7 md:w-9 md:h-9 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 
+            hover:border-green-500 hover:bg-white hover:border-3 group"
+              onClick={() => setOpenVideoCall(true)}
+            >
+              <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
+            </div>
+            <div
               className="flex justify-center items-center h-7 w-7 md:w-9 md:h-9 rounded-full hover:bg-blue-gray-100 transition duration-100 
           ease-in-out group cursor-pointer border border-blue-gray-800 hover:border-2"
               onClick={handleOpenOptions}
@@ -90,6 +101,10 @@ const ChatBox = ({
         handleOpenOptions={handleOpenOptions}
         socket={socket}
       />
+        <VideoCallScreen
+          openVideoCall={openVideoCall}
+          handleOpenVideoCall={handleOpenVideoCall}
+        />
     </>
   ) : (
     <>

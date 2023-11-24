@@ -18,6 +18,7 @@ const ChatBox = ({
   socket: Socket;
   socketConnected: boolean;
 }) => {
+
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );

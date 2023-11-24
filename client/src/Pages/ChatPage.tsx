@@ -34,11 +34,15 @@ const ChatPage = ({
         navigate("/error");
       }
     }
+  }, [user]);
 
+  useEffect(() => {
     return () => {
-      dispatch(setSelectedChat(null));
-    }
-  }, [navigate, user]);
+      if (location.pathname !== "/message") {
+        dispatch(setSelectedChat(null));
+      }
+    };
+  }, []);
 
   const userInfo = async () => {
     try {

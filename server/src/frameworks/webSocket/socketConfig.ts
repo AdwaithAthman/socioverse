@@ -47,8 +47,13 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
       });
     });
 
-   socket.on("call-user", (otherUserId: string, userInfo:UserDataInterface) => {
-      socket.in(otherUserId).emit("call-made", userInfo);
+   socket.on("call-user", (userInfo: UserDataInterface, chat: any) => {
+      const otherUserId:string = chat.users.filter((user: { _id: string }) => user._id !== userInfo._id)[0]._id
+      socket.in(otherUserId).emit("call-made", userInfo, chat);
+   })
+
+   socket.on("call-rejected", (callerId: string, user: string) => {
+      socket.in(callerId).emit("call-cancelled", user);
    })
 
     

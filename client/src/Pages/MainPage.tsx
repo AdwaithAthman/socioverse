@@ -35,7 +35,6 @@ const MainPage = () => {
   const notification = useSelector(
     (state: StoreType) => state.chat.notification
   );
-  const [callIsSent, setCallIsSent] = useState<boolean>(false);
 
   useEffect(() => {
     if (
@@ -94,9 +93,8 @@ const MainPage = () => {
       });
 
       //for video call
-      socket.on("call-made", (callerInfo: User) => {
+      socket.on("call-made", (callerInfo: User, chat: ChatInterface) => {
         toast.dismiss();
-        setCallIsSent(true);
         toast.info(
           ({ closeToast }) => (
             <div>
@@ -115,7 +113,7 @@ const MainPage = () => {
                 <Button
                   className="rounded-full bg-socioverse-500"
                   size="sm"
-                  onClick={() => rejectCall(closeToast as () => void)}
+                  onClick={() => rejectCall(chat, closeToast as () => void)}
                 >
                   Reject
                 </Button>
@@ -125,9 +123,7 @@ const MainPage = () => {
           {
             ...TOAST_ACTION,
             closeButton: false,
-            onClose: () => {
-              setCallIsSent(false);
-            },
+            autoClose: false,
           }
         );
       });
@@ -139,18 +135,22 @@ const MainPage = () => {
   };
 
   const answerCall = (callerInfo: User, closeToast: () => void) => {
-    setCallIsSent(false);
     closeToast();
   };
 
-  const rejectCall = (closeToast: () => void) => {
-    setCallIsSent(false);
+  const rejectCall = (chat:ChatInterface ,closeToast: () => void) => {
+    handleCallRejection(chat);
     closeToast();
   };
+
+  const handleCallRejection = (chat:ChatInterface) => {
+    const callerId = chat.users.filter((oneUser) => oneUser._id !== user?._id)[0]._id;
+    socket.emit("call-rejected", callerId, user?.name )
+  }
 
   return (
     <>
-      {callIsSent && <ToastContainer />}
+      {/* {callIsSent && <ToastContainer />} */}
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}

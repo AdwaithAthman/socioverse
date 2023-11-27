@@ -6,7 +6,7 @@ import {
 } from "@material-tailwind/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../../Redux/Store";
 import common from "../../Constants/common";
 import { useEffect, useRef, useState } from "react";
@@ -45,6 +45,15 @@ const VideoCallScreen = ({
   const otherUserVideo = useRef<HTMLVideoElement | null>(null);
   const [videocall, setVideocall] = useState<boolean>(true);
 
+  useEffect(() => {
+    if(socket){
+        socket.on("call-cancelled", (user: string) => {
+            toast.dismiss();
+            toast.error(`${user} has cancelled the call`);
+        })
+    }
+  })
+
   const props: PropsInterface = {
     rtcProps: {
       appId: import.meta.env.VITE_AGORA_APP_ID as string,
@@ -54,8 +63,8 @@ const VideoCallScreen = ({
     },
     callbacks: {
       EndCall: () => {
-        setVideocall(false)
-        handleOpenVideoCall();
+          setVideocall(false)
+          handleOpenVideoCall();
     },
     },
   };

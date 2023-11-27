@@ -82,7 +82,7 @@ const ChatBox = ({
                 className="flex justify-center items-center h-7 w-7 md:w-9 md:h-9 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 
             hover:border-green-500 hover:bg-white hover:border-3 group"
                 onClick={() => {
-                  socket.emit("call-user", selectedChat.users.filter(user => user._id !== userId)[0]._id, userInfo)
+                  socket.emit("call-user", userInfo, selectedChat)
                   setOpenVideoCall(true)
                 }}
               >

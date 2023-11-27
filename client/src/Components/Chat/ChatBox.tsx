@@ -24,6 +24,7 @@ const ChatBox = ({
     (state: StoreType) => state.chat.selectedChat
   );
   const userId = useSelector((state: StoreType) => state.auth.user?._id);
+  const userInfo = useSelector((state: StoreType) => state.auth.user);
   const dispatch = useDispatch();
 
   const [openOptions, setOpenOptions] = useState<boolean>(false);
@@ -80,7 +81,10 @@ const ChatBox = ({
               <div
                 className="flex justify-center items-center h-7 w-7 md:w-9 md:h-9 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 
             hover:border-green-500 hover:bg-white hover:border-3 group"
-                onClick={() => setOpenVideoCall(true)}
+                onClick={() => {
+                  socket.emit("call-user", selectedChat.users.filter(user => user._id !== userId)[0]._id, userInfo)
+                  setOpenVideoCall(true)
+                }}
               >
                 <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
               </div>

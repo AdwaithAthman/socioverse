@@ -7,10 +7,17 @@ import { StoreType } from "../Redux/Store";
 import { useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { ChatInterface, MessageInterface } from "../Types/chat";
-import common from "../Constants/common";
-import { initializeNotification, setFetchUserChatsAgain, setNotification } from "../Redux/ChatSlice";
+import common, { TOAST_ACTION } from "../Constants/common";
+import {
+  initializeNotification,
+  setFetchUserChatsAgain,
+  setNotification,
+} from "../Redux/ChatSlice";
 import { addNotification } from "../API/User";
 import { fetchNotifications } from "../API/Message";
+import { ToastContainer, toast } from "react-toastify";
+import { User } from "../Types/loginUser";
+import { Button } from "@material-tailwind/react";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -28,24 +35,26 @@ const MainPage = () => {
   const notification = useSelector(
     (state: StoreType) => state.chat.notification
   );
+  const [callIsSent, setCallIsSent] = useState<boolean>(false);
 
   useEffect(() => {
     if (
       notification.length === 0 &&
       user &&
-      user.notifications && 
+      user.notifications &&
       user.notifications.length > 0
     ) {
       fetchNotifs();
     }
   }, [user]);
 
-  const fetchNotifs = async() => {
-    const response = user && await fetchNotifications(user.notifications as string[]);
-    if(response){
-      dispatch(initializeNotification(response.notifications))
+  const fetchNotifs = async () => {
+    const response =
+      user && (await fetchNotifications(user.notifications as string[]));
+    if (response) {
+      dispatch(initializeNotification(response.notifications));
     }
-  }
+  };
 
   //socket io connection
   useEffect(() => {
@@ -83,6 +92,45 @@ const MainPage = () => {
           }
         }
       });
+
+      //for video call
+      socket.on("call-made", (callerInfo: User) => {
+        toast.dismiss();
+        setCallIsSent(true);
+        toast.info(
+          ({ closeToast }) => (
+            <div>
+              Incoming call from {callerInfo.name}
+              <div className="mt-2 flex items-center gap-2">
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  className="rounded-full text-black border-black"
+                  onClick={() =>
+                    answerCall(callerInfo, closeToast as () => void)
+                  }
+                >
+                  Answer
+                </Button>
+                <Button
+                  className="rounded-full bg-socioverse-500"
+                  size="sm"
+                  onClick={() => rejectCall(closeToast as () => void)}
+                >
+                  Reject
+                </Button>
+              </div>
+            </div>
+          ),
+          {
+            ...TOAST_ACTION,
+            closeButton: false,
+            onClose: () => {
+              setCallIsSent(false);
+            },
+          }
+        );
+      });
     }
   });
 
@@ -90,8 +138,19 @@ const MainPage = () => {
     await addNotification(messageId);
   };
 
+  const answerCall = (callerInfo: User, closeToast: () => void) => {
+    setCallIsSent(false);
+    closeToast();
+  };
+
+  const rejectCall = (closeToast: () => void) => {
+    setCallIsSent(false);
+    closeToast();
+  };
+
   return (
     <>
+      {callIsSent && <ToastContainer />}
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}

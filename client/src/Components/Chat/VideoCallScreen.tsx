@@ -53,7 +53,10 @@ const VideoCallScreen = ({
       layout: layout.grid,
     },
     callbacks: {
-      EndCall: () => setVideocall(false),
+      EndCall: () => {
+        setVideocall(false)
+        handleOpenVideoCall();
+    },
     },
   };
 
@@ -115,7 +118,7 @@ const VideoCallScreen = ({
           </div>
         </div>
       </DialogHeader>
-      <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[32rem] overflow-hidden no-scrollbar">
+      <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[36rem] overflow-hidden no-scrollbar">
         <div style={styles.container}>
           {videocall ? (
             <AgoraUIKit

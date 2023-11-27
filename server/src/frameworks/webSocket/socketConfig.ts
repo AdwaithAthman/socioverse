@@ -47,16 +47,9 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
       });
     });
 
-    socket.on('join-video-room', (roomId: string, userId: string) => {
-      console.log("user joined the roomId " + roomId)
-      console.log("user joined the video room " + userId)
-      socket.join(roomId)
-      socket.to(roomId).emit('user-connected', userId)
-  
-      socket.on('disconnect', () => {
-        socket.to(roomId).emit('user-disconnected', userId)
-      })
-    })
+   socket.on("call-user", (otherUserId: string, userInfo:UserDataInterface) => {
+      socket.in(otherUserId).emit("call-made", userInfo);
+   })
 
     
   });

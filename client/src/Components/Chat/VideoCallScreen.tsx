@@ -9,19 +9,58 @@ import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { StoreType } from "../../Redux/Store";
 import common from "../../Constants/common";
+import { useEffect, useRef, useState } from "react";
+import { Socket } from "socket.io-client";
+import AgoraUIKit, { PropsInterface, layout } from "agora-react-uikit";
+import { ChatInterface } from "../../Types/chat";
+
+const styles = {
+  container: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flex: 1,
+    // flexDirection: "row",
+    // "@media (max-width: 768px)": {
+    //   flexDirection: "column",
+    // },
+  },
+};
 
 const VideoCallScreen = ({
   openVideoCall,
   handleOpenVideoCall,
+  socket,
 }: {
   openVideoCall: boolean;
   handleOpenVideoCall: () => void;
+  socket: Socket;
 }) => {
   const user = useSelector((state: StoreType) => state.auth.user);
+  const chat: ChatInterface = useSelector(
+    (state: StoreType) => state.chat.selectedChat
+  ) as ChatInterface;
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const userVideo = useRef<HTMLVideoElement | null>(null);
+  const otherUserVideo = useRef<HTMLVideoElement | null>(null);
+  const [videocall, setVideocall] = useState<boolean>(true);
+
+  const props: PropsInterface = {
+    rtcProps: {
+      appId: import.meta.env.VITE_AGORA_APP_ID as string,
+      channel: chat._id,
+      token: null, // pass in channel token if the app is in secure mode
+      layout: layout.grid,
+    },
+    callbacks: {
+      EndCall: () => setVideocall(false),
+    },
+  };
+
   return (
     <Dialog
       open={openVideoCall}
-      size="md"
+      size="lg"
       handler={handleOpenVideoCall}
       dismiss={{
         enabled: false,
@@ -64,14 +103,42 @@ const VideoCallScreen = ({
               className="text-3xl cursor-pointer"
               onClick={(e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
                 e.stopPropagation();
+                if (stream) {
+                  stream.getTracks().forEach((track) => {
+                    track.stop();
+                  });
+                  setStream(() => null);
+                }
                 handleOpenVideoCall();
               }}
             />
           </div>
         </div>
       </DialogHeader>
-      <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-96 overflow-hidden no-scrollbar">
-        Hello guys how's this video call screen
+      <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[32rem] overflow-hidden no-scrollbar">
+        <div style={styles.container}>
+          {videocall ? (
+            <AgoraUIKit
+              rtcProps={props.rtcProps}
+              callbacks={props.callbacks}
+              styleProps={{
+                localBtnContainer: {
+                  backgroundColor: "#ff764c",
+                  borderRadius: "2rem",
+                  margin: "0.5rem 0 0 0",
+                },
+                UIKitContainer: {
+                  width: "24rem",
+                  height: "24rem",
+                  gap: "1rem",
+                },
+                gridVideoContainer: {
+                  gap: "1rem",
+                },
+              }}
+            />
+          ) : null}
+        </div>
       </DialogBody>
     </Dialog>
   );

@@ -14,8 +14,6 @@ const firebaseConfig: FirebaseOptions = {
     measurementId: "G-40H3CRDDFG"
 };
 
-console.log(process.env.FIREBASE_API_KEY);
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();

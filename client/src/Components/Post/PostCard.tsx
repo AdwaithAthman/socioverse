@@ -15,6 +15,7 @@ import {
   savePost,
   reportPost,
   getLikedUsers,
+  getComments,
 } from "../../API/Post";
 import CommentPopup from "./CommentPopup";
 import { getPostDetails } from "../../API/Post";
@@ -59,9 +60,7 @@ function PostCard({
   const userId = store.getState().auth.user?._id as string;
   const dispatch = useDispatch();
   const [post, setPost] = useState<PostDataInterface>(postData);
-  const [commentsLength, setCommentsLength] = useState<number>(
-    postData.comments?.length ?? 0
-  );
+  const [commentsLength, setCommentsLength] = useState<number>(0);
 
   const [likesArray, setLikesArray] = useState<string[]>(
     postData.likes as string[]
@@ -75,24 +74,13 @@ function PostCard({
     useState<boolean>(false);
   const handleOpenLikedUsersDialog = () =>
     setOpenLikedUsersDialog(!openLikedUsersDialog);
-  // const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
-  // const [reportSubMenuVisible, setReportSubMenuVisible] =
-  //   useState<boolean>(false);
-
-  // const toggleMenuVisibility = () => {
-  //   setMenuVisible(!isMenuVisible);
-  // };
-
-  // const toggleReportSubMenuVisibility = () => {
-  //   setReportSubMenuVisible(!reportSubMenuVisible);
-  // };
 
   const [open, setOpen] = useState<boolean>(false);
   const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
     setPost(postData);
-    setCommentsLength(postData.comments?.length ?? 0);
+    updateCommentsLength(postData._id);
     if (postData?.newPostCreated) {
       setLikesArray([]);
       setSavedPostsArray([]);
@@ -121,6 +109,11 @@ function PostCard({
     "Scam or fraud",
     "Something else",
   ];
+
+  const updateCommentsLength = async (postId: string) => {
+    const response = await getComments(postId);
+    setCommentsLength(response.comments.length);
+  };
 
   const handleDeletePost = (postId: string) => {
     toast.dismiss();
@@ -234,11 +227,7 @@ function PostCard({
             <div className="mt-3 flex items-center space-x-2">
               <img
                 className="inline-block h-10 w-10 rounded-full"
-                src={
-                  post.user?.dp
-                    ? post.user?.dp
-                    : common.DEFAULT_IMG
-                }
+                src={post.user?.dp ? post.user?.dp : common.DEFAULT_IMG}
                 alt="Profile Picture"
               />
               <span className="flex flex-col">

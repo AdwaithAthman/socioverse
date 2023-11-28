@@ -6,6 +6,7 @@ interface ChatState {
   chats: ChatInterface[];
   notification: MessageInterface[];
   fetchUserChatsAgain: boolean;
+  openVideoCall: boolean;
 }
 
 const initialState: ChatState = {
@@ -13,6 +14,7 @@ const initialState: ChatState = {
   chats: [],
   notification: [],
   fetchUserChatsAgain: false,
+  openVideoCall: false,
 };
 
 const chatSlice = createSlice({
@@ -47,8 +49,11 @@ const chatSlice = createSlice({
         );
       }
     },
+    setOpenVideoCall: (state, action: { payload: boolean}) => {
+      state.openVideoCall = action.payload;
+    }
   },
-});
+  });
 
 export const {
   setSelectedChat,
@@ -57,5 +62,6 @@ export const {
   setFetchUserChatsAgain,
   deleteNotification,
   initializeNotification,
+  setOpenVideoCall
 } = chatSlice.actions;
 export default chatSlice.reducer;

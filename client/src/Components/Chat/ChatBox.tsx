@@ -4,7 +4,7 @@ import { ReactComponent as ChatSvg } from "../../assets/ChatSvg.svg";
 import { getSender } from "../../utils/Config/chatMethods";
 import { FaArrowLeft } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
-import { setSelectedChat } from "../../Redux/ChatSlice";
+import { setOpenVideoCall, setSelectedChat } from "../../Redux/ChatSlice";
 import { useState } from "react";
 import OptionsDialog from "./OptionsDialog";
 import ChatBoxContent from "./ChatBoxContent";
@@ -23,6 +23,9 @@ const ChatBox = ({
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
+  const openVideoCall = useSelector(
+    (state: StoreType) => state.chat.openVideoCall
+  )
   const userId = useSelector((state: StoreType) => state.auth.user?._id);
   const userInfo = useSelector((state: StoreType) => state.auth.user);
   const dispatch = useDispatch();
@@ -30,8 +33,8 @@ const ChatBox = ({
   const [openOptions, setOpenOptions] = useState<boolean>(false);
   const handleOpenOptions = () => setOpenOptions((cur) => !cur);
 
-  const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
-  const handleOpenVideoCall = () => setOpenVideoCall((cur) => !cur);
+  // const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
+  const handleOpenVideoCall = () => dispatch(setOpenVideoCall(!openVideoCall));
 
   return selectedChat ? (
     <>
@@ -83,7 +86,7 @@ const ChatBox = ({
             hover:border-green-500 hover:bg-white hover:border-3 group"
                 onClick={() => {
                   socket.emit("call-user", userInfo, selectedChat)
-                  setOpenVideoCall(true)
+                  dispatch(setOpenVideoCall(true))
                 }}
               >
                 <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />

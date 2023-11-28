@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HomePage from "./HomePage";
 import ChatPage from "./ChatPage";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,8 @@ import {
   initializeNotification,
   setFetchUserChatsAgain,
   setNotification,
+  setOpenVideoCall,
+  setSelectedChat,
 } from "../Redux/ChatSlice";
 import { addNotification } from "../API/User";
 import { fetchNotifications } from "../API/Message";
@@ -24,6 +26,7 @@ let socket: Socket, selectedChatCompare: ChatInterface;
 const MainPage = () => {
   const section = useParams().section || "home";
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const user = useSelector((state: StoreType) => state.auth.user);
   const selectedChat = useSelector(
@@ -105,7 +108,7 @@ const MainPage = () => {
                   size="sm"
                   className="rounded-full text-black border-black"
                   onClick={() =>
-                    answerCall(callerInfo, closeToast as () => void)
+                    answerCall(chat, closeToast as () => void)
                   }
                 >
                   Answer
@@ -134,7 +137,10 @@ const MainPage = () => {
     await addNotification(messageId);
   };
 
-  const answerCall = (callerInfo: User, closeToast: () => void) => {
+  const answerCall = (chat: ChatInterface, closeToast: () => void) => {
+    dispatch(setSelectedChat(chat));
+    navigate('/message');
+    dispatch(setOpenVideoCall(true));
     closeToast();
   };
 

@@ -20,10 +20,6 @@ const styles = {
     height: "100%",
     display: "flex",
     flex: 1,
-    // flexDirection: "row",
-    // "@media (max-width: 768px)": {
-    //   flexDirection: "column",
-    // },
   },
 };
 
@@ -46,13 +42,13 @@ const VideoCallScreen = ({
   const [videocall, setVideocall] = useState<boolean>(true);
 
   useEffect(() => {
-    if(socket){
-        socket.on("call-cancelled", (user: string) => {
-            toast.dismiss();
-            toast.error(`${user} has cancelled the call`);
-        })
+    if (socket) {
+      socket.on("call-cancelled", (user: string) => {
+        toast.dismiss();
+        toast.error(`${user} has cancelled the call`);
+      });
     }
-  })
+  });
 
   const props: PropsInterface = {
     rtcProps: {
@@ -63,11 +59,28 @@ const VideoCallScreen = ({
     },
     callbacks: {
       EndCall: () => {
-          setVideocall(false)
-          handleOpenVideoCall();
-    },
+        setVideocall(false);
+        handleOpenVideoCall();
+      },
     },
   };
+
+//   const leaveCall = () => {
+//     // Revoke permissions
+//     navigator.mediaDevices
+//       .getUserMedia({ video: true, audio: true })
+//       .then((stream) => {
+//         console.log("the fuck is not working")
+//         stream.getTracks().forEach((track) => track.stop());
+
+//         // Set state
+//         setVideocall(false);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   };
+
 
   return (
     <Dialog
@@ -83,7 +96,7 @@ const VideoCallScreen = ({
       }}
     >
       <ToastContainer />
-      <DialogHeader>
+      <DialogHeader className="pb-0">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center justify-between gap-5 transition-transform duration-300 mx-1 px-2 pb-3 rounded-lg cursor-pointer hover:bg-gray-200 hover:scale-105">
             <div className="mt-3 flex items-center space-x-2">
@@ -110,7 +123,7 @@ const VideoCallScreen = ({
               </span>
             </div>
           </div>
-          <div>
+          {/* <div>
             <AiOutlineCloseCircle
               className="text-3xl cursor-pointer"
               onClick={(e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
@@ -124,10 +137,10 @@ const VideoCallScreen = ({
                 handleOpenVideoCall();
               }}
             />
-          </div>
+          </div> */}
         </div>
       </DialogHeader>
-      <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[36rem] overflow-hidden no-scrollbar">
+      <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 mx-2 max-h-[36rem] overflow-hidden no-scrollbar">
         <div style={styles.container}>
           {videocall ? (
             <AgoraUIKit

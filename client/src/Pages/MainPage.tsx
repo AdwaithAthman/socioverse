@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import HomePage from "./HomePage";
 import ChatPage from "./ChatPage";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +27,7 @@ const MainPage = () => {
   const section = useParams().section || "home";
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const user = useSelector((state: StoreType) => state.auth.user);
   const selectedChat = useSelector(
@@ -107,9 +108,7 @@ const MainPage = () => {
                   variant="outlined"
                   size="sm"
                   className="rounded-full text-black border-black"
-                  onClick={() =>
-                    answerCall(chat, closeToast as () => void)
-                  }
+                  onClick={() => answerCall(chat, closeToast as () => void)}
                 >
                   Answer
                 </Button>
@@ -139,20 +138,22 @@ const MainPage = () => {
 
   const answerCall = (chat: ChatInterface, closeToast: () => void) => {
     dispatch(setSelectedChat(chat));
-    navigate('/message');
+    if (location.pathname !== "/message") navigate("/message");
     dispatch(setOpenVideoCall(true));
     closeToast();
   };
 
-  const rejectCall = (chat:ChatInterface ,closeToast: () => void) => {
+  const rejectCall = (chat: ChatInterface, closeToast: () => void) => {
     handleCallRejection(chat);
     closeToast();
   };
 
-  const handleCallRejection = (chat:ChatInterface) => {
-    const callerId = chat.users.filter((oneUser) => oneUser._id !== user?._id)[0]._id;
-    socket.emit("call-rejected", callerId, user?.name )
-  }
+  const handleCallRejection = (chat: ChatInterface) => {
+    const callerId = chat.users.filter(
+      (oneUser) => oneUser._id !== user?._id
+    )[0]._id;
+    socket.emit("call-rejected", callerId, user?.name);
+  };
 
   return (
     <>

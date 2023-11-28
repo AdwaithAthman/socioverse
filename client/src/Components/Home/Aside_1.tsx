@@ -27,19 +27,23 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ToastContainer } from "react-toastify";
 import common from "../../Constants/common";
-import { setSelectedChat } from "../../Redux/ChatSlice";
+import { setOpenVideoCall, setSelectedChat } from "../../Redux/ChatSlice";
 import { fetchOtherUserChat } from "../../API/Chat";
+import { Socket } from "socket.io-client";
+import { getOtherUserInfo, getUserInfo } from "../../API/Profile";
 
 function AsideOne({
   newFollowing,
   handleFollowingAdd,
   removeFollowing,
   handleFollowingRemove,
+  socket,
 }: {
   newFollowing: boolean;
   handleFollowingAdd: (boolValue: boolean) => void;
   removeFollowing: boolean;
   handleFollowingRemove: (boolValue: boolean) => void;
+  socket: Socket;
 }) {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -56,6 +60,8 @@ function AsideOne({
     setOpenViewMoreFollowers(!openViewMoreFollowers);
   const handleOpenViewMoreFollowing = () =>
     setOpenViewMoreFollowing(!openViewMoreFollowing);
+
+  const user = useSelector((state: StoreType) => state.auth.user);
 
   useEffect(() => {
     getFollowing().then((data) => {
@@ -87,6 +93,18 @@ function AsideOne({
   const handleMessageClick = async (userId: string) => {
     const response = await fetchOtherUserChat(userId);
     dispatch(setSelectedChat(response.chat));
+    if (location.pathname !== "/message") {
+      navigate("/message");
+    }
+  };
+
+  const handleVideoCall = async (userId: string) => {
+    const response = await fetchOtherUserChat(userId);
+    dispatch(setSelectedChat(response.chat));
+    if (socket) {
+      socket.emit("call-user", user, response.chat);
+    }
+    dispatch(setOpenVideoCall(true));
     if (location.pathname !== "/message") {
       navigate("/message");
     }
@@ -155,7 +173,12 @@ function AsideOne({
                       >
                         <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
                       </div>
-                      <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group">
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleVideoCall(userProfile._id as string)
+                        }
+                      >
                         <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
                       </div>
                     </div>
@@ -257,7 +280,12 @@ function AsideOne({
                           }
                         />
                       </div>
-                      <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group">
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleVideoCall(userProfile._id as string)
+                        }
+                      >
                         <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
                       </div>
                     </div>

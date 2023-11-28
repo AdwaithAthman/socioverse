@@ -166,7 +166,7 @@ const MainPage = () => {
           exit={{ scale: 0.6, opacity: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
-          {section === "home" && <HomePage />}
+          {section === "home" && <HomePage socket={socket} />}
           {section === "message" && (
             <ChatPage socket={socket} socketConnected={socketConnected} />
           )}

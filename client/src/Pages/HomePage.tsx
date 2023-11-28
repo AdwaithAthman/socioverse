@@ -8,19 +8,19 @@ import { StoreType } from "../Redux/Store";
 
 //importing types
 import { User } from "../Types/loginUser";
+import { Socket } from "socket.io-client";
 
-
-const HomePage = () => {
+const HomePage = ({ socket }: { socket: Socket }) => {
   const user = useSelector((state: StoreType) => state.auth);
   const navigate = useNavigate();
   useEffect(() => {
-    if(!user.isAuthenticated){
-        navigate("/login");
+    if (!user.isAuthenticated) {
+      navigate("/login");
     }
-  },[navigate, user])
+  }, [navigate, user]);
   return (
     <>
-      <Home user={user.user as User} />
+      <Home user={user.user as User} socket={socket} />
     </>
   );
 };

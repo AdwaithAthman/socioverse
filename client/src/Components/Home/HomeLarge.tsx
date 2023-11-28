@@ -22,8 +22,9 @@ import { PostDataInterface } from "../../Types/post";
 import UsernameInputPopup from "../UsernameInputPopup";
 import { useNavigate } from "react-router-dom";
 import common from "../../Constants/common";
+import { Socket } from "socket.io-client";
 
-const HomeLarge = ({ user }: { user: User }) => {
+const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState<PostDataInterface[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -168,6 +169,7 @@ const HomeLarge = ({ user }: { user: User }) => {
             handleFollowingAdd={handleFollowingAdd}
             removeFollowing={removeFollowing}
             handleFollowingRemove={handleFollowingRemove}
+            socket={socket}
           />
         </aside>
         <main className="w-6/12 px-6 overflow-y-auto h-[85vh] no-scrollbar flex flex-col items-center p-2">
@@ -181,11 +183,7 @@ const HomeLarge = ({ user }: { user: User }) => {
               variant="circular"
               alt="user dp"
               className="border h-14 w-14 border-gray-500 p-0.5 cursor-pointer"
-              src={
-                user && user.dp
-                  ? user.dp
-                  : common.DEFAULT_IMG
-              } 
+              src={user && user.dp ? user.dp : common.DEFAULT_IMG}
               onClick={() => navigate(`/profile/${user && user._id}`)}
             />
             <div className="w-full" onClick={handlePostBox}>
@@ -235,4 +233,3 @@ const HomeLarge = ({ user }: { user: User }) => {
 };
 
 export default HomeLarge;
-

@@ -36,17 +36,22 @@ const VideoCallScreen = ({
   const chat: ChatInterface = useSelector(
     (state: StoreType) => state.chat.selectedChat
   ) as ChatInterface;
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const userVideo = useRef<HTMLVideoElement | null>(null);
-  const otherUserVideo = useRef<HTMLVideoElement | null>(null);
   const [videocall, setVideocall] = useState<boolean>(true);
 
   useEffect(() => {
     if (socket) {
+
       socket.on("call-cancelled", (user: string) => {
         toast.dismiss();
         toast.error(`${user} has cancelled the call`);
       });
+
+      socket.on("call-answered", () => {
+        toast.dismiss();
+        const otherUser = chat.users.filter((u) => u._id !== user?._id)[0].name;
+        toast.success(`${otherUser} has accepted the call`);
+      });
+
     }
   });
 

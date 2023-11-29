@@ -137,6 +137,10 @@ const MainPage = () => {
   };
 
   const answerCall = (chat: ChatInterface, closeToast: () => void) => {
+    const callerId = chat.users.filter(
+      (oneUser) => oneUser._id !== user?._id
+    )[0]._id;
+    socket.emit("call-accepted", callerId);
     dispatch(setSelectedChat(chat));
     if (location.pathname !== "/message") navigate("/message");
     dispatch(setOpenVideoCall(true));

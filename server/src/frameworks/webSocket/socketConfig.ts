@@ -56,6 +56,10 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
       socket.in(callerId).emit("call-cancelled", user);
    })
 
+   socket.on("call-accepted", (callerId: string) => {
+      socket.in(callerId).emit("call-answered");
+   })
+
     
   });
 

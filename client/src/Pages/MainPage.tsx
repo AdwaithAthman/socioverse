@@ -98,6 +98,7 @@ const MainPage = () => {
 
       //for video call
       socket.on("call-made", (callerInfo: User, chat: ChatInterface) => {
+        socket.emit("calling", callerInfo._id)
         toast.dismiss();
         toast.info(
           ({ closeToast }) => (
@@ -125,7 +126,7 @@ const MainPage = () => {
           {
             ...TOAST_ACTION,
             closeButton: false,
-            autoClose: false,
+            autoClose: 15000,
           }
         );
       });

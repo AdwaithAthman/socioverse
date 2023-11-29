@@ -42,27 +42,30 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
 
     socket.on("group updation", (newChat: any) => {
       newChat.users.forEach((userId: string) => {
-        if(userId === newChat.groupAdmin._id) return;
+        if (userId === newChat.groupAdmin._id) return;
         socket.in(userId).emit("group updated");
       });
     });
 
-   socket.on("call-user", (userInfo: UserDataInterface, chat: any) => {
-      const otherUserId:string = chat.users.filter((user: { _id: string }) => user._id !== userInfo._id)[0]._id
+    socket.on("call-user", (userInfo: UserDataInterface, chat: any) => {
+      const otherUserId: string = chat.users.filter(
+        (user: { _id: string }) => user._id !== userInfo._id
+      )[0]._id;
       socket.in(otherUserId).emit("call-made", userInfo, chat);
-   })
+    });
 
-   socket.on("call-rejected", (callerId: string, user: string) => {
+    socket.on("calling", (callerId: string) => {
+      socket.in(callerId).emit("calling-done")
+    })
+
+    socket.on("call-rejected", (callerId: string, user: string) => {
       socket.in(callerId).emit("call-cancelled", user);
-   })
+    });
 
-   socket.on("call-accepted", (callerId: string) => {
+    socket.on("call-accepted", (callerId: string) => {
       socket.in(callerId).emit("call-answered");
-   })
-
-    
+    });
   });
-
 };
 
 export default socketConfig;

@@ -8,7 +8,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../../Redux/Store";
-import common from "../../Constants/common";
+import common, { TOAST_ACTION } from "../../Constants/common";
 import { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import AgoraUIKit, { PropsInterface, layout } from "agora-react-uikit";
@@ -38,22 +38,45 @@ const VideoCallScreen = ({
   ) as ChatInterface;
   const [videocall, setVideocall] = useState<boolean>(true);
 
+  const timeoutIdRef = useRef<NodeJS.Timeout>();
+
   useEffect(() => {
     if (socket) {
-
-      socket.on("call-cancelled", (user: string) => {
+      const handleCallingDone = () => {
         toast.dismiss();
-        toast.error(`${user} has cancelled the call`);
-      });
-
-      socket.on("call-answered", () => {
+        if (timeoutIdRef.current) {
+          clearTimeout(timeoutIdRef.current);
+        }
+        timeoutIdRef.current = setTimeout(() => {
+          toast.error("Call timed out", TOAST_ACTION);
+        }, 16000);
+      };
+  
+      const handleCallCancelled = (user: string) => {
         toast.dismiss();
+        clearTimeout(timeoutIdRef.current);
+        toast.error(`${user} has cancelled the call`, TOAST_ACTION);
+      };
+  
+      const handleCallAnswered = () => {
+        toast.dismiss();
+        clearTimeout(timeoutIdRef.current);
         const otherUser = chat.users.filter((u) => u._id !== user?._id)[0].name;
-        toast.success(`${otherUser} has accepted the call`);
-      });
-
+        toast.success(`${otherUser} has accepted the call`, TOAST_ACTION);
+      };
+  
+      socket.on("calling-done", handleCallingDone);
+      socket.on("call-cancelled", handleCallCancelled);
+      socket.on("call-answered", handleCallAnswered);
+  
+      return () => {
+        clearTimeout(timeoutIdRef.current);
+        socket.off("calling-done", handleCallingDone);
+        socket.off("call-cancelled", handleCallCancelled);
+        socket.off("call-answered", handleCallAnswered);
+      };
     }
-  });
+  }, [socket, chat.users]);
 
   const props: PropsInterface = {
     rtcProps: {
@@ -70,22 +93,21 @@ const VideoCallScreen = ({
     },
   };
 
-//   const leaveCall = () => {
-//     // Revoke permissions
-//     navigator.mediaDevices
-//       .getUserMedia({ video: true, audio: true })
-//       .then((stream) => {
-//         console.log("the fuck is not working")
-//         stream.getTracks().forEach((track) => track.stop());
+  //   const leaveCall = () => {
+  //     // Revoke permissions
+  //     navigator.mediaDevices
+  //       .getUserMedia({ video: true, audio: true })
+  //       .then((stream) => {
+  //         console.log("the fuck is not working")
+  //         stream.getTracks().forEach((track) => track.stop());
 
-//         // Set state
-//         setVideocall(false);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   };
-
+  //         // Set state
+  //         setVideocall(false);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   };
 
   return (
     <Dialog

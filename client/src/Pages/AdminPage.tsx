@@ -50,9 +50,6 @@ const AdminPage = () => {
       <div className="flex items-between overflow-y-hidden">
         <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
           <div className="mb-2 p-4">
-            {/* <Typography variant="h5" color="blue-gray">
-            Sidebar
-          </Typography> */}
             <h1 className="lg:text-4xl text-3xl font-extrabold font-logo text-center text-socioverse-400 inline pl-3 lg:pl-0">
               SOCIOVERSE
             </h1>

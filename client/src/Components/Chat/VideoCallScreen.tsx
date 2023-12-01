@@ -65,13 +65,12 @@ const VideoCallScreen = ({
         toast.success(`${otherUser} has accepted the call`, TOAST_ACTION);
       };
   
-      socket.on("calling-done", handleCallingDone);
+      handleCallingDone();
       socket.on("call-cancelled", handleCallCancelled);
       socket.on("call-answered", handleCallAnswered);
   
       return () => {
         clearTimeout(timeoutIdRef.current);
-        socket.off("calling-done", handleCallingDone);
         socket.off("call-cancelled", handleCallCancelled);
         socket.off("call-answered", handleCallAnswered);
       };
@@ -93,22 +92,6 @@ const VideoCallScreen = ({
     },
   };
 
-  //   const leaveCall = () => {
-  //     // Revoke permissions
-  //     navigator.mediaDevices
-  //       .getUserMedia({ video: true, audio: true })
-  //       .then((stream) => {
-  //         console.log("the fuck is not working")
-  //         stream.getTracks().forEach((track) => track.stop());
-
-  //         // Set state
-  //         setVideocall(false);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   };
-
   return (
     <Dialog
       open={openVideoCall}
@@ -126,7 +109,7 @@ const VideoCallScreen = ({
       <DialogHeader className="pb-0">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center justify-between gap-5 transition-transform duration-300 mx-1 px-2 pb-3 rounded-lg cursor-pointer hover:bg-gray-200 hover:scale-105">
-            <div className="mt-3 flex items-center space-x-2">
+            {/* <div className="mt-3 flex items-center space-x-2">
               {user && user.dp ? (
                 <img
                   className="inline-block h-12 w-12 rounded-full"
@@ -148,7 +131,15 @@ const VideoCallScreen = ({
                   @{user && user.username}
                 </span>
               </span>
-            </div>
+            </div> */}
+            <div className="pt-2">
+            <h1 className="lg:text-2xl text-lg font-extrabold font-logo text-center text-socioverse-400 inline">
+              SOCIOVERSE
+            </h1>
+            <h1 className="text-blue-gray-500 text-sm lg:text-base ">
+              Video Room
+            </h1>
+          </div>
           </div>
           {/* <div>
             <AiOutlineCloseCircle

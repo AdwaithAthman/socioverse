@@ -54,10 +54,6 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
       socket.in(otherUserId).emit("call-made", userInfo, chat);
     });
 
-    socket.on("calling", (callerId: string) => {
-      socket.in(callerId).emit("calling-done")
-    })
-
     socket.on("call-rejected", (callerId: string, user: string) => {
       socket.in(callerId).emit("call-cancelled", user);
     });

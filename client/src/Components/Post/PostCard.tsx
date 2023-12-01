@@ -24,6 +24,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setHashtagSearch } from "../../Redux/PostSlice";
 import PostLikedUsers from "./PostLikedUsers";
+import copy from "copy-to-clipboard";
 
 import {
   Menu,
@@ -384,7 +385,11 @@ function PostCard({
                     handleGetPostDetails(post._id);
                   }}
                 />
-                <BiShareAlt className="text-2xl cursor-pointer" />
+                <BiShareAlt className="text-2xl cursor-pointer" 
+                onClick={() => {
+                  copy(`${common.CLIENT_BASE_URL}/share/${post._id}`)
+                }}
+                />
               </div>
               {(savedPostsArray && savedPostsArray.includes(userId)) ||
               isSaved ? (

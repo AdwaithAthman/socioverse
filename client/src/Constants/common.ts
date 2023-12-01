@@ -1,9 +1,9 @@
 import { ToastOptions } from "react-toastify";
 
 const CONSTANTS_COMMON = {
-  API_BASE_URL: "http://localhost:8000",
-  CLIENT_BASE_URL: "http://localhost:5173",
-  DEFAULT_IMG: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  CLIENT_BASE_URL: import.meta.env.VITE_CLIENT_BASE_URL,
+  DEFAULT_IMG: import.meta.env.VITE_DEFAULT_IMG,
 };
 
 export const TOAST_ACTION: ToastOptions = {

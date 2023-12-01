@@ -11,6 +11,7 @@ import common, { TOAST_ACTION } from "../Constants/common";
 import {
   initializeNotification,
   setFetchUserChatsAgain,
+  setJoinVideoRoom,
   setNotification,
   setOpenVideoCall,
   setSelectedChat,
@@ -142,6 +143,7 @@ const MainPage = () => {
     )[0]._id;
     socket.emit("call-accepted", callerId);
     dispatch(setSelectedChat(chat));
+    dispatch(setJoinVideoRoom(true));
     if (location.pathname !== "/message") navigate("/message");
     dispatch(setOpenVideoCall(true));
     closeToast();

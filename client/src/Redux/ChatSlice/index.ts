@@ -7,6 +7,7 @@ interface ChatState {
   notification: MessageInterface[];
   fetchUserChatsAgain: boolean;
   openVideoCall: boolean;
+  joinedVideoRoom: boolean;
 }
 
 const initialState: ChatState = {
@@ -15,6 +16,7 @@ const initialState: ChatState = {
   notification: [],
   fetchUserChatsAgain: false,
   openVideoCall: false,
+  joinedVideoRoom: false,
 };
 
 const chatSlice = createSlice({
@@ -51,6 +53,9 @@ const chatSlice = createSlice({
     },
     setOpenVideoCall: (state, action: { payload: boolean}) => {
       state.openVideoCall = action.payload;
+    },
+    setJoinVideoRoom: (state, action: { payload: boolean}) => {
+      state.joinedVideoRoom = action.payload;
     }
   },
   });
@@ -62,6 +67,7 @@ export const {
   setFetchUserChatsAgain,
   deleteNotification,
   initializeNotification,
-  setOpenVideoCall
+  setOpenVideoCall,
+  setJoinVideoRoom,
 } = chatSlice.actions;
 export default chatSlice.reducer;

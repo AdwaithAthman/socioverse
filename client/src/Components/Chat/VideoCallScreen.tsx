@@ -5,7 +5,7 @@ import {
   useSelect,
 } from "@material-tailwind/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../../Redux/Store";
 import common, { TOAST_ACTION } from "../../Constants/common";
@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import AgoraUIKit, { PropsInterface, layout } from "agora-react-uikit";
 import { ChatInterface } from "../../Types/chat";
+import { setJoinVideoRoom } from "../../Redux/ChatSlice";
 
 const styles = {
   container: {
@@ -32,10 +33,12 @@ const VideoCallScreen = ({
   handleOpenVideoCall: () => void;
   socket: Socket;
 }) => {
+  const dispatch = useDispatch();
   const user = useSelector((state: StoreType) => state.auth.user);
   const chat: ChatInterface = useSelector(
     (state: StoreType) => state.chat.selectedChat
   ) as ChatInterface;
+  const joinedVideoRoom = useSelector((state: StoreType) => state.chat.joinedVideoRoom)
   const [videocall, setVideocall] = useState<boolean>(true);
 
   const timeoutIdRef = useRef<NodeJS.Timeout>();
@@ -65,7 +68,7 @@ const VideoCallScreen = ({
         toast.success(`${otherUser} has accepted the call`, TOAST_ACTION);
       };
   
-      handleCallingDone();
+      !joinedVideoRoom && handleCallingDone();
       socket.on("call-cancelled", handleCallCancelled);
       socket.on("call-answered", handleCallAnswered);
   
@@ -87,6 +90,9 @@ const VideoCallScreen = ({
     callbacks: {
       EndCall: () => {
         setVideocall(false);
+        if(joinedVideoRoom){
+          dispatch(setJoinVideoRoom(false));
+        }
         handleOpenVideoCall();
       },
     },

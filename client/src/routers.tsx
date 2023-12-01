@@ -8,6 +8,7 @@ import ProfilePage from "./Pages/ProfilePage";
 import ErrorPage from "./Pages/ErrorPage";
 import AdminLoginPage from "./Pages/AdminLoginPage";
 import AdminPage from "./Pages/AdminPage";
+import SharedPostPage from "./Pages/SharedPostPage";
 
 //imports from Components
 import Settings from "./Components/Profile/SubSections/Settings";
@@ -46,6 +47,10 @@ export const appRouter = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "share/:postId",
+        element: <SharedPostPage />
+      }
     ],
   },
   {

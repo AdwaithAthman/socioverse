@@ -168,9 +168,3 @@ export interface GetLikedUsersInterface {
     message: string,
     users: User[]
 }
-
-export interface GetPostInterface {
-    status: string,
-    message: string,
-    post: PostDataInterface
-}

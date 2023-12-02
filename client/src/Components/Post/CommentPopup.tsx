@@ -53,6 +53,7 @@ import { useDispatch } from "react-redux";
 import { setHashtagSearch } from "../../Redux/PostSlice";
 import { Link } from "react-router-dom";
 import PostLikedUsers from "./PostLikedUsers";
+import copy from "copy-to-clipboard";
 
 //importing types
 import {
@@ -265,15 +266,6 @@ const CommentPopup = ({
                           ))}
                         </div>
                       </div>
-                      {/* <div className="flex items-center justify-self-center px-2">
-                        {postDetails?.image && (
-                          <img
-                            src={postDetails?.image[0]}
-                            alt="post image"
-                            className="h-full w-full rounded-lg object-cover"
-                          />
-                        )}
-                      </div> */}
                       {postDetails?.image && postDetails?.image.length > 0 && (
                         <div className="flex items-center justify-self-center px-1 w-full h-64">
                           {postDetails.image.length > 1 ? (
@@ -330,7 +322,12 @@ const CommentPopup = ({
                               onClick={handleLike}
                             />
                           )}
-                          <BiShareAlt className="text-2xl cursor-pointer" />
+                          <BiShareAlt className="text-2xl cursor-pointer" 
+                           onClick={() => {
+                            toast.dismiss()
+                            postDetails && copy(`${common.CLIENT_BASE_URL}/share/${postDetails._id}`)
+                            toast.success("Copied link to the clipboard", { ...TOAST_ACTION, closeButton: false })
+                          }} />
                         </div>
                         {(savedPostsArray &&
                           savedPostsArray.includes(userId)) ||

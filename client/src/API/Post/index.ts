@@ -22,7 +22,6 @@ import {
   LikeCommentResponse,
   GetUserPostsInterface,
   GetLikedUsersInterface,
-  GetPostInterface,
 } from "../../Types/post";
 
 export const uploadPost = async (
@@ -246,13 +245,6 @@ export const getUserSavedPosts = async (page: number): Promise<GetUserPostsInter
 export const getLikedUsers = async (postId: string): Promise<GetLikedUsersInterface> => {
   const response = await axiosUserInstance.get<GetLikedUsersInterface>(
     `${END_POINTS.GET_LIKED_USERS}/${postId}`
-  );
-  return response.data;
-}
-
-export const getPost = async (postId: string): Promise<GetPostInterface> => {
-  const response = await axiosUserInstance.get<GetPostInterface>(
-    `${END_POINTS.GET_POST}/${postId}`
   );
   return response.data;
 }

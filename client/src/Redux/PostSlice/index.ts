@@ -9,6 +9,8 @@ interface PostState {
   hashtagSearch?: string | null;
   hashtagSearchOn?: boolean;
   searchModeOn?: boolean;
+  isSharedPost: boolean;
+  sharedPostId: string | null;
 }
 
 const initialState: PostState = {
@@ -20,6 +22,8 @@ const initialState: PostState = {
   hashtagSearch: null,
   hashtagSearchOn: false,
   searchModeOn: false,
+  isSharedPost: false,
+  sharedPostId: null,
 };
 
 const postSlice = createSlice({
@@ -57,6 +61,12 @@ const postSlice = createSlice({
     },
     disableSearchMode: (state) => {
       state.searchModeOn = false;
+    },
+    setIsSharedPost: (state, action: { payload: boolean }) => {
+      state.isSharedPost = action.payload;
+    },
+    setSharedPostId: (state, action: { payload: string }) => {
+      state.sharedPostId = action.payload;
     }
   },
 });
@@ -69,6 +79,8 @@ export const {
   setHashtagSearch,
   resetHashtagSearch,
   enableSearchMode,
-  disableSearchMode
+  disableSearchMode,
+  setIsSharedPost,
+  setSharedPostId,
 } = postSlice.actions;
 export default postSlice.reducer;

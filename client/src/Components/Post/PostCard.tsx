@@ -70,6 +70,7 @@ function PostCard({
     postData.saved as string[]
   );
   const searchMode = useSelector((state: StoreType) => state.post.searchModeOn);
+  const isSharedPost = useSelector((state: StoreType) => state.post.isSharedPost);
   const [likedUsers, setLikedUsers] = useState<User[]>([]);
   const [openLikedUsersDialog, setOpenLikedUsersDialog] =
     useState<boolean>(false);
@@ -241,7 +242,7 @@ function PostCard({
               </span>
             </div>
           </Link>
-          {!searchMode && (
+          {(!searchMode && !isSharedPost) && (
             <Menu placement="bottom-start">
               <MenuHandler>
                 <Button
@@ -387,7 +388,9 @@ function PostCard({
                 />
                 <BiShareAlt className="text-2xl cursor-pointer" 
                 onClick={() => {
+                  toast.dismiss()
                   copy(`${common.CLIENT_BASE_URL}/share/${post._id}`)
+                  toast.success("Copied link to the clipboard", { ...TOAST_ACTION, closeButton: false, autoClose: 2000 })
                 }}
                 />
               </div>

@@ -5,17 +5,22 @@ import { ToastContainer, toast } from "react-toastify";
 import { isAxiosError } from "axios";
 import { AxiosErrorData } from "../Types/axiosErrorData";
 import LoginWithGoogleUtils from "../utils/LoginWithGoogleUtils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../Redux/AuthSlice";
 import { loginUser } from "../API/Auth";
 import { ReactComponent as GoogleLogoSvg } from "../assets/GoogleLogoSvg.svg";
 import { TOAST_ACTION } from "../Constants/common";
 
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
+import { StoreType } from "../Redux/Store";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const sharedPostId = useSelector(
+    (state: StoreType) => state.post.sharedPostId
+  );
 
   const validationSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -46,9 +51,13 @@ const LoginPage = () => {
         const result = await loginUser(values);
         console.log(result);
         if (result) {
-          toast.success('Successfully logged in...!', TOAST_ACTION);
+          toast.success("Successfully logged in...!", TOAST_ACTION);
           dispatch(setCredentials(result));
-          navigate("/");
+          if (sharedPostId) {
+            navigate(`/share/${sharedPostId}`);
+          } else {
+            navigate("/");
+          }
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -72,7 +81,11 @@ const LoginPage = () => {
     const result = await LoginWithGoogleUtils();
     if (result) {
       dispatch(setCredentials(result));
-      navigate("/");
+      if (sharedPostId) {
+        navigate(`/share/${sharedPostId}`);
+      } else {
+        navigate("/");
+      }
     }
   };
 
@@ -133,12 +146,12 @@ const LoginPage = () => {
                 </div>
               )}
               <Link to="/forgot-password">
-              <Typography
-                color="gray"
-                className=" font-normal text-right text-sm"
-              >
-                Forgot Password?
-              </Typography>
+                <Typography
+                  color="gray"
+                  className=" font-normal text-right text-sm"
+                >
+                  Forgot Password?
+                </Typography>
               </Link>
             </div>
           </div>
@@ -146,7 +159,8 @@ const LoginPage = () => {
             Login
           </Button>
           <Button
-            className="mt-5 !py-2.5 relative inline-flex w-full items-center justify-center rounded-md border border-gray-400 bg-white font-semibold text-gray-700 transition-all duration-200 hover:shadow-red-100 hover:bg-gray-100 hover:text-black focus:bg-gray-100 focus:text-black focus:outline-none"
+            className="mt-5 !py-2.5 relative inline-flex w-full items-center justify-center rounded-md border border-gray-400 bg-white font-semibold text-gray-700 transition-all duration-200 hover:shadow-red-100 hover:bg-gray-100
+             hover:text-black focus:bg-gray-100 focus:text-black focus:outline-none"
             onClick={loginWithGoogle}
           >
             <span className="mr-2 inline-block">

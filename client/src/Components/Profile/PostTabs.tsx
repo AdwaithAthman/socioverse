@@ -315,7 +315,6 @@ function PostTabs({ userId }: { userId?: string }) {
                 <div className="flex flex-col gap-5 lg:w-[30rem] md:w-96 w-80 mx-auto">
                   {desc.map((post) => (
                     <>
-                      {console.log("post_id+value: ", post._id + value)}
                       <PostCard
                         postData={post}
                         setDeletedPostId={setDeletedPostId}

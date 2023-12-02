@@ -1,13 +1,13 @@
 
 
-const HomeMobile = () => {
-  return (
-    <>
-    <div className="flex lg:hidden">
-        Mobile coming soon
-    </div>
-    </>
-  )
-}
+// const HomeMobile = () => {
+//   return (
+//     <>
+//     <div className="flex lg:hidden">
+//         Mobile coming soon
+//     </div>
+//     </>
+//   )
+// }
 
-export default HomeMobile
+// export default HomeMobile

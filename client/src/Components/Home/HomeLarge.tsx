@@ -162,8 +162,8 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
 
   return (
     <>
-      <div className="hidden lg:flex gap-3 items-start justify-between h-[85vh]">
-        <aside className="w-3/12 px-3 sticky top-28 overflow-y-auto h-[80vh] no-scrollbar">
+      <div className="lg:flex gap-3 items-start justify-between h-[80vh] lg:h-[85vh]">
+        <aside className="hidden lg:block w-3/12 px-3 sticky top-28 overflow-y-auto h-[80vh] no-scrollbar">
           <AsideOne
             newFollowing={newFollowing}
             handleFollowingAdd={handleFollowingAdd}
@@ -172,17 +172,12 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
             socket={socket}
           />
         </aside>
-        <main className="w-6/12 px-6 overflow-y-auto h-[85vh] no-scrollbar flex flex-col items-center p-2">
-          <div className="flex items-center justify-between w-full p-2 mb-8 gap-5 sticky top-0 z-40">
-            {/* <img
-              className="inline-block h-12 w-12 rounded-full border border-gray-50"
-              src={user && user.dp}
-              alt="user image"
-            /> */}
+        <main className="w-full lg:w-6/12 px-3 md:px-6 overflow-x-hidden overflow-y-auto h-[85vh] no-scrollbar flex flex-col items-center p-2">
+          <div className="flex items-center justify-between w-full md:p-2 mb-8 gap-3 md:gap-5 sticky top-0 z-40">
             <Avatar
               variant="circular"
               alt="user dp"
-              className="border h-14 w-14 border-gray-500 p-0.5 cursor-pointer"
+              className="border h-12 w-12 md:h-14 md:w-14 border-gray-500 p-0.5 cursor-pointer"
               src={user && user.dp ? user.dp : common.DEFAULT_IMG}
               onClick={() => navigate(`/profile/${user && user._id}`)}
             />
@@ -191,8 +186,8 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
             </div>
           </div>
           {/* <hr className="border-t-2 border-gray-900 my-4"></hr> */}
-          <div className="px-20 overflow-y-auto h-[85vh] w-full no-scrollbar flex flex-col items-center">
-            <div className="mb-10 w-full">
+          <div className=" overflow-y-auto h-[85vh] w-full no-scrollbar flex flex-col items-center">
+            <div className="mb-10 max-w-[30rem] w-full">
               {posts.map((post, index) => (
                 <div className="mb-10 w-full" key={index}>
                   <PostCard
@@ -216,7 +211,7 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
             </div>
           </div>
         </main>
-        <aside className="w-3/12 px-3 pb-5 sticky top-28 overflow-hidden">
+        <aside className="hidden lg:block w-3/12 px-3 pb-5 sticky top-28 overflow-hidden">
           <AsideTwo
             handleFollowingAdd={handleFollowingAdd}
             handleFollowingRemove={handleFollowingRemove}

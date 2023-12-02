@@ -10,7 +10,10 @@ export default defineConfig({
   plugins: [react(), svgr()],
   define: {
     'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
-  }
+  },
+  // server: {
+  //   host: import.meta.env.VITE_HOST,
+  // },
 })
 
 

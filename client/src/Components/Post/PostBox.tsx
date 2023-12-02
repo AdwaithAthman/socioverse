@@ -2,7 +2,7 @@ import { Textarea, IconButton } from "@material-tailwind/react";
  
 function PostBox() {
   return (
-    <div className="flex w-full flex-row items-center gap-2 rounded-[99px] border shadow-md border-black/40 bg-blue-gray-100/30 p-2">
+    <div className="flex w-full flex-row items-center gap-2 rounded-[99px] border shadow-md border-black/40 bg-blue-gray-100/30 p-1 md:p-2">
       <Textarea
         rows={1}
         resize={false}

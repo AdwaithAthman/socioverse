@@ -154,7 +154,6 @@ const PostDialogBox = ({
     setSelectedImages((prev) => prev.filter((img) => img.image !== image));
   };
 
-  console.log("tempPostImage: ", tempPostImage);
 
   return (
     <>

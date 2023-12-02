@@ -3,6 +3,7 @@ dotenv.config();
 
 const configKeys = {
 PORT: process.env.PORT,
+IP_ADDRESS: parseInt(process.env.IP_ADDRESS as string) as number,
 CLIENT_URL: process.env.CLIENT_URL as string,
 MONGO_URL: process.env.MONGO_URL as string,
 JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET as string,

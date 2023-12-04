@@ -206,7 +206,7 @@ const PostDialogBox = ({
           </div>
         </DialogHeader>
         <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[20.5rem] overflow-y-scroll">
-          <div className="w-full mb-12">
+          <div className="w-full mb-16 sm:mb-12">
             <ReactQuillComponent
               textValue={textValue}
               setTextValue={setTextValue}
@@ -223,10 +223,10 @@ const PostDialogBox = ({
           )}
           {tempPostImage && tempPostImage.length > 0 && (
             <div className="flex flex-col gap-3">
-              <div className="border border-black/20 py-10 flex flex-col gap-5">
+              <div className="border border-black/20 py-5 md:py-10 flex flex-col gap-2 md:gap-5">
                 {tempPostImage.map((image, index) => (
                   <div
-                    className="h-[19rem] w-full relative"
+                    className="h-56 md:h-[19rem] w-full relative"
                     style={{
                       backgroundImage: `url(${image})`,
                       backgroundSize: "contain",
@@ -235,7 +235,7 @@ const PostDialogBox = ({
                     }}
                     key={index}
                   >
-                    <div className="absolute flex gap-3 bottom-3 right-16">
+                    <div className="absolute flex gap-3 bottom-5 right-4 md:bottom-3 md:right-16">
                       <div className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 border-blue-gray-700 hover:border-red-700 hover:bg-white hover:border-3 group opacity-70 hover:opacity-100">
                         <RiDeleteBin6Line
                           className="text-xl text-white group-hover:text-red-500"

@@ -101,7 +101,7 @@ const ImageCropper = ({ image, getImage, aspectRatio }: { image: string, getImag
           {croppedBlob && (
             <div className="flex item-center justify-center border-4 border-double border-blue-gray-400">
               <img
-                className={classnames("cropped-image p-2 ", { " w-full, h-full" : aspectRatio === 4/1}, { "w-[26rem] h-80" : aspectRatio === 1.5/1}, { "w-80 h-80 rounded-full" : aspectRatio === 4/4})}
+                className={classnames("cropped-image p-2 ", { " w-full, h-full" : aspectRatio === 4/1}, { "w-[26rem] h-56 md:h-80" : aspectRatio === 1.5/1}, { "w-80 h-80 rounded-full" : aspectRatio === 4/4})}
                 src={URL.createObjectURL(croppedBlob)}
                 alt="cropped"
               />

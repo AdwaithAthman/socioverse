@@ -169,16 +169,16 @@ const SearchInputDialog = ({
       }}
     >
       {/* <ToastContainer /> */}
-      <DialogHeader className="mt-4 mx-3">
+      <DialogHeader className=" mt-0 md:mt-4 mx-0 md:mx-3">
         <div className="flex justify-between items-center w-full">
-          <div className="flex gap-3 items-center justify-start w-full">
-            <div className="flex w-4/6 flex-row items-center gap-2 rounded-[99px] border shadow-md border-black/40 bg-blue-gray-100/30 p-2">
+          <div className="flex gap-0 md:gap-3 items-center justify-start w-full">
+            <div className="flex w-5/6 md:w-4/6 flex-row items-center md:gap-2 rounded-[99px] border shadow-md border-black/40 bg-blue-gray-100/30 md:p-2">
               <Textarea
                 rows={1}
                 resize={false}
                 value={searchQuery}
                 placeholder="Search for people, posts, and more..."
-                className="min-h-full !border-0 focus:border-transparent"
+                className="min-h-full !border-0 focus:border-transparent w-full"
                 containerProps={{
                   className: "grid h-full",
                 }}
@@ -199,15 +199,15 @@ const SearchInputDialog = ({
           </div>
           <div>
             <AiOutlineCloseCircle
-              className="text-4xl cursor-pointer"
+              className=" text-3xl md:text-4xl cursor-pointer"
               onClick={handleSearchDialog}
             />
           </div>
         </div>
       </DialogHeader>
-      <DialogBody className="mx-6 ">
+      <DialogBody className="mx-1 md:mx-6 ">
         <div className="mb-6">
-          <h1 className="text-2xl">
+          <h1 className="text-lg md:text-2xl overflow-x-scroll md:no-scrollbar">
             Showing the search result for{" "}
             <span className="font-semibold">{searchQuery}</span> ...
           </h1>
@@ -219,13 +219,17 @@ const SearchInputDialog = ({
           </em>
         </div>
         {(searchResultUsers.length > 0 || searchResultPosts.length > 0) && (
-          <div className="mx-2 flex items-start justify-between gap-8">
+          <div className="md:mx-2 flex flex-col md:flex-row items-start justify-between gap-4 md:gap-8">
             {searchResultUsers.length > 0 && (
-              <div className="flex flex-col w-4/12 overflow-y-auto overflow-x-hidden h-[55vh] no-scrollbar">
+              <div
+                className="flex flex-row md:flex-col w-full md:w-4/12 md:overflow-y-auto overflow-x-scroll 
+              md:overflow-x-hidden md:h-[55vh] md:no-scrollbar gap-4 md:gap-0"
+              >
                 {searchResultUsers.length > 0 ? (
                   searchResultUsers.map((user) => (
                     <div
-                      className="flex w-60 px-4 py-2 mb-5 items-center justify-between transition duration-100 ease-in-out rounded-lg shadow-md hover:scale-105 hover:rounded-lg cursor-pointer"
+                      className="flex w-36 md:w-60 px-1 md:px-4 py-2 mb-2 md:mb-5 items-center justify-between transition duration-100 ease-in-out rounded-lg 
+                      shadow-md hover:scale-105 hover:rounded-lg cursor-pointer flex-shrink-0"
                       key={user._id}
                       onClick={() => {
                         navigate(`/profile/${user._id}`);
@@ -234,19 +238,15 @@ const SearchInputDialog = ({
                     >
                       <div className="s) => setLimt-3 flex items-center space-x-2">
                         <img
-                          className="inline-block h-12 w-12 rounded-full"
-                          src={
-                            user.dp
-                              ? user.dp
-                              : common.DEFAULT_IMG
-                          }
+                          className="inline-block h-10 w-10 md:h-12 md:w-12 rounded-full"
+                          src={user.dp ? user.dp : common.DEFAULT_IMG}
                           alt="dp"
                         />
                         <span className="flex flex-col">
-                          <span className="text-[14px] font-medium text-gray-900">
+                          <span className="text-[11px] md:text-[14px] font-medium text-gray-900">
                             {user.name}
                           </span>
-                          <span className="text-[11px] font-medium text-gray-500">
+                          <span className="text-[9px] md:text-[11px] font-medium text-gray-500">
                             @{user.username}
                           </span>
                         </span>
@@ -263,10 +263,11 @@ const SearchInputDialog = ({
             ></div> */}
               </div>
             )}
+            <div className="md:hidden border-t-4 border-dotted border-gray-300 w-full"></div>
             {searchResultPosts.length > 0 && (
-              <div className="flex flex-col w-8/12 overflow-y-auto h-[55vh] no-scrollbar items-center">
+              <div className="flex flex-col w-full md:w-8/12 overflow-y-auto h-[55vh] no-scrollbar items-center">
                 {searchResultPosts.map((post, index) => (
-                  <div className="mb-10 w-[80%]" key={index}>
+                  <div className="mb-10 w-full md:w-[80%]" key={index}>
                     <PostCard
                       postData={post}
                       setDeletedPostId={setDeletedPostId}

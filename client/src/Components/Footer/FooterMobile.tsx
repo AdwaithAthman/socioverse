@@ -33,7 +33,8 @@ const FooterMobile = () => {
       return (
         <div className="lg:hidden bg-white shadow-lg px-3 fixed bottom-0 z-10 w-full flex items-center justify-between md:justify-evenly border ">
           {allTypes.map((item) => (
-            <Link to={`/${item.id}`} key={item.id} className="w-1/4">
+            item.id !== "search" ? (
+              <Link to={`/${item.id}`} key={item.id} className="w-1/4">
               <div
                 className={
                   section === item.id
@@ -53,6 +54,28 @@ const FooterMobile = () => {
                 </div>
               </div>
             </Link>
+            ) : (
+              <div className="w-1/4" >
+              <div
+                className={
+                  section === item.id
+                    ? "flex flex-col items-center text-xl text-socioverse-400"
+                    : "flex flex-col items-center text-xl text-gray-500"
+                }
+              >
+                <div
+                  className={
+                    section === item.id
+                      ? "flex justify-center items-center flex-col w-full py-3 border-t-2 border-socioverse-400"
+                      : "flex justify-center items-center flex-col py-3 border-t-2 border-white"
+                  }
+                >
+                  {item.icon}
+                  <h5 className="text-sm">{item.name}</h5>
+                </div>
+              </div>
+              </div>
+            )
           ))}
         </div>
       );

@@ -197,7 +197,7 @@ const CommentPopup = ({
       >
         <ToastContainer />
         <DialogBody>
-          <DialogHeader>
+          <DialogHeader className="p-0">
             <div className="flex justify-between items-center w-full">
               <div className="flex items-center justify-between gap-5 transition-transform duration-300 mx-1 px-2 pb-3 rounded-lg cursor-pointer hover:bg-gray-200 hover:scale-105">
                 {postDetails && (
@@ -242,7 +242,7 @@ const CommentPopup = ({
           </DialogHeader>
           <section>
             <div className="flex gap-8 items-start justify-start">
-              <div className="relative flex w-1/2 pl-4 pb-5">
+              <div className="relative hidden md:flex w-1/2 pl-4 pb-5">
                 <div className="flex flex-col w-full h-full items-start gap-2">
                   <div className="w-full rounded-lg border shadow-lg">
                     <div className=" flex flex-col justify-center w-full h-fit rounded-t-lg p-3 gap-3">
@@ -367,7 +367,7 @@ const CommentPopup = ({
                   </div>
                 </div>
               </div>
-              <div className="flex w-1/2 h-[32rem] pr-4 pb-5">
+              <div className="flex w-full md:w-1/2 h-[32rem] md:pr-4 md:pb-5">
                 <div className="flex flex-col w-full h-full items-start border-2 rounded-lg shadow-lg">
                   {/* <div className="h-5/6 w-full"></div>
                   <div className="h-1/6 w-full border-t-2"></div> */}
@@ -398,7 +398,7 @@ const CommentPopup = ({
                       </div>
                     )}
                   </div>
-                  <div className="h-fit w-full p-4 border-t-2">
+                  <div className="h-fit w-full p-2 md:p-4 border-t-2">
                     {postDetails && (
                       <CommentBoxTextarea
                         postId={postDetails._id}
@@ -756,7 +756,7 @@ function Comment({
       <div className="transition-transform duration-300 rounded-lg cursor-pointer w-full">
         <div
           className={classnames(
-            "space-x-2 flex items-start p-4 rounded-lg shadow-lg",
+            "space-x-2 flex items-start p-1 md:p-4 rounded-lg shadow-lg",
             {
               "bg-blue-gray-50":
                 (onReply &&
@@ -771,13 +771,13 @@ function Comment({
             <Link to={`/profile/${commentData.user?._id}`}>
               {commentData.user?.dp ? (
                 <img
-                  className="inline-block h-10 w-10 rounded-full"
+                  className="inline-block h-8 w-8 md:h-10 md:w-10 rounded-full"
                   src={commentData.user?.dp}
                   alt="user dp"
                 />
               ) : (
                 <img
-                  className="inline-block h-10 w-10 rounded-full"
+                  className="inline-block h-8 w-8 md:h-10 md:w-10 rounded-full"
                   src={common.DEFAULT_IMG}
                   alt="user dp"
                 />
@@ -788,7 +788,7 @@ function Comment({
             <div className="flex justify-between items-center">
               {commentData && (
                 <Link to={`/profile/${commentData.user?._id}`}>
-                  <span className="text-sm font-bold text-gray-900">
+                  <span className="text-xs md:text-sm font-bold text-gray-900">
                     {commentData.user?.name}
                   </span>
                 </Link>
@@ -855,7 +855,7 @@ function Comment({
               </div>
             </div>
             <span className="flex-1">
-              <p className="text-sm text-gray-600">{commentData.comment}</p>
+              <p className="text-xs md:text-sm text-gray-600">{commentData.comment}</p>
               <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
                 <div className="flex gap-5">
                   {commentLikes.includes(userId) ? (
@@ -863,20 +863,20 @@ function Comment({
                       onClick={handleLikeComment}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-xs font-bold">{commentLikes.length}</p>
-                      <AiFillHeart className="text-md cursor-pointer text-socioverse-500 hover:scale-105" />
+                      <p className="text-[0.6rem] md:text-xs font-bold">{commentLikes.length}</p>
+                      <AiFillHeart className="text-sm md:text-md cursor-pointer text-socioverse-500 hover:scale-105" />
                     </button>
                   ) : (
                     <button
                       onClick={handleLikeComment}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-xs font-bold">{commentLikes.length}</p>
-                      <AiOutlineHeart className="text-md cursor-pointer hover:text-socioverse-500" />
+                      <p className="text-[0.6rem] md:text-xs font-bold">{commentLikes.length}</p>
+                      <AiOutlineHeart className="text-sm md:text-md cursor-pointer hover:text-socioverse-500" />
                     </button>
                   )}
                   <button
-                    className="text-xs font-bold"
+                    className="text-[0.6rem] md:text-xs font-bold"
                     onClick={() =>
                       commentData.user &&
                       handleOnReply(
@@ -891,13 +891,13 @@ function Comment({
                     Reply
                   </button>
                   <button
-                    className="text-xs font-bold"
+                    className="text-[0.6rem] md:text-xs font-bold"
                     onClick={() => setOpenReplies((prev) => !prev)}
                   >
                     Replies {replies.length || commentData.replies.length}
                   </button>
                 </div>
-                <p className="text-xs">
+                <p className="text-[0.6rem] md:text-xs">
                   {moment(commentData.createdAt).startOf("minutes").fromNow()}
                   {commentData.createdAt !== commentData.updatedAt &&
                     " ( Edited )"}
@@ -1027,7 +1027,7 @@ const Reply = ({
       <div className=" pl-10 pr-2">
         <div
           className={classnames(
-            "space-x-2 p-4 rounded-lg shadow-lg border flex items-start",
+            "space-x-2 p-1 md:p-4 rounded-lg shadow-lg border flex items-start",
             { "bg-blue-gray-50": onReply && fromId === reply._id },
             { "bg-white": !onReply }
           )}
@@ -1036,13 +1036,13 @@ const Reply = ({
             <Link to={`/profile/${reply.userId}`}>
               {reply.user?.dp ? (
                 <img
-                  className="inline-block h-10 w-10 rounded-full"
+                  className="inline-block h-8 w-8 md:h-10 md:w-10 rounded-full"
                   src={reply.user?.dp}
                   alt="Profile Picture"
                 />
               ) : (
                 <img
-                  className="inline-block h-10 w-10 rounded-full"
+                  className="inline-block h-8 w-8 md:h-10 md:w-10 rounded-full"
                   src={common.DEFAULT_IMG}
                   alt="Profile Picture"
                 />
@@ -1053,7 +1053,7 @@ const Reply = ({
           <div className="flex justify-between items-center">
             {reply && (
               <Link to={`/profile/${reply.userId}`}>
-                <span className="text-sm font-bold text-gray-900">
+                <span className="text-xs md:text-sm font-bold text-gray-900">
                   {reply.user?.name}
                 </span>
               </Link>
@@ -1108,7 +1108,7 @@ const Reply = ({
               </div>
               </div>
             <span className="flex-1">
-              <p className="text-sm text-gray-600">{reply.reply}</p>
+              <p className="text-xs md:text-sm text-gray-600">{reply.reply}</p>
               <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
                 <div className="flex gap-5">
                   {replyLikes.includes(userId) ? (
@@ -1116,20 +1116,20 @@ const Reply = ({
                       onClick={handleLikeReply}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-xs font-bold">{replyLikes.length}</p>
-                      <AiFillHeart className="text-md cursor-pointer text-socioverse-500 hover:scale-105" />
+                      <p className="text-[0.6rem] md:text-xs font-bold">{replyLikes.length}</p>
+                      <AiFillHeart className="text-sm md:text-md cursor-pointer text-socioverse-500 hover:scale-105" />
                     </button>
                   ) : (
                     <button
                       onClick={handleLikeReply}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-xs font-bold">{replyLikes.length}</p>
-                      <AiOutlineHeart className="text-md cursor-pointer hover:text-socioverse-500" />
+                      <p className="text-[0.6rem] md:text-xs font-bold">{replyLikes.length}</p>
+                      <AiOutlineHeart className="text-sm md:text-md cursor-pointer hover:text-socioverse-500" />
                     </button>
                   )}
                   <button
-                    className="text-xs font-bold"
+                    className="text-[0.6rem] md:text-xs font-bold"
                     onClick={() => {
                       reply.user &&
                         handleOnReply(
@@ -1144,7 +1144,7 @@ const Reply = ({
                     Reply
                   </button>
                 </div>
-                <p className="text-xs">
+                <p className="text-[0.6rem] md:text-xs">
                   {moment(reply.createdAt).startOf("minutes").fromNow()}
                 </p>
               </div>

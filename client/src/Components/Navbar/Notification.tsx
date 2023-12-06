@@ -29,6 +29,7 @@ const Notification = ({
   );
 
   const handleNotificationOnClick = async (notif: MessageInterface) => {
+    console.log("notif when notification is clicked: ", notif)
     dispatch(setSelectedChat(notif.chat));
     dispatch(deleteNotification(notif));
     await deleteNotificationFromDB(notif._id);

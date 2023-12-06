@@ -123,7 +123,7 @@ const ChatBoxContent = ({
       dispatch(setFetchUserChatsAgain(true));
       if (response && response.message) {
         const newMessage = response.message;
-        response && socket.emit("new message", newMessage);
+        response && socket.emit("new message", {...newMessage, chat: selectedChat});
         response &&
           response.message &&
           setMessages((cur) => [...cur, newMessage]);

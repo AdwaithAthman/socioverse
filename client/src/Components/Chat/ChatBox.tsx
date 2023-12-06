@@ -36,6 +36,8 @@ const ChatBox = ({
   // const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
   const handleOpenVideoCall = () => dispatch(setOpenVideoCall(!openVideoCall));
 
+  console.log("selectedChat is not mounted: ", selectedChat)
+
   return selectedChat ? (
     <>
       <div className="flex flex-col justify-between p-2 md:p-4 gap-4 md:gap-8 h-full w-full">

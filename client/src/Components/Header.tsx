@@ -415,14 +415,6 @@ export function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
-  const [notificationPanelOpen, setNotificationPanelOpen] =
-    React.useState<boolean>(false);
-
-  const handleNotificationPanel = () => {
-    setNotificationPanelOpen((prev) => !prev);
-  };
-
-
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -441,12 +433,6 @@ export function ComplexNavbar() {
         {/* </div> */}
         <InputWithButton />
         <div className="flex items-center justify-between">
-          {/* <div className="block lg:hidden mr-2 md:mr-3 ">
-          <Notification
-            handleNotificationPanel={handleNotificationPanel}
-            notificationPanelOpen={notificationPanelOpen}
-          />
-          </div> */}
           <ProfileMenu />
         </div>
       </div>

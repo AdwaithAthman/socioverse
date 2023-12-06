@@ -10,7 +10,7 @@ export interface RecievedChatInterface {
     _id: string;
     chatName: string;
     isGroupChat: boolean;
-    users: string[];
+    users: UserDataInterface[];
     latestMessage: MessageInterface;
     groupAdmin: UserDataInterface;
     createdAt: string;

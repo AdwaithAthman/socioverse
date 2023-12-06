@@ -30,9 +30,9 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
     socket.on("new message", (newMessageRecieved: RecievedMessageInterface) => {
       const chat = newMessageRecieved.chat;
       if (!chat.users) return console.log("chat.users is not defined");
-      chat.users.forEach((userId) => {
-        if (userId === newMessageRecieved.sender._id) return;
-        socket.in(userId).emit("message recieved", newMessageRecieved);
+      chat.users.forEach((user:UserDataInterface) => {
+        if (user._id === newMessageRecieved.sender._id) return;
+        socket.in(user._id as string).emit("message recieved", newMessageRecieved);
       });
     });
 

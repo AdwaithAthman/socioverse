@@ -33,7 +33,7 @@ const SearchInputDialog = ({
 }: {
   handleSearchDialog: () => void;
   showSearchDialog: boolean;
-  hashtagSearchOn: boolean;
+  hashtagSearchOn?: boolean;
 }) => {
   const dispatch = useDispatch();
   const hashtagSearchValue = useSelector(

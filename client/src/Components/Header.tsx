@@ -40,6 +40,7 @@ import { deleteNotification, setSelectedChat } from "../Redux/ChatSlice";
 import { MessageInterface } from "../Types/chat";
 import { deleteNotificationFromDB } from "../API/User";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import Notification from "./Navbar/Notification";
 
 // profile menu component
 const profileMenuItems = [
@@ -135,140 +136,16 @@ function ProfileMenu() {
     setNotificationPanelOpen((prev) => !prev);
   };
 
-  const handleNotificationOnClick = async (notif: MessageInterface) => {
-    dispatch(setSelectedChat(notif.chat));
-    dispatch(deleteNotification(notif));
-    await deleteNotificationFromDB(notif._id);
-    closeNotificationPanel();
-    if (location.pathname !== "/message") {
-      navigate("/message");
-    }
-  };
-
-  const handleCloseNotification = async (notif: MessageInterface) => {
-    dispatch(deleteNotification(notif));
-    await deleteNotificationFromDB(notif._id);
-  };
-
-  const closeNotificationPanel = () => {
-    const bellButton = document.getElementById("bell-button");
-    if (bellButton) {
-      bellButton.click();
-    }
-  };
-
   return (
     <div className="flex gap-6 items-center">
       <div className="hidden lg:flex gap-6">
         {navBarIcons.map((item) => (
           <div key={item.id}>
             {item.id === "notification" ? (
-              <Popover
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 50 },
-                }}
-                placement="bottom-end"
-                offset={20}
-                dismiss={{ enabled: false }}
-              >
-                <PopoverHandler onClick={handleNotificationPanel}>
-                  <div className="relative">
-                    <div
-                      className={classnames(
-                        "flex justify-center items-center w-8 h-8 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group hover:cursor-pointer",
-                        { "bg-blue-gray-100": notificationPanelOpen },
-                        { "bg-black": !notificationPanelOpen }
-                      )}
-                      id="bell-button"
-                    >
-                      <div
-                        className={classnames(
-                          "text-2xl transition duration-100 ease-in-out group-hover:text-socioverse-500",
-                          { "text-socioverse-500": notificationPanelOpen },
-                          { "text-blue-gray-500": !notificationPanelOpen }
-                        )}
-                      >
-                        {item.icon}
-                      </div>
-                    </div>
-                    {notification.length > 0 && (
-                      <span
-                        className="absolute bottom-5 left-5 inline-flex items-center justify-center px-1 py-1 mr-2 text-[0.5rem]
-                         font-bold leading-none text-white bg-red-600 rounded-full"
-                      >
-                        {notification.length}
-                      </span>
-                    )}
-                  </div>
-                </PopoverHandler>
-                <PopoverContent
-                  className="z-[999] w-[26rem] max-h-[34rem] overflow-y-scroll 
-                overflow-x-hidden no-scrollbar p-0"
-                >
-                  <div className="p-6 bg-black bg-opacity-20 flex flex-col gap-5 justify-center">
-                    {notification.length > 0 ? (
-                      notification.map((notif) => (
-                        <div
-                          className="w-full rounded-lg border shadow-lg bg-white hover:scale-95 
-                          transition duration-100 ease-in-out group"
-                          key={notif._id}
-                        >
-                          <div className=" flex flex-col justify-center w-full h-fit rounded-t-lg p-3 gap-3">
-                            <div className="flex items-start justify-between ">
-                              <div
-                                className="s) => setLimt-3 flex items-center space-x-2 cursor-pointer "
-                                onClick={() => handleNotificationOnClick(notif)}
-                              >
-                                <img
-                                  className="inline-block h-12 w-12 rounded-full 
-                                group-hover:scale-95 group-hover:p-[0.15rem] group-hover:ring group-hover:ring-blue-gray-500"
-                                  src={
-                                    notif.chat.isGroupChat
-                                      ? notif.chat.groupDp
-                                      : notif.sender.dp
-                                      ? notif.sender.dp
-                                      : common.DEFAULT_IMG
-                                  }
-                                  alt="dp"
-                                />
-                                <span className="flex flex-col">
-                                  <span
-                                    className={classnames(
-                                      "text-[14px] group-hover:font-bold group-hover:scale-95"
-                                    )}
-                                  >
-                                    {notif.chat.isGroupChat
-                                      ? notif.chat.chatName
-                                      : notif.sender.name}
-                                  </span>
-                                  <span
-                                    className={classnames(
-                                      "text-[11px] group-hover:font-bold group-hover:scale-95"
-                                    )}
-                                  >
-                                    New unread message!
-                                  </span>
-                                </span>
-                              </div>
-                              <AiOutlineCloseCircle
-                                className="h-5 w-5 hover:scale-110 hover:text-socioverse-400 z-40 cursor-pointer"
-                                onClick={() => handleCloseNotification(notif)}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="w-full rounded-lg border shadow-lg bg-white">
-                        <div className=" flex flex-col justify-center w-full h-fit rounded-t-lg p-3 gap-3">
-                          No new message.
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <Notification
+                handleNotificationPanel={handleNotificationPanel}
+                notificationPanelOpen={notificationPanelOpen}
+              />
             ) : (
               <Link to={`/${item.id}`}>
                 <div
@@ -537,8 +414,15 @@ const navListItems = [
 
 export function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
-
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+
+  const [notificationPanelOpen, setNotificationPanelOpen] =
+    React.useState<boolean>(false);
+
+  const handleNotificationPanel = () => {
+    setNotificationPanelOpen((prev) => !prev);
+  };
+
 
   React.useEffect(() => {
     window.addEventListener(
@@ -558,7 +442,12 @@ export function ComplexNavbar() {
         {/* </div> */}
         <InputWithButton />
         <div className="flex items-center justify-between">
-          <IoNotifications className="lg:hidden h-6 w-6 mr-2 md:mr-3 text-blue-gray-500" />
+          <div className="lg:hidden mr-2 md:mr-3 ">
+          <Notification
+            handleNotificationPanel={handleNotificationPanel}
+            notificationPanelOpen={notificationPanelOpen}
+          />
+          </div>
           <ProfileMenu />
         </div>
         {/* <IconButton

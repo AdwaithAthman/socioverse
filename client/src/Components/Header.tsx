@@ -137,20 +137,20 @@ function ProfileMenu() {
   };
 
   return (
-    <div className="flex gap-6 items-center">
-      <div className="hidden lg:flex gap-6">
+    <div className="flex gap-3 md:gap-4 lg:gap-6 items-center">
+      <div className=" lg:flex lg:gap-6">
         {navBarIcons.map((item) => (
           <div key={item.id}>
             {item.id === "notification" ? (
-              <Notification
+                <Notification
                 handleNotificationPanel={handleNotificationPanel}
                 notificationPanelOpen={notificationPanelOpen}
               />
             ) : (
-              <Link to={`/${item.id}`}>
+              <Link to={`/${item.id}`} >
                 <div
                   className={classnames(
-                    "flex justify-center items-center w-8 h-8 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group",
+                    "hidden lg:flex justify-center items-center w-8 h-8 rounded-full hover:bg-blue-gray-100 transition duration-100 ease-in-out group",
                     { "bg-blue-gray-100": section == item.id },
                     { "bg-black": section != item.id }
                   )}
@@ -163,7 +163,6 @@ function ProfileMenu() {
                     )}
                   >
                     {item.icon}
-                    {/* <h5 className="text-sm">{item.name}</h5> */}
                   </div>
                 </div>
               </Link>
@@ -442,26 +441,15 @@ export function ComplexNavbar() {
         {/* </div> */}
         <InputWithButton />
         <div className="flex items-center justify-between">
-          <div className="lg:hidden mr-2 md:mr-3 ">
+          {/* <div className="block lg:hidden mr-2 md:mr-3 ">
           <Notification
             handleNotificationPanel={handleNotificationPanel}
             notificationPanelOpen={notificationPanelOpen}
           />
-          </div>
+          </div> */}
           <ProfileMenu />
         </div>
-        {/* <IconButton
-          size="sm"
-          color="blue-gray"
-          variant="text"
-          onClick={toggleIsNavOpen}
-          className="ml-auto mr-2 lg:hidden"
-        >
-        </IconButton> */}
       </div>
-      {/* <Collapse open={isNavOpen} className="overflow-scroll">
-         <NavList />
-       </Collapse>  */}
     </Navbar>
   );
 }

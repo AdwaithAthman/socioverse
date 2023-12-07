@@ -122,7 +122,7 @@ const EditPostDialogBox = ({
             </div>
           </div>
         </DialogHeader>
-        <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[20.5rem] overflow-y-scroll no-scrollbar">
+        <DialogBody className="flex flex-col gap-4 lg:mx-4 my-0 mx-2 px-4 py-0 md:px-4 md:py-4 max-h-[20.5rem] overflow-y-scroll no-scrollbar">
           <div className="w-full mb-16 sm:mb-12">
             <ReactQuillComponent
               textValue={textValue}

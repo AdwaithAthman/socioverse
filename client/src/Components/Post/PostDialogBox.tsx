@@ -205,8 +205,8 @@ const PostDialogBox = ({
             </div>
           </div>
         </DialogHeader>
-        <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[20.5rem] overflow-y-scroll">
-          <div className="w-full mb-16 sm:mb-12">
+        <DialogBody className="flex flex-col gap-4 lg:mx-4 my-0 mx-2 px-4 py-0 md:px-4 md:py-4 max-h-[20.5rem] overflow-y-scroll">
+          <div className="w-full mb-20 sm:mb-12">
             <ReactQuillComponent
               textValue={textValue}
               setTextValue={setTextValue}

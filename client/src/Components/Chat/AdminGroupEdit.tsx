@@ -162,11 +162,11 @@ const AdminGroupEdit = ({
         <input
           type="file"
           accept="image/*"
-          id="image-input"
+          id="newGroup-image"
           className="hidden"
           onChange={handleGroupDp}
         />
-        <label htmlFor="image-input">
+        <label htmlFor="newGroup-image">
           <img
             src={
               imgFile instanceof File

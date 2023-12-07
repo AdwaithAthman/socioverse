@@ -159,7 +159,7 @@ const PostList = () => {
       const response = await unblockPost(postId);
       if (response.status === "success") {
         toast.dismiss();
-        toast.success("User unblocked successfully...!", TOAST_ACTION);
+        toast.success("Post unblocked successfully...!", TOAST_ACTION);
         setPostsList((prev) => {
           if (prev) {
             return prev.map((post) => {

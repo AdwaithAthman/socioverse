@@ -142,7 +142,7 @@ function AsideOne({
               {followersProfiles?.length && followersProfiles ? (
                 followersProfiles.slice(0, 5).map((userProfile, index) => (
                   <div
-                    className="flex p-2 items-center justify-between transition duration-100 ease-in-out hover:shadow-md hover:scale-105 hover:rounded-lg"
+                    className="flex p-2 items-center justify-between transition duration-100 ease-in-out rounded-lg hover:shadow-md hover:scale-105 hover:rounded-lg"
                     key={index}
                   >
                     <Link to={`/profile/${userProfile._id}`}>
@@ -374,6 +374,24 @@ function AsideOne({
                     </span>
                   </div>
                 </Link>
+                <div className="flex items-center gap-2">
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleMessageClick(userProfile._id as string)
+                        }
+                      >
+                        <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
+                      </div>
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleVideoCall(userProfile._id as string)
+                        }
+                      >
+                        <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
+                      </div>
+                    </div>
               </div>
             ))}
           </div>
@@ -429,6 +447,24 @@ function AsideOne({
                     </span>
                   </div>
                 </Link>
+                <div className="flex items-center gap-2">
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleMessageClick(userProfile._id as string)
+                        }
+                      >
+                        <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
+                      </div>
+                      <div
+                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                        onClick={() =>
+                          handleVideoCall(userProfile._id as string)
+                        }
+                      >
+                        <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
+                      </div>
+                    </div>
               </div>
             ))}
           </div>

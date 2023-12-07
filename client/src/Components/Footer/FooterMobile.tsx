@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessages } from "react-icons/tb";
-import { TbLogout } from "react-icons/tb";
+import { HiUserGroup } from "react-icons/hi";
 import { disableSearchMode, enableSearchMode } from "../../Redux/PostSlice";
 import { useDispatch } from "react-redux";
 import SearchInputDialog from "../Search";
@@ -26,9 +26,9 @@ const FooterMobile = () => {
       name: "Message",
     },
     {
-      id: "logout",
-      icon: <TbLogout />,
-      name: "Logout",
+      id: "people",
+      icon: <HiUserGroup />,
+      name: "People",
     },
   ]);
 

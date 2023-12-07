@@ -21,6 +21,7 @@ import { fetchNotifications } from "../API/Message";
 import { ToastContainer, toast } from "react-toastify";
 import { User } from "../Types/loginUser";
 import { Button } from "@material-tailwind/react";
+import PeoplePage from "./PeoplePage";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -34,6 +35,19 @@ const MainPage = () => {
   const selectedChat = useSelector(
     (state: StoreType) => state.chat.selectedChat
   );
+
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+
+  //people section is only available in mobile and medium screens
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    // Redirect if window is larger than medium breakpoint
+    if (windowWidth > 959 && section === "people") {
+      navigate("/error");
+    }
+    return () => window.removeEventListener("resize", handleResize);
+  }, [windowWidth, navigate, section]);
 
   //for socket purpose
   const [socketConnected, setSocketConnected] = useState<boolean>(false);
@@ -175,6 +189,11 @@ const MainPage = () => {
           {section === "home" && <HomePage socket={socket} />}
           {section === "message" && (
             <ChatPage socket={socket} socketConnected={socketConnected} />
+          )}
+          {section === "people" && (
+            <div className="block lg:hidden">
+              <PeoplePage socket={socket} />
+            </div>
           )}
         </motion.div>
       </AnimatePresence>

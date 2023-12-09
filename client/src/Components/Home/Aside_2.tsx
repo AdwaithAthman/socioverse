@@ -13,6 +13,7 @@ import {
   getRestOfAllUsers,
   followUser,
   unfollowUser,
+  getSuggestions,
 } from "../../API/User";
 import { ToastContainer, toast } from "react-toastify";
 import common, { TOAST_ACTION } from "../../Constants/common";
@@ -38,12 +39,9 @@ function AsideTwo({
   handleFollowingAdd: (boolValue: boolean) => void;
   handleFollowingRemove: (boolValue: boolean) => void;
 }) {
-  // const [userData, setUserData] = useState<User|null>(store.getState().auth.user);
   const userInfoRedux = useSelector((store: StoreType) => store?.auth?.user);
   const [userInfo, setUserInfo] = useState<User | null>(null);
-  const [limitedUserProfiles, setLimitedUserProfiles] = useState<User[] | []>(
-    []
-  );
+  const [tempFollowingList, setTempFollowingList] = useState<string[]>();
   const [allUserProfiles, setAllUserProfiles] = useState<User[] | []>([]);
   const [open, setOpen] = useState<boolean>(false);
   const handleOpen = () => setOpen(!open);
@@ -65,17 +63,17 @@ function AsideTwo({
     };
 
     fetchUser();
-    getRestOfUsers().then((res) => setLimitedUserProfiles(res.users));
+    getSuggestions().then((res) => setAllUserProfiles(res.suggestions));
   }, []);
+
+  useEffect(() => {
+    if (userInfoRedux) {
+      setTempFollowingList(userInfoRedux.following);
+    }
+  }, [userInfoRedux]);
 
   const handleFollowingButton = (friendId: string, name: string) => {
     followUser(friendId).then(() => {
-      if (open) {
-        getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
-        getRestOfUsers().then((res) => setLimitedUserProfiles(res.users));
-      } else {
-        getRestOfUsers().then((res) => setLimitedUserProfiles(res.users));
-      }
       handleFollowingAdd(true);
       toast.dismiss();
       toast.success(`Following ${name}`, {
@@ -83,17 +81,13 @@ function AsideTwo({
         position: "bottom-left",
       });
     });
+    !tempFollowingList?.includes(friendId) &&
+      setTempFollowingList([...(tempFollowingList as string[]), friendId]);
     dispatch(addFollower(friendId));
   };
 
   const handleUnfollowingButton = (friendId: string, name: string) => {
     unfollowUser(friendId).then(() => {
-      if (open) {
-        getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
-        getRestOfUsers().then((res) => setLimitedUserProfiles(res.users));
-      } else {
-        getRestOfUsers().then((res) => setLimitedUserProfiles(res.users));
-      }
       handleFollowingRemove(true);
       toast.dismiss();
       toast.success(`Unfollowed ${name}`, {
@@ -101,11 +95,12 @@ function AsideTwo({
         position: "bottom-left",
       });
     });
+    setTempFollowingList(tempFollowingList?.filter((id) => id !== friendId));
     dispatch(removeFollower(friendId));
   };
 
   const handleViewMore = () => {
-    getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
+    getSuggestions().then((res) => setAllUserProfiles(res.suggestions));
   };
 
   return (
@@ -125,7 +120,7 @@ function AsideTwo({
               </div>
 
               <div className="flex flex-col gap-2 ">
-                {limitedUserProfiles.map((userProfile) => (
+                {allUserProfiles.slice(0, 5).map((userProfile) => (
                   <div
                     className="flex p-2 items-center justify-between transition duration-100 ease-in-out hover:shadow-md hover:scale-105 hover:rounded-lg"
                     key={userProfile._id}
@@ -135,9 +130,7 @@ function AsideTwo({
                         <img
                           className="inline-block h-12 w-12 rounded-full"
                           src={
-                            userProfile.dp
-                              ? userProfile.dp
-                              : common.DEFAULT_IMG
+                            userProfile.dp ? userProfile.dp : common.DEFAULT_IMG
                           }
                           alt="user dp"
                         />
@@ -153,7 +146,8 @@ function AsideTwo({
                         </span>
                       </div>
                     </Link>
-                    {(userInfoRedux &&
+                    {tempFollowingList?.includes(userProfile._id as string) ||
+                    (userInfoRedux &&
                       userProfile.followers?.includes(
                         userInfoRedux._id as string
                       )) ||
@@ -196,6 +190,7 @@ function AsideTwo({
                     handleViewMore();
                     handleOpen();
                   }}
+                  disabled={allUserProfiles.length <= 5}
                 >
                   View More
                   <svg
@@ -250,11 +245,7 @@ function AsideTwo({
                   <div className="mt-3 flex items-center space-x-2">
                     <img
                       className="inline-block h-12 w-12 rounded-full"
-                      src={
-                        userProfile.dp
-                          ? userProfile.dp
-                          : common.DEFAULT_IMG
-                      }
+                      src={userProfile.dp ? userProfile.dp : common.DEFAULT_IMG}
                       alt="user dp"
                     />
                     <span className="flex flex-col">
@@ -269,7 +260,8 @@ function AsideTwo({
                     </span>
                   </div>
                 </Link>
-                {(userInfoRedux &&
+                {tempFollowingList?.includes(userProfile._id as string) ||
+                (userInfoRedux &&
                   userProfile.followers?.includes(
                     userInfoRedux._id as string
                   )) ||

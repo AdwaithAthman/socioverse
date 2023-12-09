@@ -101,8 +101,7 @@ const People = ({ socket }: { socket: Socket }) => {
       toast.dismiss();
       toast.success(`Unfollowed ${name}`, TOAST_ACTION);
     });
-    !tempFollowingList?.includes(friendId) &&
-      setTempFollowingList([...(tempFollowingList as string[]), friendId]);
+    setTempFollowingList(tempFollowingList?.filter((id) => id !== friendId));
     dispatch(removeFollower(friendId));
   };
 
@@ -111,7 +110,8 @@ const People = ({ socket }: { socket: Socket }) => {
       toast.dismiss();
       toast.success(`Following ${name}`, TOAST_ACTION);
     });
-    setTempFollowingList(tempFollowingList?.filter((id) => id !== friendId));
+    !tempFollowingList?.includes(friendId) &&
+    setTempFollowingList([...(tempFollowingList as string[]), friendId]);
     dispatch(addFollower(friendId));
   };
 

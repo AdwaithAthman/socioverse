@@ -18,7 +18,7 @@ import { Socket } from "socket.io-client";
 import { ReactComponent as NoDataAvailableSvg } from "../../assets/NoDataAvailable.svg";
 import { User } from "../../Types/loginUser";
 import common from "../../Constants/common";
-import { getFollowers, getFollowing } from "../../API/User";
+import { getFollowers, getFollowing, getSuggestions } from "../../API/User";
 
 const People = ({ socket }: { socket: Socket }) => {
   const dispatch = useDispatch();
@@ -34,6 +34,9 @@ const People = ({ socket }: { socket: Socket }) => {
     });
     getFollowers().then((data) => {
       setFollowers(data.followers);
+    });
+    getSuggestions().then((data) => {
+      setSuggested(data.suggestions);
     });
   }, []);
 

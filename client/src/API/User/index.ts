@@ -7,6 +7,7 @@ import {
   GetRestOfUsersResponse,
   GetFollowersResponse,
   GetFollowingResponse,
+  GetSuggestionsResponse
 } from "../../Types/userProfile";
 
 export const followUser = async (friendId: string): Promise<FollowUserResponse> => {
@@ -43,6 +44,13 @@ export const getFollowers = async (): Promise<GetFollowersResponse> => {
 export const getFollowing = async (): Promise<GetFollowingResponse> => {
   const response = await axiosUserInstance.get<GetFollowingResponse>(
     END_POINTS.GET_FOLLOWING
+  );
+  return response.data;
+}
+
+export const getSuggestions = async (): Promise<GetSuggestionsResponse> => {
+  const response = await axiosUserInstance.get<GetSuggestionsResponse>(
+    END_POINTS.GET_SUGGESTIONS
   );
   return response.data;
 }

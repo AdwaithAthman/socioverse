@@ -95,3 +95,9 @@ export interface FetchNotificationsResponse {
     message: string,
     notifications: MessageInterface[]
 }
+
+export interface GetSuggestionsResponse {
+    status: string,
+    message: string,
+    suggestions: User[]
+}

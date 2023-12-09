@@ -50,6 +50,7 @@ const END_POINTS = {
     GET_REST_OF_ALL_USERS: `api/user/getRestOfAllUsers`,
     GET_FOLLOWERS: `api/user/getFollowers`,
     GET_FOLLOWING: `api/user/getFollowing`,
+    GET_SUGGESTIONS: `api/user/getSuggestions`,
     ADD_NOTIFICATION: 'api/user/addNotification',
     DELETE_NOTIFICATION: 'api/user/deleteNotification',
     ADMIN_LOGIN: 'api/admin/login',

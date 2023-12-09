@@ -243,8 +243,8 @@ export const userRepositoryMongoDB = () => {
 
   const followUser = async (userId: string, friendId: string) => {
     try {
-      await User.updateOne({ _id: userId }, { $push: { following: friendId } });
-      await User.updateOne({ _id: friendId }, { $push: { followers: userId } });
+      await User.updateOne({ _id: userId }, { $addToSet: { following: friendId } });
+      await User.updateOne({ _id: friendId }, { $addToSet: { followers: userId } });
     } catch (error) {
       console.log(error);
       throw new Error("Error following user!")
@@ -274,13 +274,69 @@ export const userRepositoryMongoDB = () => {
   const getFollowing = async (userId: string) => {
     try {
       const user = await User.findById(userId).populate("following");
-      console.log("following: ", user?.following.length);
       return user?.following;
     } catch (error) {
       console.log(error);
       throw new Error("Error getting following!")
     }
   };
+
+  const getSuggestions = async (userId: string) => {
+    try{
+      const userObjId = new mongoose.Types.ObjectId(userId);
+      const suggestions = await User.aggregate([
+        {
+          $match: {
+            _id: userObjId
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'following',
+            foreignField: '_id',
+            as: 'followingUsers'
+          }
+        },
+        {
+          $unwind: '$followingUsers'
+        },
+        {
+          $replaceRoot: {
+            newRoot: '$followingUsers'
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'following',
+            foreignField: '_id',
+            as: 'followingUsers'
+          }
+        },
+        {
+          $unwind: '$followingUsers'
+        },
+        {
+          $replaceRoot: {
+            newRoot: '$followingUsers'
+          }
+        },
+        {
+          $match: {
+            _id: { $ne: userObjId },
+            followers: { $ne: userObjId },
+          }
+        }
+      ]);
+      console.log("suggestions: ", suggestions)
+      return suggestions;
+    }
+    catch(error){
+      console.log(error);
+      throw new Error("Error getting suggestions!")
+    }
+  }
 
   const updatePosts = async (userId: string, postId: string) => {
     try {
@@ -496,6 +552,7 @@ export const userRepositoryMongoDB = () => {
     unfollowUser,
     getFollowers,
     getFollowing,
+    getSuggestions,
     updatePosts,
     deletePost,
     savePost,

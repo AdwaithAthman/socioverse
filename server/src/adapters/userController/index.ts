@@ -13,6 +13,7 @@ import {
   handleUnfollowUser,
   handleGetFollowers,
   handleGetFollowing,
+  handleGetSuggestions,
   handleAddNotification,
   handleDeleteNotification,
 } from "../../application/use-cases/user/user";
@@ -83,6 +84,16 @@ const userController = (
     });
   });
 
+  const  getSuggestions = asyncHandler(async (req: Request, res: Response) => {
+    const { userId }: { userId: string } = req.body;
+    const suggestions = await handleGetSuggestions(userId, dbUserRepository);
+    res.json({
+      status: "success",
+      message: "suggestions fetched",
+      suggestions,
+    });
+  });
+
   const addNotification = asyncHandler(async (req: Request, res: Response) => {
     const { userId, messageId }: { userId: string; messageId: string } =
       req.body;
@@ -110,6 +121,7 @@ const userController = (
     getRestOfAllUsers,
     getFollowers,
     getFollowing,
+    getSuggestions,
     addNotification,
     deleteNotification,
   };

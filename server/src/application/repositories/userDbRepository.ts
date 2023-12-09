@@ -46,6 +46,8 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
 
     const getFollowing = async(userId: string) => await repository.getFollowing(userId)
 
+    const getSuggestions = async(userId: string) => await repository.getSuggestions(userId)
+
     const updatePosts = async(userId: string, postId: string) => await repository.updatePosts(userId, postId)
 
     const deletePost = async(userId: string, postId: string) => await repository.deletePost(userId, postId)
@@ -101,6 +103,7 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
         unfollowUser,
         getFollowers,
         getFollowing,
+        getSuggestions,
         updatePosts,
         deletePost,
         savePost,

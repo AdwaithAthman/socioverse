@@ -94,6 +94,23 @@ export const handleGetFollowing = async (
   }
 };
 
+export const handleGetSuggestions = async (
+  userId: string,
+  dbUserRepository: ReturnType<UserDbInterface>
+) => {
+  try{
+    const suggestions = await dbUserRepository.getSuggestions(userId);
+    const uniqueSuggestions = Array.from(suggestions.reduce((map, obj) => map.set(obj._id.toString(), obj), new Map()).values())
+    return uniqueSuggestions;
+  }
+  catch (error) {
+    throw new AppError(
+      "Error fetching suggestions!",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 export const handleAddNotification = async (
   userId: string,
   messageId: string,

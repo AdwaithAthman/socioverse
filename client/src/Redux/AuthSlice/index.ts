@@ -39,7 +39,9 @@ const authSlice = createSlice({
            state.user?.following?.splice(state.user?.following?.indexOf(action.payload), 1);
         },
         addFollower: (state, action) => {
-            state.user?.following?.push(action.payload);
+            if (!state.user?.following?.includes(action.payload)) {
+                state.user?.following?.push(action.payload);
+            }
         },
     },
 })

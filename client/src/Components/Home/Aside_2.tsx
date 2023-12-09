@@ -153,12 +153,6 @@ function AsideTwo({
                         </span>
                       </div>
                     </Link>
-                    {/* <Button
-                    size="sm"
-                    className="rounded-full bg-blue-gray-700 shadow-none transition duration-400 ease-in-out hover:scale-95 hover:shadow-none"
-                  >
-                    Connect
-                  </Button> */}
                     {(userInfoRedux &&
                       userProfile.followers?.includes(
                         userInfoRedux._id as string

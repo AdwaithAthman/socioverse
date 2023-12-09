@@ -21,6 +21,7 @@ const userRouter = () => {
     router.get('/getRestOfAllUsers', authMiddleware, controller.getRestOfAllUsers);
     router.get('/getFollowers', authMiddleware, controller.getFollowers);
     router.get('/getFollowing', authMiddleware, controller.getFollowing);
+    router.get('/getSuggestions', authMiddleware, controller.getSuggestions);
     router.post('/addNotification', authMiddleware, controller.addNotification);
     router.delete('/deleteNotification/:messageId', authMiddleware, controller.deleteNotification);
 

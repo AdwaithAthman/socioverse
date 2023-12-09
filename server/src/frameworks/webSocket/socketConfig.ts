@@ -61,6 +61,7 @@ const socketConfig = (io: Server<DefaultEventsMap>) => {
     socket.on("call-accepted", (callerId: string) => {
       socket.in(callerId).emit("call-answered");
     });
+
   });
 };
 

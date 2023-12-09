@@ -36,7 +36,6 @@ const ChatBox = ({
   // const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
   const handleOpenVideoCall = () => dispatch(setOpenVideoCall(!openVideoCall));
 
-  console.log("selectedChat is not mounted: ", selectedChat)
 
   return selectedChat ? (
     <>

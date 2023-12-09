@@ -19,10 +19,10 @@ import { BiSolidCommentError } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
 import { StoreType } from "../Redux/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { adminLogout } from "../Redux/AdminSlice";
-import { TOAST_ACTION } from "../Constants/common";
 import { logoutAdmin } from "../API/Admin";
+
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const AdminPage = () => {
   const isAdminAuthenticated: boolean = useSelector(
     (store: StoreType) => store.admin.isAuthenticated
   );
+
   useEffect(() => {
     if (!isAdminAuthenticated) {
       navigate("/admin-login");
@@ -98,20 +99,9 @@ const AdminPage = () => {
             </ListItem>
           </List>
         </Card>
-        {/* <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ scale: 0.6, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.6, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="flex items-center justify-center lg:h-full w-full"
-          > */}
         <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 lg:px-20">
           <Outlet />
         </div>
-        {/* </motion.div>
-        </AnimatePresence> */}
       </div>
     </>
   );

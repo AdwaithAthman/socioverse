@@ -1,8 +1,9 @@
 import axios from "axios";
-import CONSTANTS_COMMON from "../../Constants/common";
+import CONSTANTS_COMMON, { TOAST_ACTION } from "../../Constants/common";
 import store from "../../Redux/Store";
-import { refreshAccessToken } from "../Auth";
-import { setCredentials } from "../../Redux/AuthSlice";
+import { logoutUser, refreshAccessToken } from "../Auth";
+import { logout, setCredentials } from "../../Redux/AuthSlice";
+import { toast } from "react-toastify";
 
 const axiosUserInstance = axios.create({
   baseURL: CONSTANTS_COMMON.API_BASE_URL,
@@ -40,6 +41,15 @@ axiosUserInstance.interceptors.response.use(
       !originalRequest._retry
     ) {
       try {
+        if (error.response.data.message === "User is blocked") {
+          await logoutUser();
+          toast.dismiss();
+          toast.error(
+            "Your account has been blocked. Please contact admin.",
+            TOAST_ACTION
+          );
+          store.dispatch(logout());
+        }
         const { accessToken } = await refreshAccessToken();
         store.dispatch(setCredentials({ accessToken }));
         originalRequest.headers.authorization = `Bearer ${accessToken}`;

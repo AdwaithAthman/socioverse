@@ -40,15 +40,17 @@ const People = ({ socket }: { socket: Socket }) => {
   const [tempFollowingList, setTempFollowingList] = useState<string[]>();
 
   useEffect(() => {
-    getFollowing().then((data) => {
-      setFollowing(data.following);
-    });
-    getFollowers().then((data) => {
-      setFollowers(data.followers);
-    });
-    getSuggestions().then((data) => {
-      setSuggested(data.suggestions);
-    });
+    if(user){
+      getFollowing(user._id as string).then((data) => {
+        setFollowing(data.following);
+      });
+      getFollowers(user._id as string).then((data) => {
+        setFollowers(data.followers);
+      });
+      getSuggestions().then((data) => {
+        setSuggested(data.suggestions);
+      });
+    }
   }, [user, dispatch]);
 
   useEffect(() => {

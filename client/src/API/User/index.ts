@@ -34,16 +34,16 @@ export const getRestOfAllUsers = async (): Promise<GetRestOfUsersResponse> => {
   return response.data;
 };
 
-export const getFollowers = async (): Promise<GetFollowersResponse> => {
+export const getFollowers = async ( userId: string ): Promise<GetFollowersResponse> => {
   const response = await axiosUserInstance.get<GetFollowersResponse>(
-    END_POINTS.GET_FOLLOWERS
+    `${END_POINTS.GET_FOLLOWERS}/${userId}`
   );
   return response.data;
 }
 
-export const getFollowing = async (): Promise<GetFollowingResponse> => {
+export const getFollowing = async ( userId: string ): Promise<GetFollowingResponse> => {
   const response = await axiosUserInstance.get<GetFollowingResponse>(
-    END_POINTS.GET_FOLLOWING
+    `${END_POINTS.GET_FOLLOWING}/${userId}`
   );
   return response.data;
 }

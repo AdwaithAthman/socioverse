@@ -65,7 +65,7 @@ const userController = (
   );
 
   const getFollowers = asyncHandler(async (req: Request, res: Response) => {
-    const { userId }: { userId: string } = req.body;
+    const { userId }: { userId: string } = req.params as unknown as { userId: string };
     const followers = await handleGetFollowers(userId, dbUserRepository);
     res.json({
       status: "success",
@@ -75,7 +75,7 @@ const userController = (
   });
 
   const getFollowing = asyncHandler(async (req: Request, res: Response) => {
-    const { userId }: { userId: string } = req.body;
+    const { userId }: { userId: string } = req.params as unknown as { userId: string };
     const following = await handleGetFollowing(userId, dbUserRepository);
     res.json({
       status: "success",

@@ -64,29 +64,33 @@ function AsideOne({
   const user = useSelector((state: StoreType) => state.auth.user);
 
   useEffect(() => {
-    getFollowing().then((data) => {
-      setUserFollowingProfiles(data.following);
-    });
-    getFollowers().then((data) => {
-      setFollowersProfiles(data.followers);
-    });
-  }, []);
+    if (user) {
+      getFollowing(user._id as string).then((data) => {
+        setUserFollowingProfiles(data.following);
+      });
+      getFollowers(user._id as string).then((data) => {
+        setFollowersProfiles(data.followers);
+      });
+    }
+  }, [user]);
   const [open, setOpen] = useState(1);
 
   const handleOpen = (value: SetStateAction<number>) =>
     setOpen(open === value ? 0 : value);
 
   if (newFollowing) {
-    getFollowing().then((data) => {
-      setUserFollowingProfiles(data.following);
-    });
+    user &&
+      getFollowing(user._id as string).then((data) => {
+        setUserFollowingProfiles(data.following);
+      });
     handleFollowingAdd(false);
   }
 
   if (removeFollowing) {
-    getFollowing().then((data) => {
-      setUserFollowingProfiles(data.following);
-    });
+    user &&
+      getFollowing(user._id as string).then((data) => {
+        setUserFollowingProfiles(data.following);
+      });
     handleFollowingRemove(false);
   }
 
@@ -375,23 +379,21 @@ function AsideOne({
                   </div>
                 </Link>
                 <div className="flex items-center gap-2">
-                      <div
-                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
-                        onClick={() =>
-                          handleMessageClick(userProfile._id as string)
-                        }
-                      >
-                        <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
-                      </div>
-                      <div
-                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
-                        onClick={() =>
-                          handleVideoCall(userProfile._id as string)
-                        }
-                      >
-                        <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
-                      </div>
-                    </div>
+                  <div
+                    className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                    onClick={() =>
+                      handleMessageClick(userProfile._id as string)
+                    }
+                  >
+                    <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
+                  </div>
+                  <div
+                    className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                    onClick={() => handleVideoCall(userProfile._id as string)}
+                  >
+                    <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -448,23 +450,21 @@ function AsideOne({
                   </div>
                 </Link>
                 <div className="flex items-center gap-2">
-                      <div
-                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
-                        onClick={() =>
-                          handleMessageClick(userProfile._id as string)
-                        }
-                      >
-                        <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
-                      </div>
-                      <div
-                        className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
-                        onClick={() =>
-                          handleVideoCall(userProfile._id as string)
-                        }
-                      >
-                        <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
-                      </div>
-                    </div>
+                  <div
+                    className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                    onClick={() =>
+                      handleMessageClick(userProfile._id as string)
+                    }
+                  >
+                    <BiSolidMessageDetail className="text-md text-socioverse-500 group-hover:text-green-500" />
+                  </div>
+                  <div
+                    className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-100 rounded-full cursor-pointer border-2 border-blue-gray-500 hover:border-green-500 hover:bg-white hover:border-3 group"
+                    onClick={() => handleVideoCall(userProfile._id as string)}
+                  >
+                    <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
+                  </div>
+                </div>
               </div>
             ))}
           </div>

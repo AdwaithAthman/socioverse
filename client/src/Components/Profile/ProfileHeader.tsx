@@ -3,6 +3,7 @@ import {
   Button,
   Dialog,
   DialogBody,
+  DialogFooter,
   DialogHeader,
   Menu,
   MenuHandler,
@@ -25,12 +26,17 @@ import {
 import store from "../../Redux/Store";
 import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
 import { deleteCoverPhoto, deleteProfilePhoto } from "../../API/Profile";
-import { TOAST_ACTION } from "../../Constants/common";
-import { useNavigate } from "react-router-dom";
+import common, { TOAST_ACTION } from "../../Constants/common";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import ImageCropper from "../Crop/ImageCropper";
 import { uploadProfilePhoto } from "../../API/Profile";
-import { followUser, unfollowUser } from "../../API/User";
+import {
+  followUser,
+  getFollowers,
+  getFollowing,
+  unfollowUser,
+} from "../../API/User";
 import { SlOptionsVertical } from "react-icons/sl";
 
 //importing types
@@ -52,6 +58,10 @@ const ProfileHeader = ({
   const [otherUser, setOtherUser] = useState<boolean>(false);
   const [otherUserInfo, setOtherUserInfo] = useState<User | null>(null);
   const [following, setFollowing] = useState<boolean>(false);
+  const [openFollowing, setOpenFollowing] = useState<boolean>(false);
+  const [openFollowers, setOpenFollowers] = useState<boolean>(false);
+  const [followingList, setFollowingList] = useState<User[]>([]);
+  const [followersList, setFollowersList] = useState<User[]>([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -125,6 +135,23 @@ const ProfileHeader = ({
       ifOtherUser(false);
     }
   }, [id, ifOtherUser, userData]);
+
+  // fetching followers and following list
+  useEffect(() => {
+    if (id) {
+      getFollowing(id).then((data) => {
+        setFollowingList(data.following);
+      });
+    }
+  }, [id, openFollowing]);
+
+  useEffect(() => {
+    if (id) {
+      getFollowers(id).then((data) => {
+        setFollowersList(data.followers);
+      });
+    }
+  }, [id, openFollowers]);
 
   const [imageCropperOpen, setImageCropperOpen] = useState<boolean>(false);
   const handleImageCropperOpen = () => setImageCropperOpen(!imageCropperOpen);
@@ -384,6 +411,10 @@ const ProfileHeader = ({
       dispatch(removeFollower(friendId));
     });
   };
+
+  const handleOpenFollowing = () => setOpenFollowing(!openFollowing);
+  const handleOpenFollowers = () => setOpenFollowers(!openFollowers);
+
   return (
     <>
       <ToastContainer />
@@ -402,13 +433,19 @@ const ProfileHeader = ({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="lg:text-sm text-xs font-bold text-socioverse-500">
+            <span
+              className="lg:text-sm text-xs font-bold text-socioverse-500 cursor-pointer"
+              onClick={handleOpenFollowing}
+            >
               {otherUser
                 ? otherUserInfo?.following?.length
                 : userData?.following?.length}{" "}
               following
             </span>
-            <span className="lg:text-sm text-xs font-bold text-socioverse-500">
+            <span
+              className="lg:text-sm text-xs font-bold text-socioverse-500 cursor-pointer"
+              onClick={handleOpenFollowers}
+            >
               {otherUser
                 ? otherUserInfo?.followers?.length
                 : userData?.followers?.length}{" "}
@@ -521,6 +558,124 @@ const ProfileHeader = ({
           </Menu>
         </div>
       </div>
+
+      {/* Following List */}
+      <Dialog
+        open={openFollowing}
+        size="xs"
+        handler={handleOpenFollowing}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogHeader>
+          <div className="flex justify-between items-center w-full">
+            <h1 className="text-xl font-semibold">Following List</h1>
+            <div>
+              <AiOutlineCloseCircle
+                className="text-3xl cursor-pointer"
+                onClick={handleOpenFollowing}
+              />
+            </div>
+          </div>
+        </DialogHeader>
+        <ToastContainer />
+        <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[20.5rem] overflow-y-scroll">
+          <div className="flex flex-col gap-2 ">
+            {followingList.map((userProfile) => (
+              <div
+                className="flex p-2 items-center justify-between transition duration-100 ease-in-out hover:shadow-md hover:scale-105 hover:rounded-lg"
+                key={userProfile._id}
+              >
+                <div
+                  className="mt-3 flex items-center space-x-2"
+                  onClick={() => {
+                    handleOpenFollowing();
+                    navigate(`/profile/${userProfile._id}`);
+                  }}
+                >
+                  <img
+                    className="inline-block h-12 w-12 rounded-full"
+                    src={userProfile.dp ? userProfile.dp : common.DEFAULT_IMG}
+                    alt="user dp"
+                  />
+                  <span className="flex flex-col">
+                    <span className="text-[14px] font-medium text-gray-900">
+                      {userProfile?.name}
+                    </span>
+                    <span className="text-[11px] font-medium text-gray-500">
+                      {userProfile.username
+                        ? `@${userProfile.username}`
+                        : "@ -"}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogBody>
+        <DialogFooter children={undefined}></DialogFooter>
+      </Dialog>
+
+      {/* Followers List */}
+      <Dialog
+        open={openFollowers}
+        size="xs"
+        handler={handleOpenFollowers}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogHeader>
+          <div className="flex justify-between items-center w-full">
+            <h1 className="text-xl font-semibold">Followers List</h1>
+            <div>
+              <AiOutlineCloseCircle
+                className="text-3xl cursor-pointer"
+                onClick={handleOpenFollowers}
+              />
+            </div>
+          </div>
+        </DialogHeader>
+        <ToastContainer />
+        <DialogBody className="flex flex-col gap-4 lg:mx-4 lg:my-0 m-2 max-h-[20.5rem] overflow-y-scroll">
+          <div className="flex flex-col gap-2 ">
+            {followersList.map((userProfile) => (
+              <div
+                className="flex p-2 items-center justify-between transition duration-100 ease-in-out hover:shadow-md hover:scale-105 hover:rounded-lg"
+                key={userProfile._id}
+              >
+                <div
+                  className="mt-3 flex items-center space-x-2"
+                  onClick={() => {
+                    handleOpenFollowers();
+                    navigate(`/profile/${userProfile._id}`);
+                  }}
+                >
+                  <img
+                    className="inline-block h-12 w-12 rounded-full"
+                    src={userProfile.dp ? userProfile.dp : common.DEFAULT_IMG}
+                    alt="user dp"
+                  />
+                  <span className="flex flex-col">
+                    <span className="text-[14px] font-medium text-gray-900">
+                      {userProfile?.name}
+                    </span>
+                    <span className="text-[11px] font-medium text-gray-500">
+                      {userProfile.username
+                        ? `@${userProfile.username}`
+                        : "@ -"}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogBody>
+        <DialogFooter children={undefined}></DialogFooter>
+      </Dialog>
     </>
   );
 };

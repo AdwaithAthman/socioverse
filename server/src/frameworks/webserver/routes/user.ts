@@ -19,8 +19,8 @@ const userRouter = () => {
     router.post('/unfollowUser', authMiddleware, controller.unfollowUser)
     router.get('/getRestOfUsers', authMiddleware, controller.getRestOfUsers);
     router.get('/getRestOfAllUsers', authMiddleware, controller.getRestOfAllUsers);
-    router.get('/getFollowers', authMiddleware, controller.getFollowers);
-    router.get('/getFollowing', authMiddleware, controller.getFollowing);
+    router.get('/getFollowers/:userId', authMiddleware, controller.getFollowers);
+    router.get('/getFollowing/:userId', authMiddleware, controller.getFollowing);
     router.get('/getSuggestions', authMiddleware, controller.getSuggestions);
     router.post('/addNotification', authMiddleware, controller.addNotification);
     router.delete('/deleteNotification/:messageId', authMiddleware, controller.deleteNotification);

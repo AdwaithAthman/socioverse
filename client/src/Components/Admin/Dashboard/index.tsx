@@ -5,9 +5,7 @@ import { RiUserFill, RiFileUserLine } from "react-icons/ri";
 import { Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import {
-  getAllPosts,
   getAllPostsCount,
-  getAllUsers,
   getAllUsersCount,
   getBlockedUsersCount,
 } from "../../../API/Admin";
@@ -37,7 +35,6 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    console.log(totalUsers, blockedUsers);
     setActiveUsers(totalUsers - blockedUsers);
   }, [totalUsers, blockedUsers]);
 

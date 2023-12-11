@@ -88,16 +88,13 @@ const ChatBoxContent = ({
     try {
       setLoading(true);
       const response = await getAllMessagesFromChat(selectedChat._id);
-      console.log("messages: ", response.messages);
       setMessages(response.messages);
       setLoading(false);
       if (socket) {
-        console.log("joined room");
         socket.emit("join room", selectedChat._id);
       }
     } catch (error) {
       toast.dismiss();
-      console.log("error fetching messages: ", error);
       toast.error("Error fetching messages", TOAST_ACTION);
     }
   };
@@ -129,7 +126,6 @@ const ChatBoxContent = ({
           setMessages((cur) => [...cur, newMessage]);
       }
     } catch (err) {
-      console.log("error sending message: ", err);
       toast.dismiss();
       toast.error("Error sending message", TOAST_ACTION);
     }
@@ -159,26 +155,6 @@ const ChatBoxContent = ({
     }, timerLength);
   };
 
-  // const typingHandler = (value: string) => {
-  //   setNewMessage(value);
-  //   if (!socketConnected) return;
-  //   if (!typing) {
-  //     setTyping(true);
-  //     socket.emit("typing", selectedChat?._id);
-  //   }
-  //   const lastTypingTime = new Date().getTime();
-  //   const timerLength = 3000;
-
-  //   setTimeout(() => {
-  //     const timeNow = new Date().getTime();
-  //     const timeDiff = timeNow - lastTypingTime;
-  //     if (timeDiff >= timerLength) {
-  //       socket.emit("stop typing", selectedChat?._id);
-  //       setTyping(false);
-  //     }
-  //   }, timerLength);
-  // };
-
   const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -188,8 +164,6 @@ const ChatBoxContent = ({
       return;
     }
     setImg(file);
-    // const formData = new FormData();
-    // formData.append("image", file);
   };
 
   //image viewer

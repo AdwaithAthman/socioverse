@@ -17,12 +17,10 @@ import {
 export const loginUser = async (
   payload: LoginUserInterface
 ): Promise<LoginUserResponse> => {
-  console.log("payload==============", payload);
   const response = await axiosRefreshInstance.post<LoginUserResponse>(
     END_POINTS.LOGIN_USER,
     payload
   );
-  console.log("response==============", response);
   return response.data;
 };
 
@@ -33,7 +31,6 @@ export const signupUser = async (
     END_POINTS.SIGNUP_USER,
     payload
   );
-  console.log("response=", response);
   return response.data;
 };
 
@@ -44,7 +41,6 @@ export const loginUsingGoogle = async (
     END_POINTS.LOGIN_GOOGLE,
     payload
   );
-  console.log("response==============", response);
   return response.data;
 };
 
@@ -55,14 +51,8 @@ export const refreshAccessToken = async (): Promise<{
     END_POINTS.REFRESH_TOKEN,
     { withCredentials: true }
   );
-  console.log("response==============", response);
   return response.data;
 };
-
-// export const verifyToken = async(payload: string): Promise<verifyTokenResponse> => {
-//     const response = await axiosUserInstance.get<verifyTokenResponse>(END_POINTS.VERIFY_TOKEN + payload);
-//     return response.data
-// }
 
 export const usernameAvailability = async (
   params: string

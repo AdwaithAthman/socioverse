@@ -119,7 +119,6 @@ function PostCard({
 
   const handleDeletePost = (postId: string) => {
     toast.dismiss();
-    console.log("Delete Post is done");
     toast(
       <ConfirmDeleteToast
         onDelete={() => handleConfirmDeletePost(postId)}

@@ -79,7 +79,6 @@ export const addGroupDp = async (
   groupId: string,
   data: FormData
 ): Promise<AddGroupDpResponse> => {
-  console.log("data at addGroupDp API: ", data)
   const response = await axiosUserInstance.patch<AddGroupDpResponse>(
     `${END_POINTS.ADD_GROUP_DP}/${groupId}`,
     data,

@@ -21,8 +21,6 @@ const ReportInfo = ({report} : {report: ReportInfoInterface[]}) => {
   }
  }, [report])
 
- console.log("reportInfo at ReportInfo.tsx: ", reportData)
-
   return (
     <Card className="h-full w-full">
       <CardHeader floated={false} shadow={false} className="rounded-none mb-4">

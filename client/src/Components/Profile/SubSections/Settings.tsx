@@ -67,7 +67,6 @@ const Settings = () => {
     onSubmit: async (values) => {
       try {
         const result = await changePassword(values);
-        console.log(result);
         toast.success("Password changed successfully!", TOAST_ACTION);
         if (result) {
           navigate(`/profile/${store.getState().auth.user?._id}`);

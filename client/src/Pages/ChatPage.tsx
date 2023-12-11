@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import store, { StoreType } from "../Redux/Store";
@@ -66,7 +66,6 @@ const ChatPage = ({
 
   return (
     <div className="w-full h-[80vh] lg:h-[85vh] ">
-      {/* <SideDrawer userId={(user && user._id) as string} /> */}
       <ToastContainer />
       <div className="flex justify-between items-center w-full h-full p-2 gap-5">
         <div

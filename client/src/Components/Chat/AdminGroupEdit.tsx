@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { User } from "../../Types/loginUser";
 import ChatLoading from "../Skeletons/ChatLoading";
 import { toast } from "react-toastify";
-import common, { TOAST_ACTION } from "../../Constants/common";
+import { TOAST_ACTION } from "../../Constants/common";
 import { searchUsers } from "../../API/Profile";
 import UserCard from "./UserCard";
 import { addGroupDp, updateGroupChat } from "../../API/Chat";
@@ -69,7 +69,6 @@ const AdminGroupEdit = ({
         setLoading(false);
         setSearchResult(response.users);
       } catch (error) {
-        console.log(error);
         toast.dismiss();
         toast.error("Failed to load search results", TOAST_ACTION);
       }

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 //import { useNavigate, useLocation } from "react-router-dom";
 
 //imports from Components
-import ComplexNavbar from "./Components/Header";
+import ComplexNavbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import AccountVerificationPopup from "./Components/AccountVerificationPopup";
 

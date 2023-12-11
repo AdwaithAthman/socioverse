@@ -1,5 +1,3 @@
-// import { motion, AnimatePresence } from "framer-motion";
-// import { Card, Typography } from "@material-tailwind/react";
 import { useEffect } from "react";
 import Home from "../Components/Home";
 import { useNavigate } from "react-router-dom";

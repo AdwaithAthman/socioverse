@@ -38,7 +38,6 @@ const ImageCropper = ({ image, getImage, aspectRatio }: { image: string, getImag
           croppedAreaPixels,
           rotation
         )) as Blob;
-        console.log("donee", { croppedBlob });
         if (croppedBlob) {
           setCroppedBlob(croppedBlob);
         }
@@ -53,7 +52,6 @@ const ImageCropper = ({ image, getImage, aspectRatio }: { image: string, getImag
   }, []);
 
   const onUpdate = useCallback(() => {
-    if(!croppedBlob) console.log("cropped image is null");
     if(aspectRatio === 1.5/1 && croppedBlob){
       dispatch(setTempPostImage(URL.createObjectURL(croppedBlob)))
     }

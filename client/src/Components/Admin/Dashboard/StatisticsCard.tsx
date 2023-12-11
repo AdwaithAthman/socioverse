@@ -1,7 +1,6 @@
 import {
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Typography,
 } from "@material-tailwind/react";
@@ -37,9 +36,6 @@ const StatisticsCard = ({ IconComponent, iconColor, colorIntensity, header, coun
             {count}
           </Typography>
         </CardBody>
-        {/* <CardFooter className="border-t border-blue-gray-50 p-4">
-          Thanlklkdjln
-        </CardFooter> */}
       </Card>
     </>
   );

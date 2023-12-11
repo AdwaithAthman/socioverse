@@ -28,7 +28,6 @@ export const uploadCoverPhoto = async (
       },
     }
   );
-  console.log("uploadCoverPhotoResponse============== ", response);
   return response.data;
 };
 
@@ -44,7 +43,6 @@ export const uploadProfilePhoto = async (
       },
     }
   );
-  console.log("uploadProfilePhotoResponse============== ", response);
   return response.data;
 }
 
@@ -52,7 +50,6 @@ export const getUserInfo = async (): Promise<GetUserInfoResponse> => {
   const response = await axiosUserInstance.get<GetUserInfoResponse>(
     END_POINTS.GET_USER_INFO
   );
-  console.log("getUserInfoResponse============== ", response);
   return response.data;
 };
 
@@ -67,7 +64,6 @@ export const deleteCoverPhoto = async (): Promise<DeleteCoverPhotoResponse> => {
   const response = await axiosUserInstance.delete<DeleteCoverPhotoResponse>(
     END_POINTS.DELETE_COVER_PHOTO
   );
-  console.log("deleteCoverPhotoResponse============== ", response);
   return response.data;
 };
 
@@ -75,7 +71,6 @@ export const deleteProfilePhoto = async (): Promise<DeleteProfilePhotoResponse> 
   const response = await axiosUserInstance.delete<DeleteProfilePhotoResponse>(
     END_POINTS.DELETE_PROFILE_PHOTO
   );
-  console.log("deleteCoverPhotoResponse============== ", response);
   return response.data;
 };
 

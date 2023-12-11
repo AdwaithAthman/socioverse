@@ -11,7 +11,6 @@ import {
   MenuList,
 } from "@material-tailwind/react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { BiEditAlt } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
 import MyDropzone from "./MyDropzone";
@@ -27,7 +26,7 @@ import store from "../../Redux/Store";
 import ConfirmDeleteToast from "../../utils/customToasts/confirmDeleteToast";
 import { deleteCoverPhoto, deleteProfilePhoto } from "../../API/Profile";
 import common, { TOAST_ACTION } from "../../Constants/common";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import ImageCropper from "../Crop/ImageCropper";
 import { uploadProfilePhoto } from "../../API/Profile";
@@ -158,7 +157,6 @@ const ProfileHeader = ({
   const [imgFile, setImgFile] = useState<File | null>(null);
 
   const handleUploadPostImage = async (coverPhoto: Blob) => {
-    console.log("blob====== ", coverPhoto);
     if (coverPhoto) {
       try {
         const reader = new FileReader();

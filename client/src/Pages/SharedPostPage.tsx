@@ -74,7 +74,6 @@ const SharedPostPage = () => {
   const fetchPostData = async (postId: string) => {
     const response = await getPostDetails(postId);
     if (response.post) {
-      console.log("postData for share", response.post);
       setPost(response.post);
     } else {
       navigate("/error");

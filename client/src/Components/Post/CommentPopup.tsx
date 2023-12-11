@@ -4,13 +4,6 @@ import {
   Dialog,
   DialogBody,
   DialogHeader,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
-  Textarea,
-  IconButton,
-  input,
   Carousel,
 } from "@material-tailwind/react";
 import {
@@ -62,7 +55,6 @@ import {
   ReplyInterface,
 } from "../../Types/post";
 import { User } from "../../Types/loginUser";
-
 
 const CommentPopup = ({
   commentPopupOpen,
@@ -125,7 +117,7 @@ const CommentPopup = ({
   useEffect(() => {
     if (onReply && postDetails) {
       console.log("comment to be replied: ", commentToBeReplied);
-      console.log("taggedUser name: ", taggedUser);
+      console.log("tagged user name: ", taggedUser);
     } else {
       setTaggedUser(null);
       setCommentToBeReplied(null);
@@ -322,12 +314,20 @@ const CommentPopup = ({
                               onClick={handleLike}
                             />
                           )}
-                          <BiShareAlt className="text-2xl cursor-pointer" 
-                           onClick={() => {
-                            toast.dismiss()
-                            postDetails && copy(`${common.CLIENT_BASE_URL}/share/${postDetails._id}`)
-                            toast.success("Copied link to the clipboard", { ...TOAST_ACTION, closeButton: false })
-                          }} />
+                          <BiShareAlt
+                            className="text-2xl cursor-pointer"
+                            onClick={() => {
+                              toast.dismiss();
+                              postDetails &&
+                                copy(
+                                  `${common.CLIENT_BASE_URL}/share/${postDetails._id}`
+                                );
+                              toast.success("Copied link to the clipboard", {
+                                ...TOAST_ACTION,
+                                closeButton: false,
+                              });
+                            }}
+                          />
                         </div>
                         {(savedPostsArray &&
                           savedPostsArray.includes(userId)) ||
@@ -345,10 +345,14 @@ const CommentPopup = ({
                       </div>
                       <div className="flex items-center justify-between w-full">
                         <div className="flex items-center justify-start gap-4 px-2">
-                          <span className="text-[12px] font-medium text-gray-500 cursor-pointer" onClick={() => {
-                            postDetails && handleGetLikedUsers(postDetails._id);
-                            setOpenLikedUsersDialog(true);
-                          }}>
+                          <span
+                            className="text-[12px] font-medium text-gray-500 cursor-pointer"
+                            onClick={() => {
+                              postDetails &&
+                                handleGetLikedUsers(postDetails._id);
+                              setOpenLikedUsersDialog(true);
+                            }}
+                          >
                             {likesArray.length} likes
                           </span>
                           <span className="text-[12px] font-medium text-gray-500">
@@ -519,8 +523,7 @@ function CommentBoxTextarea({
           error: "Error making changes!",
         });
         (await response).status === "success" &&
-          (console.log("This is the edited Comment: ", await response),
-          setNewlyUpdatedComment((await response).editedComment),
+          (setNewlyUpdatedComment((await response).editedComment),
           setEditCommentMode(false));
       } else {
         const response = addComment(commentObj);
@@ -616,7 +619,6 @@ function Comment({
   const [replyForReply, setReplyForReply] = useState<boolean>(false);
   const [deleteReplyId, setDeleteReplyId] = useState<string | null>(null);
 
-
   // const [isEditButtonClicked, setIsEditButtonClicked] = useState<boolean>(false);
 
   const toggleMenuVisibility = () => {
@@ -636,7 +638,6 @@ function Comment({
 
   useEffect(() => {
     if (newlyAddedReply) {
-      console.log("newly added reply : ", newlyAddedReply);
       setReplies((prev) => [newlyAddedReply, ...prev]);
       setNewlyAddedReply(null);
     }
@@ -659,9 +660,7 @@ function Comment({
   //deleting reply
   useEffect(() => {
     if (deleteReplyId) {
-      const index = replies.findIndex(
-        (reply) => reply._id === deleteReplyId
-      );
+      const index = replies.findIndex((reply) => reply._id === deleteReplyId);
       if (index !== -1) {
         const updatedReplies = [...replies];
         updatedReplies.splice(index, 1);
@@ -720,15 +719,15 @@ function Comment({
       setDeleteCommentId(commentData._id);
   };
 
-  const handleReportComment = async() => {
-    toast.dismiss()
+  const handleReportComment = async () => {
+    toast.dismiss();
     const response = reportComment(commentData._id);
     toast.promise(response, {
       pending: "Reporting Comment...",
       success: "Comment reported successfully!",
       error: "Error reporting comment!",
     });
-  }
+  };
 
   const handleLikeComment = async () => {
     toast.dismiss();
@@ -841,7 +840,7 @@ function Comment({
                         <button
                           className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
                           onClick={() => {
-                            handleReportComment()
+                            handleReportComment();
                             setMenuVisible(false);
                           }}
                         >
@@ -855,7 +854,9 @@ function Comment({
               </div>
             </div>
             <span className="flex-1">
-              <p className="text-xs md:text-sm text-gray-600">{commentData.comment}</p>
+              <p className="text-xs md:text-sm text-gray-600">
+                {commentData.comment}
+              </p>
               <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
                 <div className="flex gap-5">
                   {commentLikes.includes(userId) ? (
@@ -863,7 +864,9 @@ function Comment({
                       onClick={handleLikeComment}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-[0.6rem] md:text-xs font-bold">{commentLikes.length}</p>
+                      <p className="text-[0.6rem] md:text-xs font-bold">
+                        {commentLikes.length}
+                      </p>
                       <AiFillHeart className="text-sm md:text-md cursor-pointer text-socioverse-500 hover:scale-105" />
                     </button>
                   ) : (
@@ -871,7 +874,9 @@ function Comment({
                       onClick={handleLikeComment}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-[0.6rem] md:text-xs font-bold">{commentLikes.length}</p>
+                      <p className="text-[0.6rem] md:text-xs font-bold">
+                        {commentLikes.length}
+                      </p>
                       <AiOutlineHeart className="text-sm md:text-md cursor-pointer hover:text-socioverse-500" />
                     </button>
                   )}
@@ -944,11 +949,11 @@ const Reply = ({
     commentUser: string | null,
     replyUser: string,
     fromId: string,
-    replyForReply: boolean,
+    replyForReply: boolean
   ) => void;
   onReply: boolean;
   fromId: string | null;
-  setDeleteReplyId: React.Dispatch<React.SetStateAction<string | null>>
+  setDeleteReplyId: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
   const [replyLikes, setReplyLikes] = useState<string[]>(reply.likes);
   const [replyIsLiked, setReplyIsLiked] = useState<boolean>(false);
@@ -1008,19 +1013,18 @@ const Reply = ({
       success: "Reply deleted successfully!",
       error: "Error deleting reply!",
     });
-    (await response).status === "success" &&
-      setDeleteReplyId(reply._id);
+    (await response).status === "success" && setDeleteReplyId(reply._id);
   };
 
   const handleReportReply = () => {
-    toast.dismiss()
+    toast.dismiss();
     const response = reportReply(reply._id, commentId);
     toast.promise(response, {
       pending: "Reporting Reply...",
       success: "Reply reported successfully!",
       error: "Error reporting reply!",
     });
-  }
+  };
 
   return (
     <>
@@ -1050,15 +1054,15 @@ const Reply = ({
             </Link>
           )}
           <div className="w-full">
-          <div className="flex justify-between items-center">
-            {reply && (
-              <Link to={`/profile/${reply.userId}`}>
-                <span className="text-xs md:text-sm font-bold text-gray-900">
-                  {reply.user?.name}
-                </span>
-              </Link>
-            )}
-            <div className="group inline-block relative">
+            <div className="flex justify-between items-center">
+              {reply && (
+                <Link to={`/profile/${reply.userId}`}>
+                  <span className="text-xs md:text-sm font-bold text-gray-900">
+                    {reply.user?.name}
+                  </span>
+                </Link>
+              )}
+              <div className="group inline-block relative">
                 <Button
                   color="blue-gray"
                   size="sm"
@@ -1080,21 +1084,21 @@ const Reply = ({
                       } absolute right-0 mt-1 w-full bg-white border border-blue-gray-300/20 shadow-lg rounded-md z-10`}
                     >
                       {reply.user?._id === userId ? (
-                          <button
-                            className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
-                            onClick={() => {
-                              handleDeleteComment();
-                              setMenuVisible(false);
-                            }}
-                          >
-                            <RiDeleteBin6Line className="mr-2 text-md" />
-                            <p className="text-sm">Delete</p>
-                          </button>
+                        <button
+                          className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
+                          onClick={() => {
+                            handleDeleteComment();
+                            setMenuVisible(false);
+                          }}
+                        >
+                          <RiDeleteBin6Line className="mr-2 text-md" />
+                          <p className="text-sm">Delete</p>
+                        </button>
                       ) : (
                         <button
                           className="flex items-center w-full pl-5 py-[0.6rem] text-blue-gray-700 hover:bg-blue-100/50 hover:text-blue-gray-800 text-left"
                           onClick={() => {
-                            handleReportReply()
+                            handleReportReply();
                             setMenuVisible(false);
                           }}
                         >
@@ -1106,7 +1110,7 @@ const Reply = ({
                   </div>
                 )}
               </div>
-              </div>
+            </div>
             <span className="flex-1">
               <p className="text-xs md:text-sm text-gray-600">{reply.reply}</p>
               <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
@@ -1116,7 +1120,9 @@ const Reply = ({
                       onClick={handleLikeReply}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-[0.6rem] md:text-xs font-bold">{replyLikes.length}</p>
+                      <p className="text-[0.6rem] md:text-xs font-bold">
+                        {replyLikes.length}
+                      </p>
                       <AiFillHeart className="text-sm md:text-md cursor-pointer text-socioverse-500 hover:scale-105" />
                     </button>
                   ) : (
@@ -1124,7 +1130,9 @@ const Reply = ({
                       onClick={handleLikeReply}
                       className="flex gap-1 items-center"
                     >
-                      <p className="text-[0.6rem] md:text-xs font-bold">{replyLikes.length}</p>
+                      <p className="text-[0.6rem] md:text-xs font-bold">
+                        {replyLikes.length}
+                      </p>
                       <AiOutlineHeart className="text-sm md:text-md cursor-pointer hover:text-socioverse-500" />
                     </button>
                   )}

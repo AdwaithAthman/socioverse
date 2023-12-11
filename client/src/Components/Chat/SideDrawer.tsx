@@ -28,7 +28,6 @@ const SideDrawer = ({ userId }: { userId: string }) => {
   const chats = useSelector((state: StoreType) => state.chat.chats);
 
   const handlePopoverOpen = () => {
-    console.log("popover open: ", popoverOpen);
     setPopoverOpen((prev) => !prev);
   };
 
@@ -43,7 +42,6 @@ const SideDrawer = ({ userId }: { userId: string }) => {
       }
       setSearchResult(response.users);
     } catch (error) {
-      console.log(error);
       toast.dismiss();
       toast.error("Failed to load search results", TOAST_ACTION);
     }
@@ -144,11 +142,7 @@ const SideDrawer = ({ userId }: { userId: string }) => {
                       <div className="s) => setLimt-3 flex items-center space-x-2">
                         <img
                           className="inline-block h-12 w-12 rounded-full"
-                          src={
-                            user.dp
-                              ? user.dp
-                              : common.DEFAULT_IMG
-                          }
+                          src={user.dp ? user.dp : common.DEFAULT_IMG}
                           alt="user dp"
                         />
                         <span className="flex flex-col">

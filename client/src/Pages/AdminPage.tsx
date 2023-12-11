@@ -4,22 +4,18 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
 } from "@material-tailwind/react";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { FaUsersGear } from "react-icons/fa6";
-import { MdReport } from "react-icons/md";
 import { FaPowerOff } from "react-icons/fa";
 import { BsFillPostcardFill } from "react-icons/bs";
 import { HiPresentationChartBar } from "react-icons/hi";
 import { BiSolidCommentError } from "react-icons/bi";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer} from "react-toastify";
 import { StoreType } from "../Redux/Store";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { adminLogout } from "../Redux/AdminSlice";
 import { logoutAdmin } from "../API/Admin";
 
@@ -39,7 +35,6 @@ const AdminPage = () => {
 
   const handleLogout = async () => {
     const response = await logoutAdmin();
-    console.log("response of admin logout: ",response)
     if (response.status === "success") {
       dispatch(adminLogout());
       navigate("/admin-login");

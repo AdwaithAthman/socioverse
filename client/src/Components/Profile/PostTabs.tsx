@@ -271,15 +271,6 @@ function PostTabs({ userId }: { userId?: string }) {
     };
   }, [isPostLoading, myPostPage, isLastPostPage, currentTab, userId, otherUserPostPage]);
 
-  useEffect(() => {
-    console.log("count of myPosts: ", myPosts.length);
-    console.log("count of savedPosts: ", savedPosts.length);
-    console.log("count of likedPosts: ", likedPosts.length);
-    console.log("count of otherUserPosts: ", otherUserPosts.length);
-    console.log("isLastPostPage: ", isLastPostPage);
-    console.log("isPostLoading: ", isPostLoading);
-  });
-
   return (
     <Tabs id="custom-animation" value="myPosts">
       <TabsHeader className="sticky overflow-y-hidden">

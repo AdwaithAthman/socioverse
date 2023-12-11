@@ -40,7 +40,7 @@ const App = () => {
       <div className="my-5 lg:pt-20 pt-16 pb-16 lg:pb-0 max-w-[1480px] w-full mx-auto px-4 no-scollbar">
         <Outlet />
       </div>
-      <Footer />
+      <Footer />                                  
       {/* popup windows */}
       <AccountVerificationPopup
         handleAccountVerifyPopup={handleAccountVerifyPopup}

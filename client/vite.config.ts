@@ -8,9 +8,6 @@ dotenv.config()
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), svgr()],
-  define: {
-    'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
-  },
 })
 
 

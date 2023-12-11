@@ -2,16 +2,17 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
+import configKeys from "../../Constants/config";
 
 // Define the type for the firebaseConfig object
 const firebaseConfig: FirebaseOptions = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: "socioverse-80932.firebaseapp.com",
-    projectId: "socioverse-80932",
-    storageBucket: "socioverse-80932.appspot.com",
-    messagingSenderId: "633826874091",
-    appId: "1:633826874091:web:f3133f4e692db124a024ae",
-    measurementId: "G-40H3CRDDFG"
+    apiKey: configKeys.FIREBASE_API_KEY,
+    authDomain: configKeys.FIREBASE_AUTH_DOMAIN,
+    projectId: configKeys.FIREBASE_PROJECT_ID,
+    storageBucket: configKeys.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: configKeys.FIREBASE_MESSAGING_SENDER_ID,
+    appId: configKeys.FIREBASE_APP_ID,
+    measurementId: configKeys.FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

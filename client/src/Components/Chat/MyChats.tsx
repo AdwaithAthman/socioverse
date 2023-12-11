@@ -143,10 +143,6 @@ const MyChats = ({ userId, socket }: { userId: string; socket: Socket }) => {
                       >
                         {chat.latestMessage ? (
                           <>
-                            {/* <span className="font-bold">
-                              {chat.latestMessage.sender?.name} :{" "}
-                            </span> */}
-
                             {chat.latestMessage.image
                               ? "📷"
                               : truncate(chat.latestMessage.content, 20)}

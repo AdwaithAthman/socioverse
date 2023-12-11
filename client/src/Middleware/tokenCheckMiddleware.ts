@@ -30,7 +30,6 @@ const TokenCheckMiddleware = ({
       }
 
       fetchUser().then((user) => (
-        console.log("userInfo for login= ", user),
         user ? navigate("/home") : ""
       ))
     }

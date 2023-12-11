@@ -2,12 +2,10 @@ import {
   Button,
   Dialog,
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Typography,
   Input,
-  Checkbox,
   Chip,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
@@ -21,7 +19,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store";
 import { addGroupDp, createGroupChat } from "../../API/Chat";
 import { setChats } from "../../Redux/ChatSlice";
-import { CgProfile } from "react-icons/cg";
 import { Socket } from "socket.io-client";
 
 function CreateGroupDialog({

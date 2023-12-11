@@ -32,8 +32,6 @@ const ChatBox = ({
 
   const [openOptions, setOpenOptions] = useState<boolean>(false);
   const handleOpenOptions = () => setOpenOptions((cur) => !cur);
-
-  // const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
   const handleOpenVideoCall = () => dispatch(setOpenVideoCall(!openVideoCall));
 
 
@@ -41,11 +39,6 @@ const ChatBox = ({
     <>
       <div className="flex flex-col justify-between p-2 md:p-4 gap-4 md:gap-8 h-full w-full">
         <header className="flex items-center justify-between">
-          {/* <h1 className="font-medium text-2xl">
-          {selectedChat.isGroupChat
-            ? selectedChat.chatName
-            : userId && getSender(userId, selectedChat.users).name}
-        </h1> */}
           {selectedChat.isGroupChat ? (
             <div className="flex items-center justify-between gap-4">
               <img

@@ -9,8 +9,6 @@ import {
 import { TiUserAdd } from "react-icons/ti";
 import { HiUserGroup } from "react-icons/hi";
 import {
-  getRestOfUsers,
-  getRestOfAllUsers,
   followUser,
   unfollowUser,
   getSuggestions,

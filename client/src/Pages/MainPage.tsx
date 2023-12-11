@@ -18,7 +18,7 @@ import {
 } from "../Redux/ChatSlice";
 import { addNotification } from "../API/User";
 import { fetchNotifications } from "../API/Message";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { User } from "../Types/loginUser";
 import { Button } from "@material-tailwind/react";
 import PeoplePage from "./PeoplePage";
@@ -177,7 +177,6 @@ const MainPage = () => {
 
   return (
     <>
-      {/* {callIsSent && <ToastContainer />} */}
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}

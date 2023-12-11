@@ -4,7 +4,6 @@ import {
   CardBody,
   CardFooter,
   Dialog,
-  Typography,
 } from "@material-tailwind/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useSelector } from "react-redux";

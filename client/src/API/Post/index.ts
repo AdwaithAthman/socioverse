@@ -36,7 +36,6 @@ export const uploadPost = async (
       },
     }
   );
-  console.log("uploadPostResponse============== ", response);
   return response.data;
 };
 
@@ -46,7 +45,6 @@ export const getPosts = async (page: number): Promise<GetPostsInterface> => {
   const response = await axiosUserInstance.get<GetPostsInterface>(
     `${END_POINTS.GET_POSTS}?skip=${skip}&limit=${pageSize}`
   );
-  console.log("getPostsResponse============== ", response);
   return response.data;
 };
 

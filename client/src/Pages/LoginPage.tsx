@@ -49,7 +49,6 @@ const LoginPage = () => {
     onSubmit: async (values) => {
       try {
         const result = await loginUser(values);
-        console.log(result);
         if (result) {
           toast.success("Successfully logged in...!", TOAST_ACTION);
           dispatch(setCredentials(result));

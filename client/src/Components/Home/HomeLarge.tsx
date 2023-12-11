@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Avatar, Card, Typography } from "@material-tailwind/react";
+import { Avatar } from "@material-tailwind/react";
 import { ReactComponent as Loader } from "../../assets/Loader.svg";
 
 //components
@@ -13,7 +12,6 @@ import { getUserInfo } from "../../API/Profile";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../Redux/AuthSlice";
 import { getPosts } from "../../API/Post";
-import AccountVerificationPopup from "../AccountVerificationPopup";
 
 //importing types
 import { User } from "../../Types/loginUser";

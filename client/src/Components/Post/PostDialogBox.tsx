@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Dialog,
@@ -22,7 +22,6 @@ import { useDispatch } from "react-redux";
 import {
   deleteTempPostImage,
   resetTempPostImage,
-  setTempPostImage,
 } from "../../Redux/PostSlice";
 
 //importing types
@@ -114,7 +113,6 @@ const PostDialogBox = ({
       toast.error("All the fields cannot be empty!", TOAST_ACTION);
     } else {
       try {
-        console.log("req.files content: ", data.get("files"));
         const response = uploadPost.mutateAsync(data);
         toast.promise(
           response,

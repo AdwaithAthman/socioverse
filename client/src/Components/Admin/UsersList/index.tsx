@@ -1,5 +1,4 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -9,11 +8,7 @@ import {
   CardBody,
   Chip,
   CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
   Avatar,
-  IconButton,
   Tooltip,
   Switch,
 } from "@material-tailwind/react";
@@ -53,7 +48,6 @@ const UsersList = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [searchText, setSearchText] = useState<string>("");
   const [searchModeOn, setSearchModeOn] = useState<boolean>(false);
-  //const [refetchUsers, setRefetchUsers] = useState<boolean>(false);
 
   useEffect(() => {
     fetchUsersCount();

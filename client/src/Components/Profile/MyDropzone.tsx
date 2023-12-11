@@ -29,19 +29,15 @@ const MyDropzone = () => {
   ]);
 
   const handleUploadCoverPhoto = async (coverPhoto: Blob) => {
-    console.log("blob====== ", coverPhoto);
     if (coverPhoto) {
       try {
         const formData = new FormData();
-        console.log("formData", formData);
-
         const reader = new FileReader();
         reader.onload = (event) => {
           if (event.target?.result) {
             const filePart = event.target.result as ArrayBuffer;
             const blobPart = new Blob([filePart], { type: coverPhoto.type });
             formData.append("file", blobPart, "image.jpg");
-            console.log("profilepicFormData", formData.get("file"))
             uploadCoverPhotoMutation.mutate(formData);
           }
         };
@@ -61,14 +57,10 @@ const MyDropzone = () => {
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      console.log("accepted files", acceptedFiles);
-      console.log(acceptedFiles?.length);
       if (acceptedFiles?.length === 0) {
         toast.error("Invalid action!", TOAST_ACTION);
       } else {
         setImg(acceptedFiles[0]);
-        console.log("objectUrl", URL.createObjectURL(acceptedFiles[0]));
-        console.log("image", img);
         setOpen(true);
       }
     },
@@ -123,7 +115,6 @@ const MyDropzone = () => {
         <DialogBody className="lg:m-4 m-2">
           {img ? (
             <div className="w-auto lg:h-[28rem] h-96 ">
-              {/* <CropImage image={URL.createObjectURL(img)} onConfirm={onConfirm} /> */}
               <ImageCropper
                 image={URL.createObjectURL(img)}
                 getImage={getImage}

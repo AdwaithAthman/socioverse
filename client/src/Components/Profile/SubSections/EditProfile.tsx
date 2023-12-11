@@ -79,7 +79,6 @@ const EditProfile = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log("valuesOf profile : ", values);
 
         const updatedFields: { [key: string]: string | number } = {};
 
@@ -93,9 +92,6 @@ const EditProfile = () => {
           "city",
         ];
 
-        console.log("values: ", values);
-        console.log("profileInfo: ", profileInfo);
-
         for (const field of fieldsToCheck) {
           if (
             values[field as keyof typeof values] !==
@@ -105,13 +101,11 @@ const EditProfile = () => {
           }
         }
 
-        console.log("updatedFields: ", updatedFields);
         if(Object.keys(updatedFields).length === 0){
           toast.error("No changes made!", TOAST_ACTION);
           return;
         }
         const result = await editProfile(updatedFields);
-        console.log(result);
         toast.success("Profile updated successfully!", TOAST_ACTION);
         if (result) {
           dispatch(setCredentials({ result: result.user, accessToken }));
@@ -137,9 +131,7 @@ const EditProfile = () => {
   });
 
   const handleGenderChange = (value: string | undefined) => {
-    console.log("e for handleGenderChange: ", value);
     formik.setFieldValue("gender", value);
-    console.log("formik.value.gender: ", formik.values.gender);
   };
 
   return (

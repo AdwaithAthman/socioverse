@@ -77,17 +77,14 @@ const MailInput = ({
   const handleSendOtp = async () => {
     try {
       setIsSendingOtp(true);
-      console.log("email for sendOtp: ", formik.values.email);
       const response =
         formik.values.email &&
         (await sendOtp(formik.values.email, "forgot-password"));
-      console.log(response);
       if (response && response?.status === "success") {
         toast.success("OTP sent successfully", TOAST_ACTION);
       }
       setSendOtpDone(true);
     } catch (error) {
-      console.log("error: ", error);
       if (isAxiosError(error)) {
         const err: AxiosErrorData = error as AxiosErrorData;
         if (

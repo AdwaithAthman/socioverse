@@ -1,8 +1,7 @@
-// import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { signupUser, usernameAvailability } from "../API/Auth";
+import { signupUser } from "../API/Auth";
 import { isAxiosError } from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import LoginWithGoogleUtils from "../utils/LoginWithGoogleUtils";
@@ -104,7 +103,6 @@ const SignupPage = () => {
         setTimeout(() => {
           navigate("/login");
         }, 2000);
-        // console.log(res.message);
       } catch (error) {
         if (isAxiosError(error)) {
           const err: AxiosErrorData = error as AxiosErrorData;
@@ -139,29 +137,6 @@ const SignupPage = () => {
     }, 1500);
   }
 
-  // const [availabilityMessage, setAvailabilityMessage] = useState("");
-  // const [checkingUsername, setCheckingUsername] = useState(false);
-
-  // const checkUsernameAvailability = () => {
-  //   setCheckingUsername(true);
-
-  //   usernameAvailability(formik.values.username)
-  //     .then((res) => {
-  //       setCheckingUsername(false);
-
-  //       if (res.available) {
-  //         setAvailabilityMessage("Username is available!");
-  //       } else {
-  //         setAvailabilityMessage("Username is already taken!");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       setCheckingUsername(false);
-
-  //       console.error("Error checking username", err);
-  //       setAvailabilityMessage("Error checking username. Please try again.");
-  //     });
-  // };
   return (
     <>
       <ToastContainer />
@@ -205,8 +180,6 @@ const SignupPage = () => {
               value={formik.values.username}
               onChange={(e) => {
                 formik.handleChange(e);
-                // checkUsernameAvailability();
-                // setAvailabilityMessage(""); 
               }}
               onBlur={formik.handleBlur}
             />
@@ -215,19 +188,6 @@ const SignupPage = () => {
                 {formik.errors.username}
               </div>
             )}
-            {/* {checkingUsername && <div>spinner</div>}
-
-            {availabilityMessage && (
-              <div
-                className={`mt-[-1.25rem] text-sm ${
-                  availabilityMessage.includes("available")
-                    ? "text-green-500"
-                    : "text-red-500"
-                }`}
-              >
-                {availabilityMessage}
-              </div>
-            )} */}
             <Input
               size="lg"
               label="Email"

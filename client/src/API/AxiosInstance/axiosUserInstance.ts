@@ -19,7 +19,6 @@ axiosUserInstance.interceptors.request.use(
   (config) => {
     const { accessToken } = store.getState().auth;
     if (accessToken) {
-      console.log("accessToken= ", accessToken);
       config.headers.authorization = `Bearer ${accessToken}`;
     }
     return config;
@@ -33,8 +32,6 @@ axiosUserInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    console.log("error.config= ", error.config);
-    console.log("error.response === ", error.response);
     if (
       error.response &&
       error.response.status === 401 &&

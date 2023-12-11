@@ -1,22 +1,18 @@
 import {
-  Card,
   Dialog,
   DialogBody,
   DialogHeader,
   IconButton,
   Textarea,
-  Typography,
 } from "@material-tailwind/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { ImSearch } from "react-icons/im";
-import { RiUserUnfollowFill } from "react-icons/ri";
-import { TiUserAdd } from "react-icons/ti";
 import PostCard from "../Post/PostCard";
 import { useEffect, useRef, useState } from "react";
 import { searchUsers } from "../../API/Profile";
 import { ReactComponent as Loader } from "../../assets/Loader.svg";
 import { searchPosts } from "../../API/Post";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetHashtagSearch } from "../../Redux/PostSlice";
 
@@ -101,7 +97,6 @@ const SearchInputDialog = ({
         ) {
           setIsPostLoading(true);
           const newPostResult = await searchPosts(searchQuery, postPage);
-          console.log("posts from infinte scrolling -> ", newPostResult);
           if (newPostResult.posts.length === 0) {
             setIsPostLoading(false);
             setIsLastPostPage(true);
@@ -256,11 +251,6 @@ const SearchInputDialog = ({
                 ) : (
                   <div className="text-center mt-5"> No users...</div>
                 )}
-                {/* <div
-              id="sentinel_1"
-              style={{ height: "1px" }}
-              className="mt-10"
-            ></div> */}
               </div>
             )}
             <div className="md:hidden border-t-4 border-dotted border-gray-300 w-full"></div>

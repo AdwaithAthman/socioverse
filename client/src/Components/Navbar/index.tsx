@@ -47,10 +47,6 @@ const profileMenuItems = [
 
 function ProfileMenu() {
   const userInfo = useSelector((state: StoreType) => state.auth.user);
-  const notification = useSelector(
-    (state: StoreType) => state.chat.notification
-  );
-  console.log("notification from header: ", notification);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [notificationPanelOpen, setNotificationPanelOpen] =
     React.useState<boolean>(false);
@@ -102,7 +98,6 @@ function ProfileMenu() {
       navigate(`/profile/${userInfo?._id}`);
     }
     if (label === "Sign Out") {
-      console.log("signout is called");
       try {
         const response = logoutUser();
         await toast.promise(

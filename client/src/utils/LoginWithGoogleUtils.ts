@@ -20,24 +20,6 @@ const LoginWithGoogleUtils = async () => {
         email: user?.email as string
       })
   
-      // await toast.promise(
-      //   response,
-      //   {
-      //     pending: "Logging in.....", // Message shown while the promise is pending
-      //     success: "Successfully Logged in", // Message shown when the promise is resolved
-      //     error: "Failed to Login", // Message shown when the promise is rejected
-      //   },
-      //   {
-      //     position: "top-right",
-      //     autoClose: 5000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "light",
-      //   }
-      // );
       return response;
     }
   } catch (error) {

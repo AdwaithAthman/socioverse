@@ -1,4 +1,3 @@
-import { MessageInterface } from "./chat";
 
 export interface LoginUserInterface {
     email: string,

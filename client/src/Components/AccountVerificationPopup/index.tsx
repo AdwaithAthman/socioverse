@@ -49,7 +49,6 @@ const AccountVerificationPopup = ({
     validationSchema: validationSchema,
     onSubmit: async (value) => {
       try {
-        console.log("verify button is clicked");
         const response = email &&  (await verifyOtp(email, value.otp, "email-verification"));
         if (response && response.status === "success") {
           toast.success("Account verified successfully", {...TOAST_ACTION, position: "bottom-left"});
@@ -77,9 +76,7 @@ const AccountVerificationPopup = ({
   const handleSendOtp = async () => {
     try {
       setIsSendingOtp(true);
-      console.log("email for sendOtp: ", email);
       const response = email && (await sendOtp(email, "email-verification"));
-      console.log(response);
       if (response && response?.status === "success") {
         toast.success("OTP sent successfully", TOAST_ACTION);
       }

@@ -13,8 +13,6 @@ import {
 //icons
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdKeyboardArrowUp } from "react-icons/md";
-import { RiUserFollowFill } from "react-icons/ri";
-import { RiUserUnfollowFill } from "react-icons/ri";
 import { MdVideoCall } from "react-icons/md";
 import { BiSolidMessageDetail } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +28,6 @@ import common from "../../Constants/common";
 import { setOpenVideoCall, setSelectedChat } from "../../Redux/ChatSlice";
 import { fetchOtherUserChat } from "../../API/Chat";
 import { Socket } from "socket.io-client";
-import { getOtherUserInfo, getUserInfo } from "../../API/Profile";
 
 function AsideOne({
   newFollowing,

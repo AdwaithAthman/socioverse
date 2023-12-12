@@ -8,8 +8,7 @@ import LoginWithGoogleUtils from "../utils/LoginWithGoogleUtils";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../Redux/AuthSlice";
 import { loginUser } from "../API/Auth";
-import { ReactComponent as GoogleLogoSvg } from "../assets/GoogleLogoSvg.svg";
-import { TOAST_ACTION } from "../Constants/common";
+import common, { TOAST_ACTION } from "../Constants/common";
 
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { StoreType } from "../Redux/Store";
@@ -163,7 +162,7 @@ const LoginPage = () => {
             onClick={loginWithGoogle}
           >
             <span className="mr-2 inline-block">
-              <GoogleLogoSvg />
+              <img src={common.GOOGLE_LOGO_SVG} alt="google logo" className="w-5 h-5" />
             </span>
             Login with Google
           </Button>

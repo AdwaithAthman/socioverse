@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ReactComponent as Loader } from "../../assets/Loader.svg";
+// import { ReactComponent as Loader } from "../../assets/Loader.svg";
 import InputEmoji from "react-input-emoji";
 import { toast } from "react-toastify";
 import { TOAST_ACTION } from "../../Constants/common";
@@ -24,6 +24,7 @@ import { ImAttachment } from "react-icons/im";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { SendMessageResponse } from "../../Types/message";
 import ImageViewer from "react-simple-image-viewer";
+import loader from "../../assets/Loader.png";
 
 let selectedChatCompare: ChatInterface;
 
@@ -178,8 +179,9 @@ const ChatBoxContent = ({
   return (
     <>
       {loading ? (
-        <div className="flex items-center justify-between h-full">
-          <Loader className="!bg-blue-gray-300/0 w-20 h-20" />
+        <div className="flex items-center justify-center h-full">
+          {/* <Loader className="!bg-blue-gray-300/0 w-20 h-20" /> */}
+          <img src={loader} alt="loader" className="animate-spin w-20 h-20" />
         </div>
       ) : (
         <>

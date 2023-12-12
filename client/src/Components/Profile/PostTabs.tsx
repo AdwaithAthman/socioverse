@@ -8,7 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { PostDataInterface } from "../../Types/post";
 import PostCard from "../Post/PostCard";
-import { ReactComponent as Loader } from "../../assets/Loader.svg";
+import loader from "../../assets/Loader.svg";
 import {
   getUserPosts,
   getUserLikedPosts,
@@ -327,7 +327,7 @@ function PostTabs({ userId }: { userId?: string }) {
                     ref={sentinelRef}
                   >
                     {!isLastPostPage && (
-                      <Loader className="w-20 h-20 animate-spin" />
+                      <img src={loader} className="w-20 h-20" />
                     )}
                   </div>
                 </div>

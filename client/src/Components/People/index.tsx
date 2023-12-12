@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenVideoCall, setSelectedChat } from "../../Redux/ChatSlice";
 import { StoreType } from "../../Redux/Store";
 import { Socket } from "socket.io-client";
-import { ReactComponent as NoDataAvailableSvg } from "../../assets/NoDataAvailable.svg";
 import { User } from "../../Types/loginUser";
 import common, { TOAST_ACTION } from "../../Constants/common";
 import {
@@ -140,7 +139,7 @@ const People = ({ socket }: { socket: Socket }) => {
               {typeof desc === "string" ? (
                 <div className="flex flex-col items-center justify-center mt-4">
                   <div className="w-80 mx-auto">
-                    <NoDataAvailableSvg />
+                    <img src={common.NO_DATA_AVAILABLE_SVG} alt="no data available" />
                   </div>
                   <h1>{desc}</h1>
                 </div>

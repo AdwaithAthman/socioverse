@@ -14,8 +14,7 @@ import {
   Option,
   Textarea,
 } from "@material-tailwind/react";
-import { TOAST_ACTION } from "../../../Constants/common";
-import { ReactComponent as ProfileSvg } from "../../../assets/profileSvg.svg";
+import common, { TOAST_ACTION } from "../../../Constants/common";
 import { editProfile } from "../../../API/Profile";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -259,7 +258,7 @@ const EditProfile = () => {
             )}
           </div>
           <div className="w-96 h-96 hidden lg:block">
-            <ProfileSvg />
+            <img src={common.PROFILE_SVG} alt="profile svg" className="w-full h-full" />
           </div>
         </div>
       </Card>

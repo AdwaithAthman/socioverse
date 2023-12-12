@@ -1,10 +1,10 @@
 import React from 'react';
-import { ReactComponent as ErrorSvg } from '../assets/404.svg';
+import common from '../Constants/common';
 
 const ErrorPage: React.FC = () => {
     return (
         <div className="h-screen w-[24rem] md:w-[35rem] lg:w-[60rem] flex justify-center items-center mx-auto overflow-hidden">
-            <ErrorSvg />
+            <img src={common.ERROR_NOT_FOUND_SVG} alt="404 error svg" className='w-full h-full' />
         </div>
     );
 };

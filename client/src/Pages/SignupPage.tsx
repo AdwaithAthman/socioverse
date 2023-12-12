@@ -5,7 +5,6 @@ import { signupUser } from "../API/Auth";
 import { isAxiosError } from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import LoginWithGoogleUtils from "../utils/LoginWithGoogleUtils";
-import { ReactComponent as GoogleLogoSvg } from "../assets/GoogleLogoSvg.svg";
 
 //importing types
 import { AxiosErrorData } from "../Types/axiosErrorData";
@@ -17,9 +16,9 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import common from "../Constants/common";
 
 const SignupPage = () => {
-
   const navigate = useNavigate();
 
   const validationSchema = yup.object().shape({
@@ -36,19 +35,19 @@ const SignupPage = () => {
       .required("Username is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
     phoneNumber: yup
-    .number()
-    .nullable()
-    .transform((value, originalValue) => {
-      if (typeof originalValue === "string") {
-        originalValue = originalValue.trim();
-      }
-      return originalValue === "" ? null : value;
-    })
-    .required("Phone number is required")
-    .max(9999999999, "Phone number must be 10 digits")
-    .min(1000000000, "Phone number must be 10 digits")
-    .typeError("Phone number must be a number"),
-  
+      .number()
+      .nullable()
+      .transform((value, originalValue) => {
+        if (typeof originalValue === "string") {
+          originalValue = originalValue.trim();
+        }
+        return originalValue === "" ? null : value;
+      })
+      .required("Phone number is required")
+      .max(9999999999, "Phone number must be 10 digits")
+      .min(1000000000, "Phone number must be 10 digits")
+      .typeError("Phone number must be a number"),
+
     password: yup
       .string()
       .min(6, "Password must be at least 6 characters")
@@ -80,9 +79,9 @@ const SignupPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      try { 
+      try {
         await toast.promise(
-          signupUser({...values, phoneNumber: Number(values.phoneNumber)}),
+          signupUser({ ...values, phoneNumber: Number(values.phoneNumber) }),
           {
             pending: "Creating your account...", // Message shown while the promise is pending
             success: "Successfully created an account", // Message shown when the promise is resolved
@@ -135,12 +134,16 @@ const SignupPage = () => {
     setTimeout(() => {
       navigate("/");
     }, 1500);
-  }
+  };
 
   return (
     <>
       <ToastContainer />
-      <Card color="transparent" shadow={false} className="p-8 lg:p-10 md:shadow-xl">
+      <Card
+        color="transparent"
+        shadow={false}
+        className="p-8 lg:p-10 md:shadow-xl"
+      >
         <div className="flex flex-col items-start">
           <Typography variant="h4" color="blue-gray">
             Sign Up
@@ -266,9 +269,12 @@ const SignupPage = () => {
           <Button className="mt-6" fullWidth type="submit">
             Register
           </Button>
-          <Button className="mt-5 !py-2.5 relative inline-flex w-full items-center justify-center rounded-md border border-gray-400 bg-white font-semibold text-gray-700 transition-all duration-200 hover:shadow-red-100 hover:bg-gray-100 hover:text-black focus:bg-gray-100 focus:text-black focus:outline-none" onClick={loginWithGoogle}>
+          <Button
+            className="mt-5 !py-2.5 relative inline-flex w-full items-center justify-center rounded-md border border-gray-400 bg-white font-semibold text-gray-700 transition-all duration-200 hover:shadow-red-100 hover:bg-gray-100 hover:text-black focus:bg-gray-100 focus:text-black focus:outline-none"
+            onClick={loginWithGoogle}
+          >
             <span className="mr-2 inline-block">
-              <GoogleLogoSvg />
+              <img src={common.GOOGLE_LOGO_SVG} alt="google logo" className="w-5 h-5" />
             </span>
             Login with Google
           </Button>

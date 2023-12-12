@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Avatar } from "@material-tailwind/react";
-import { ReactComponent as Loader } from "../../assets/Loader.svg";
+import loader from "../../assets/Loader.svg";
 
 //components
 import AsideTwo from "./Aside_2";
@@ -205,7 +205,7 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
             </div>
             {isLastPage && <div> No posts...</div>}
             <div id="sentinel" style={{ height: "1px" }} className="mt-10">
-              {!isLastPage && <Loader className="w-20 h-20 animate-spin" />}
+              {!isLastPage && <img src={loader} className="w-20 h-20" />}
             </div>
           </div>
         </main>

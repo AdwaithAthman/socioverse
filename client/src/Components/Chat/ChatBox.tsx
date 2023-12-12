@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../../Redux/Store";
-import { ReactComponent as ChatSvg } from "../../assets/ChatSvg.svg";
 import { getSender } from "../../utils/Config/chatMethods";
 import { FaArrowLeft } from "react-icons/fa";
 import { SlOptionsVertical } from "react-icons/sl";
@@ -116,7 +115,7 @@ const ChatBox = ({
     <>
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center">
-          <ChatSvg />
+          <img src={common.CHAT_SVG} alt="chat" />
           <h1 className="font-semibold text-2xl text-blue-gray-700">
             Click on a user to start chatting !
           </h1>

@@ -5,8 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { isAxiosError } from "axios";
 import { AxiosErrorData } from "../../../Types/axiosErrorData";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
-import { TOAST_ACTION } from "../../../Constants/common";
-import { ReactComponent as SettingsSvg } from "../../../assets/Settings.svg";
+import common, { TOAST_ACTION } from "../../../Constants/common";
 import { changePassword } from "../../../API/Profile";
 import store from "../../../Redux/Store";
 
@@ -164,7 +163,7 @@ const Settings = () => {
             </form>
           </div>
           <div className="w-96 h-96 hidden lg:block">
-            <SettingsSvg />
+            <img src={common.SETTING_SVG} alt="settings" className="w-full h-full" />
           </div>
         </div>
       </Card>

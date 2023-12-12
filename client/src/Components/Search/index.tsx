@@ -10,7 +10,7 @@ import { ImSearch } from "react-icons/im";
 import PostCard from "../Post/PostCard";
 import { useEffect, useRef, useState } from "react";
 import { searchUsers } from "../../API/Profile";
-import { ReactComponent as Loader } from "../../assets/Loader.svg";
+import loader from "../../assets/Loader.svg";
 import { searchPosts } from "../../API/Post";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -274,7 +274,7 @@ const SearchInputDialog = ({
                   ref={sentinelRef}
                 >
                   {!isLastPostPage && searchQuery.length > 0 && (
-                    <Loader className="w-20 h-20 animate-spin" />
+                    <img src={loader} className="w-20 h-20" />
                   )}
                 </div>
               </div>

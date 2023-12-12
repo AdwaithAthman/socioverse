@@ -4,10 +4,10 @@ import {
   DialogBody,
   DialogHeader,
 } from "@material-tailwind/react";
-import { ReactComponent as LoginAlertSvg } from "../../assets/LoginAlertSvg.svg";
 import { useNavigate } from "react-router-dom";
 import { setSharedPostId } from "../../Redux/PostSlice";
 import { useDispatch } from "react-redux";
+import common from "../../Constants/common";
 
 const NotLoggedInAlert = ({
   openAlert,
@@ -45,7 +45,7 @@ const NotLoggedInAlert = ({
             Inorder to view the post, user must be logged in.
           </div>
           <div className="w-96 h-96 mb-4 px-4 md:px-0">
-            <LoginAlertSvg />
+            <img src={common.LOGIN_ALERT_SVG} alt="login alert svg" />
           </div>
           <Button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto "

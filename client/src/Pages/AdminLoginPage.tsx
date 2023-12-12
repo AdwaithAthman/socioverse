@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as AdminLoginSvg } from "../assets/AdminLoginSvg.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
-import { TOAST_ACTION } from "../Constants/common";
+import common, { TOAST_ACTION } from "../Constants/common";
 import { isAxiosError } from "axios";
 import { adminLogin, refreshAdminAccessToken } from "../API/Admin";
 import { useEffect } from "react";
@@ -89,7 +88,7 @@ const AdminLoginPage = () => {
             </h1>
           </div>
           <div className="md:w-[30rem] md:h-[30rem]">
-            <AdminLoginSvg path />
+            <img src={common.ADMIN_LOGIN_SVG} alt="admin login svg" />
           </div>
         </div>
         <AnimatePresence mode="wait">

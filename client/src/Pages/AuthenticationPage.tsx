@@ -1,10 +1,10 @@
 import { useLocation } from "react-router-dom";
-import { ReactComponent as AuthenticationSvg } from "../assets/AuthenticationSvg.svg";
 import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
 import { motion, AnimatePresence } from "framer-motion";
 import TokenCheckMiddleware from "../Middleware/tokenCheckMiddleware";
 import ForgotPasswordPage from "./ForgotPasswordPage";
+import common from "../Constants/common";
 
 const AuthenticationPage = () => {
   const location = useLocation();
@@ -20,7 +20,7 @@ const AuthenticationPage = () => {
             SOCIOVERSE
           </h1>
           </div>
-          <AuthenticationSvg path />
+          <img src={common.AUTHENTICATION_SVG} alt="authentication svg" />
         </div>
         <AnimatePresence mode="wait">
           <motion.div

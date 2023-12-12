@@ -224,12 +224,9 @@ const ReportedCommentsList = () => {
               (
                 {
                   _id,
-                  userId,
                   comment,
                   report,
                   isBlock,
-                  createdAt,
-                  updatedAt,
                   user,
                 },
                 index

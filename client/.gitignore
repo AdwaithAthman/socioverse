@@ -11,7 +11,8 @@ lerna-debug.log*
 .env
 
 node_modules
-dist
+dist/
+build/
 dist-ssr
 *.local
 

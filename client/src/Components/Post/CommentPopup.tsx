@@ -386,7 +386,6 @@ const CommentPopup = ({
                           setCommentToBeReplied={setCommentToBeReplied}
                           setTaggedUser={setTaggedUser}
                           editCommentMode={editCommentMode}
-                          editComment={editComment}
                           setEditComment={setEditComment}
                           setDeleteCommentId={setDeleteCommentId}
                           newlyAddedReply={newlyAddedReply}
@@ -587,14 +586,12 @@ function Comment({
   commentData,
   setTaggedUser,
   editCommentMode,
-  editComment,
   setEditComment,
   setDeleteCommentId,
   newlyAddedReply,
   setNewlyAddedReply,
 }: {
   onReply: boolean;
-  editComment: CommentInterface | null;
   commentToBeReplied: string | null;
   setCommentToBeReplied: React.Dispatch<React.SetStateAction<string | null>>;
   setOnReply: React.Dispatch<React.SetStateAction<boolean>>;

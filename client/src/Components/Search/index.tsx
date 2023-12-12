@@ -47,7 +47,6 @@ const SearchInputDialog = ({
   const [isLastPostPage, setIsLastPostPage] = useState<boolean>(false);
   const [deletedPostId, setDeletedPostId] = useState<string | null>(null);
   const [reportedPostId, setReportedPostId] = useState<string | null>(null);
-  const [postEdited, setPostEdited] = useState<PostDataInterface | null>(null);
   const sentinelRef = useRef(null);
 
   const navigate = useNavigate();
@@ -262,7 +261,6 @@ const SearchInputDialog = ({
                       postData={post}
                       setDeletedPostId={setDeletedPostId}
                       setReportedPostId={setReportedPostId}
-                      setPostEdited={setPostEdited}
                     />
                   </div>
                 ))}

@@ -219,12 +219,9 @@ const ReportedRepliesList = () => {
               (
                 {
                   _id,
-                  userId,
                   reply,
                   report,
                   isBlock,
-                  createdAt,
-                  updatedAt,
                   user,
                   commentId,
                 },

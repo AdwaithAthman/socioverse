@@ -284,15 +284,6 @@ export function InputWithButton() {
 }
 
 export function ComplexNavbar() {
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false)
-    );
-  }, []);
-
   return (
     <Navbar className="fixed top-0 z-50 mx-auto mb-2 lg:mt-2 p-2 lg:rounded-full lg:pl-6 max-w-[1480px] bg-black bg-opacity-100">
       <div className="relative mx-auto flex items-center text-blue-gray-900 justify-between">

@@ -23,7 +23,6 @@ const SideDrawer = ({ userId }: { userId: string }) => {
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingChat, setLoadingChat] = useState<boolean>(false);
   const dispatch = useDispatch();
   const chats = useSelector((state: StoreType) => state.chat.chats);
 
@@ -49,13 +48,11 @@ const SideDrawer = ({ userId }: { userId: string }) => {
 
   const handleAccessChat = async (otherUserId: string) => {
     try {
-      setLoadingChat(true);
       const response = await fetchOtherUserChat(otherUserId);
       if (!chats.find((chat) => chat._id === response.chat._id))
         dispatch(setChats([response.chat, ...chats]));
       dispatch(setSelectedChat(response.chat));
       closePopover();
-      setLoadingChat(false);
     } catch (err) {
       toast.error("Error fetching the chat", TOAST_ACTION);
     }

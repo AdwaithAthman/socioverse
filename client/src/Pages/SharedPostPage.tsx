@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getPostDetails } from "../API/Post";
 import { PostDataInterface } from "../Types/post";
 import PostCard from "../Components/Post/PostCard";
-import { LikePostId, SavePostId } from "../Components/Profile/PostTabs";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSharedPost } from "../Redux/PostSlice";
 import store, { StoreType } from "../Redux/Store";
@@ -19,11 +18,6 @@ const SharedPostPage = () => {
   const user = useSelector((state: StoreType) => state.auth.user);
   const { postId } = useParams<{ postId: string }>();
   const [post, setPost] = useState<PostDataInterface | null>(null);
-  const [deletedPostId, setDeletedPostId] = useState<string | null>(null);
-  const [reportedPostId, setReportedPostId] = useState<string | null>(null);
-  const [postEdited, setPostEdited] = useState<PostDataInterface | null>(null);
-  const [likedPostId, setLikedPostId] = useState<LikePostId | null>(null);
-  const [savedPostId, setSavedPostId] = useState<SavePostId | null>(null);
 
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const handleOpenAlert = () => {
@@ -89,11 +83,6 @@ const SharedPostPage = () => {
         >
           <PostCard
             postData={post}
-            setDeletedPostId={setDeletedPostId}
-            setReportedPostId={setReportedPostId}
-            setPostEdited={setPostEdited}
-            setSavedPostId={setSavedPostId}
-            setLikedPostId={setLikedPostId}
           />
         </div>
       )}

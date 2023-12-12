@@ -52,9 +52,11 @@ function PostCard({
   setLikedPostId,
 }: {
   postData: PostDataInterface;
-  setDeletedPostId: React.Dispatch<React.SetStateAction<string | null>>;
-  setReportedPostId: React.Dispatch<React.SetStateAction<string | null>>;
-  setPostEdited: React.Dispatch<React.SetStateAction<PostDataInterface | null>>;
+  setDeletedPostId?: React.Dispatch<React.SetStateAction<string | null>>;
+  setReportedPostId?: React.Dispatch<React.SetStateAction<string | null>>;
+  setPostEdited?: React.Dispatch<
+    React.SetStateAction<PostDataInterface | null>
+  >;
   setSavedPostId?: React.Dispatch<React.SetStateAction<SavePostId | null>>;
   setLikedPostId?: React.Dispatch<React.SetStateAction<LikePostId | null>>;
 }) {
@@ -70,7 +72,9 @@ function PostCard({
     postData.saved as string[]
   );
   const searchMode = useSelector((state: StoreType) => state.post.searchModeOn);
-  const isSharedPost = useSelector((state: StoreType) => state.post.isSharedPost);
+  const isSharedPost = useSelector(
+    (state: StoreType) => state.post.isSharedPost
+  );
   const [likedUsers, setLikedUsers] = useState<User[]>([]);
   const [openLikedUsersDialog, setOpenLikedUsersDialog] =
     useState<boolean>(false);
@@ -133,7 +137,7 @@ function PostCard({
     if (response.status === "success") {
       toast.dismiss();
       toast.success("Successfully deleted the Post", TOAST_ACTION);
-      setDeletedPostId(postId);
+      setDeletedPostId && setDeletedPostId(postId);
     } else {
       toast.dismiss();
       toast.error("Error deleting the Post", TOAST_ACTION);
@@ -193,7 +197,7 @@ function PostCard({
     toast.dismiss();
     const response = await reportPost(label, postId);
     if (response.status === "success") {
-      setReportedPostId(postId);
+      setReportedPostId && setReportedPostId(postId);
       toast.success("The following post is reported", {
         ...TOAST_ACTION,
         closeButton: false,
@@ -241,7 +245,7 @@ function PostCard({
               </span>
             </div>
           </Link>
-          {(!searchMode && !isSharedPost) && (
+          {!searchMode && !isSharedPost && (
             <Menu placement="bottom-start">
               <MenuHandler>
                 <Button
@@ -262,12 +266,14 @@ function PostCard({
                     >
                       <BiEditAlt className="text-lg" />
                       <div className="text-md">Edit</div>
-                      <EditPostDialogBox
-                        open={open}
-                        handleOpen={handleOpen}
-                        post={post}
-                        setPostEdited={setPostEdited}
-                      />
+                      {setPostEdited && (
+                        <EditPostDialogBox
+                          open={open}
+                          handleOpen={handleOpen}
+                          post={post}
+                          setPostEdited={setPostEdited}
+                        />
+                      )}
                     </MenuItem>
                     <MenuItem
                       className=" flex items-center gap-2"
@@ -385,12 +391,17 @@ function PostCard({
                     handleGetPostDetails(post._id);
                   }}
                 />
-                <BiShareAlt className="text-2xl cursor-pointer" 
-                onClick={() => {
-                  toast.dismiss()
-                  copy(`${common.CLIENT_BASE_URL}/share/${post._id}`)
-                  toast.success("Copied link to the clipboard", { ...TOAST_ACTION, closeButton: false, autoClose: 2000 })
-                }}
+                <BiShareAlt
+                  className="text-2xl cursor-pointer"
+                  onClick={() => {
+                    toast.dismiss();
+                    copy(`${common.CLIENT_BASE_URL}/share/${post._id}`);
+                    toast.success("Copied link to the clipboard", {
+                      ...TOAST_ACTION,
+                      closeButton: false,
+                      autoClose: 2000,
+                    });
+                  }}
                 />
               </div>
               {(savedPostsArray && savedPostsArray.includes(userId)) ||

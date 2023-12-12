@@ -76,7 +76,6 @@ const Dashboard = () => {
           <StaticsticsCard
             IconComponent={info.IconComponent}
             iconColor={info.iconColor}
-            colorIntensity={info.colorIntensity}
             header={info.header}
             count={info.count}
             key={info.header}

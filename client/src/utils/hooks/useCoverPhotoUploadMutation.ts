@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { uploadCoverPhoto } from "../../API/Profile";
 import { useDispatch } from "react-redux";
-import { setCoverPhoto } from "../../Redux/PhotoSlice";
 import { useSelector } from "react-redux";
 import { setCredentials } from "../../Redux/AuthSlice";
 
@@ -18,7 +17,6 @@ export const useCoverPhotoUploadMutation = () => {
     return coverPhotoData;
   }, {
     onSuccess: (coverPhotoData) => {
-      // dispatch(setCoverPhoto(coverPhotoData.coverPhoto));
       dispatch(setCredentials({ user: { ...userInfo, coverPhoto: coverPhotoData.coverPhoto }, accessToken }))
     }
   }

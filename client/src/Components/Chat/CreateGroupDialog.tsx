@@ -101,6 +101,7 @@ function CreateGroupDialog({
       toast.dismiss();
       toast.success("Group created successfully", TOAST_ACTION);
       setImgFile(undefined);
+      setData(new FormData());
       setGroupChatName("");
       setSelectedUsers([]);
       handleCreateGroupDialog();

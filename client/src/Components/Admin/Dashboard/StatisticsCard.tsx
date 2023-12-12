@@ -8,14 +8,13 @@ import {
 interface StatisticsCardProps {
   IconComponent: React.ElementType;
   iconColor: string;
-  colorIntensity: string;
   header: string;
   count: number;
 }
 
-const iconColor = ["socioverse", "orange", "yellow", "green", "blue", "indigo", "purple", "pink", "red", "gray", "true-gray", "cool-gray", "blue-gray"]
+//const iconColor = ["socioverse", "orange", "yellow", "green", "blue", "indigo", "purple", "pink", "red", "gray", "true-gray", "cool-gray", "blue-gray"]
 
-const StatisticsCard = ({ IconComponent, iconColor, colorIntensity, header, count }: StatisticsCardProps) => {
+const StatisticsCard = ({ IconComponent, iconColor, header, count }: StatisticsCardProps) => {
   return (
     <>
       <Card className="w-60">

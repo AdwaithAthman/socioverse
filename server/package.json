@@ -5,8 +5,10 @@
   "main": "build/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -w",
-    "start": "concurrently --kill-others \"npm run build\" \"nodemon ./src/app.ts\""
+    "build": "tsc -b",
+    "watch": "tsc -w",
+    "dev": "concurrently --kill-others \"npm run watch\" \"nodemon ./build/app.js\"",
+    "start": "node ./build/app.js"
   },
   "author": "",
   "license": "ISC",

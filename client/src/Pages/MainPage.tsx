@@ -38,6 +38,10 @@ const MainPage = () => {
 
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
 
+  useEffect(() => {
+    if(section !== "home" && section !== "message" && section !== "people") navigate("/error");
+  },[navigate, section])
+  
   //people section is only available in mobile and medium screens
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);

@@ -17,7 +17,7 @@ const HomePage = ({ socket }: { socket: Socket }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!user) {
+    if (!user.isAuthenticated) {
       const userData = userInfo();
       if (!userData) {
         navigate("/error");
@@ -44,7 +44,7 @@ const HomePage = ({ socket }: { socket: Socket }) => {
       }
     }
   };
-  
+
   return (
     <>
       <Home user={user.user as User} socket={socket} />

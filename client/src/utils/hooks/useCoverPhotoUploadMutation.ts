@@ -12,7 +12,6 @@ export const useCoverPhotoUploadMutation = () => {
   const userInfo = useSelector((state: StoreType) => state.auth.user);
   const accessToken = useSelector((state: StoreType) => state.auth.accessToken);
   return useMutation(async (formData: FormData) => {
-    console.log("file useMutation= ", formData)
     const coverPhotoData = await uploadCoverPhoto(formData);
     return coverPhotoData;
   }, {

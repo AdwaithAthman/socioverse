@@ -11,9 +11,7 @@ const LoginWithGoogleUtils = async () => {
 
     // Get user from result
     const user = result.user;
-    console.log("userData from google: ", user);
 
-   
     if (user) {
       const response = await loginUsingGoogle({
         name: user?.displayName as string,

@@ -24,9 +24,10 @@ export const appRouter = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
+        path: "/" ,
         element: <Navigate to="/home" />,
       },
       {
@@ -45,12 +46,16 @@ export const appRouter = createBrowserRouter([
             path: "edit-profile",
             element: <EditProfile />,
           },
+          {
+            path: "*",
+            element: <Navigate to="/error" />,
+          }
         ],
       },
       {
         path: "share/:postId",
-        element: <SharedPostPage />
-      }
+        element: <SharedPostPage />,
+      },
     ],
   },
   {
@@ -76,6 +81,7 @@ export const appRouter = createBrowserRouter([
   {
     path: "/admin",
     element: <AdminPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/admin",
@@ -91,7 +97,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "posts-list",
-        element: <PostList />
+        element: <PostList />,
       },
       {
         path: "reported-list",
@@ -99,22 +105,22 @@ export const appRouter = createBrowserRouter([
         children: [
           {
             path: "",
-            element:  <Navigate to="/admin/reported-list/comments" />
+            element: <Navigate to="/admin/reported-list/comments" />,
           },
           {
-            path:"comments",
-            element: <ReportedCommentsList />
+            path: "comments",
+            element: <ReportedCommentsList />,
           },
           {
             path: "replies",
-            element: <ReportedRepliesList />
-          }
-        ]
-      }
+            element: <ReportedRepliesList />,
+          },
+        ],
+      },
     ],
   },
-  // {
-  //   path: "*",
-  //   element: <Navigate to="/error" />,
-  // }
+  {
+    path: "*",
+    element: <Navigate to="/error" />,
+  }
 ]);

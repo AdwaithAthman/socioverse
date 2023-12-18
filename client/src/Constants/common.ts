@@ -1,8 +1,8 @@
 import { ToastOptions } from "react-toastify";
 
 const CONSTANTS_COMMON = {
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL!,
-  CLIENT_BASE_URL: import.meta.env.VITE_CLIENT_BASE_URL!,
+  API_BASE_URL: "https://socioverse.online",
+  CLIENT_BASE_URL: "https://socioverse.online",
   DEFAULT_IMG: import.meta.env.VITE_DEFAULT_IMG!,
   ADMIN_LOGIN_SVG: "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381015/socioverse%20stock/AdminLoginSvg_ain9jo.svg",
   AUTHENTICATION_SVG: "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381022/socioverse%20stock/AuthenticationSvg_iirmb2.svg",

@@ -62,7 +62,6 @@ const messageController = (
   const getAllMessagesFromChat = asyncHandler(
     async (req: Request, res: Response) => {
       const { chatId } = req.params as unknown as { chatId: string };
-      console.log("chatId at controller: ", chatId);
       const messages = await handleGetAllMessagesFromChat(
         chatId,
         messageDbRepository

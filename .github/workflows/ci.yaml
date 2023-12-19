@@ -14,31 +14,31 @@ jobs:
     if: contains(github.event.head_commit.modified, 'client/')
     steps:
       - name: Checkout code
-      uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: SSH and deploy
-      env:
-        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-      run: |
-        echo "$SSH_PRIVATE_KEY" > keyfile
-        chmod 600 keyfile
-        mkdir -p ~/.ssh
-        cp known_hosts ~/.ssh/known_hosts
-        ssh -t -i keyfile ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-client.sh"
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > keyfile
+          chmod 600 keyfile
+          mkdir -p ~/.ssh
+          cp known_hosts ~/.ssh/known_hosts
+          ssh -t -i keyfile ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-client.sh"
   
   deploy_server:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.modified, 'server/')
     steps:
       - name: Checkout code
-      uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: SSH and deploy
-      env:
-        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-      run: |
-        echo "$SSH_PRIVATE_KEY" > keyfile
-        chmod 600 keyfile
-        mkdir -p ~/.ssh
-        cp known_hosts ~/.ssh/known_hosts
-        ssh -t -i keyfile ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-server.sh"
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > keyfile
+          chmod 600 keyfile
+          mkdir -p ~/.ssh
+          cp known_hosts ~/.ssh/known_hosts
+          ssh -t -i keyfile ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-server.sh"

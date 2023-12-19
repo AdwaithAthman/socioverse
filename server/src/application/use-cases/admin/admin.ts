@@ -17,7 +17,6 @@ export const handleAdminLogin = async (
             password: configKeys.ADMIN_PASSWORD
         }
         if (email === adminCredentials.email && password === adminCredentials.password) {
-            console.log("admin login is working properly")
             const payload = {
                 userId: "admin",
                 role: "admin"

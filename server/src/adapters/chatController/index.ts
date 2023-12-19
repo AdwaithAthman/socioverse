@@ -30,7 +30,6 @@ const chatController = (
     async (req: Request, res: Response) => {
       const { userId, otherUserId }: { userId: string; otherUserId: string } =
         req.body;
-      console.log("otherUserId: ", otherUserId);
       const chat = await handleAccessOrCreateChat(
         userId,
         otherUserId,
@@ -136,7 +135,6 @@ const chatController = (
 
   const addGroupDp = asyncHandler(async (req: Request, res: Response) => {
     const { groupId } = req.params as unknown as { groupId: string };
-    console.log("req.file of addGroupDp: ", req.file);
     const {
       buffer,
       mimetype,

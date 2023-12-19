@@ -68,8 +68,6 @@ const postController = (
     //   mimetype = null;
     // }
     const files = req.files as Express.Multer.File[];
-    console.log("files from req.files: ", files)
-    console.log("postData from req.body: ", postData)
     const post = await handleCreatePost(
       postData,
       files,
@@ -77,15 +75,6 @@ const postController = (
       postDbRepository,
       dbUserRepository
     );
-
-    // const post = await handleCreatePost(
-    //   postData,
-    //   buffer,
-    //   mimetype,
-    //   cloudinaryService,
-    //   postDbRepository,
-    //   dbUserRepository
-    // );
     res.json({
       status: "success",
       message: "post created",
@@ -227,7 +216,6 @@ const postController = (
   const editPost = asyncHandler(async (req: Request, res: Response) => {
     const { postId } = req.params as unknown as { postId: string };
     const postData = req.body;
-    console.log("postData from req.body: ", postData);
     const editedPost = await handleEditPost(postId, postData, postDbRepository);
     res.json({
       status: "success",
@@ -238,7 +226,6 @@ const postController = (
 
   const editComment = asyncHandler(async (req: Request, res: Response) => {
     const { commentId } = req.params as unknown as { commentId: string };
-    console.log("edited commment req.body: ", req.body);
     const { comment }: { comment: string } = req.body;
     const editedComment = await handleEditComment(
       commentId,
@@ -325,7 +312,6 @@ const postController = (
       action: string;
       userId: string;
     };
-    console.log("req body for comment like: ", req.body);
     const message = await handleLikeComment(
       commentId,
       userId,

@@ -11,7 +11,7 @@ on:
 jobs:
   deploy_client:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'client/')
+    if: contains(github.event.push.paths, 'client/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
   
   deploy_server:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'server/')
+    if: contains(github.event.push.paths, 'server/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

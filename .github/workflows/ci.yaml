@@ -24,7 +24,7 @@ jobs:
         chmod 600 keyfile
         mkdir -p ~/.ssh
         cp known_hosts ~/.ssh/known_hosts
-        ssh -t -i keyfile ubuntu@ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-client.sh"
+        ssh -t -i keyfile ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-client.sh"
   
   deploy_server:
     runs-on: ubuntu-latest
@@ -41,4 +41,4 @@ jobs:
         chmod 600 keyfile
         mkdir -p ~/.ssh
         cp known_hosts ~/.ssh/known_hosts
-        ssh -t -i keyfile ubuntu@ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-server.sh"
+        ssh -t -i keyfile ubuntu@ec2-13-127-105-158.ap-south-1.compute.amazonaws.com "sudo bash ~/deploy-server.sh"

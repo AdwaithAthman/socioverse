@@ -63,9 +63,6 @@ const authController = (
       dbUserRepository,
       authService
     );
-    console.log("userDetails= ", userDetails);
-    console.log("refreshToken= ", refreshToken);
-    console.log("accessToken= ", accessToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true, // use in HTTPS only

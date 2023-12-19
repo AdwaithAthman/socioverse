@@ -122,7 +122,6 @@ const profileController = (
   });
 
   const changePassword = asyncHandler(async (req: Request, res: Response) => {
-    console.log("req.body= ", req.body);
     const {
       userId,
       oldPassword,
@@ -142,7 +141,6 @@ const profileController = (
   });
 
   const editProfile = asyncHandler(async (req: Request, res: Response) => {
-    console.log("req.body= ", req.body);
     const profileInfo: ProfileInterface = req.body;
     const user = await handleUpdateProfile(profileInfo, dbUserRepository);
     res.json({
@@ -153,7 +151,6 @@ const profileController = (
   });
 
   const searchUsers = asyncHandler(async (req: Request, res: Response) => {
-    console.log("req.query= ", req.query)
     const { searchQuery } = req.query as unknown as { searchQuery: string } ;
     const users = await handleSearchUsers(searchQuery, dbUserRepository);
     res.json({

@@ -122,7 +122,6 @@ export const commentRepositoryMongoDB = () => {
         },
       },
     ]);
-    console.log("replies: ", replies);
     return replies;
   };
 
@@ -176,7 +175,6 @@ export const commentRepositoryMongoDB = () => {
           },
         },
       ]);
-      console.log("comment: ", comment);
       return comment[0];
     } catch (err) {
       console.log(err);

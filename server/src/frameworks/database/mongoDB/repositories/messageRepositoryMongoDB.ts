@@ -50,7 +50,6 @@ export const messageRepositoryMongoDB = () => {
 
   const fetchNotifications = async (notificationIds: string[]) => {
     try {
-      console.log("notificationIds: ", notificationIds);
       const notifications = await Message.aggregate([
         {
           $match: {

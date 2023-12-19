@@ -83,7 +83,6 @@ export const postRepositoryMongoDB = () => {
   const getPostById = async (postId: string) => {
     try {
       const postObjId = new mongoose.Types.ObjectId(postId);
-      console.log(postObjId);
       const post = await Post.aggregate([
         {
           $match: { _id: postObjId, isBlock: false },
@@ -302,7 +301,6 @@ export const postRepositoryMongoDB = () => {
     limit: number
   ) => {
     try {
-      console.log(following)
       const posts = await Post.aggregate([
         {
           $match:

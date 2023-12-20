@@ -48,12 +48,14 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
   }, [user]);
 
   useEffect(() => {
-    if (!isUsernameAvailable) {
-      setUsernameInputPopupOpen(true);
-    } else {
-      setUsernameInputPopupOpen(false);
+    if(user){
+      if (!isUsernameAvailable) {
+        setUsernameInputPopupOpen(true);
+      } else {
+        setUsernameInputPopupOpen(false);
+      }
     }
-  }, [isUsernameAvailable]);
+  }, [isUsernameAvailable, user]);
 
   const handleUsernameInputPopup = () => {
     setUsernameInputPopupOpen((prev) => !prev);

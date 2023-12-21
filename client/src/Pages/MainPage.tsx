@@ -22,6 +22,7 @@ import { User } from "../Types/loginUser";
 import { Button } from "@material-tailwind/react";
 import HomePageLoading from "../Components/Skeletons/HomePageLoading";
 import ChatPageLoading from "../Components/Skeletons/ChatPageLoading";
+import PeoplePageLoading from "../Components/Skeletons/PeoplePageLoading";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -202,7 +203,7 @@ const MainPage = () => {
           )}
           {section === "people" && (
             <div className="block lg:hidden">
-              <Suspense fallback={<div>Loading</div>}>
+              <Suspense fallback={<PeoplePageLoading />}>
                 <PeoplePage socket={socket} />
               </Suspense>
             </div>

@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { User } from "../Types/loginUser";
 import { Button } from "@material-tailwind/react";
 import HomePageLoading from "../Components/Skeletons/HomePageLoading";
+import ChatPageLoading from "../Components/Skeletons/ChatPageLoading";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -195,7 +196,7 @@ const MainPage = () => {
             </Suspense>
           )}
           {section === "message" && (
-            <Suspense fallback={<div>Loading</div>}>
+            <Suspense fallback={<ChatPageLoading />}>
               <ChatPage socket={socket} socketConnected={socketConnected} />
             </Suspense>
           )}

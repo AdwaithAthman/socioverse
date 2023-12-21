@@ -7,6 +7,7 @@ import AsideTwo from "./Aside_2";
 import AsideOne from "./Aside_1";
 import PostBox from "../Post/PostBox";
 import PostCard from "../Post/PostCard";
+import PostCardLoading from "../Skeletons/PostCardLoading";
 import PostDialogBox from "../Post/PostDialogBox";
 import { getUserInfo } from "../../API/Profile";
 import { useDispatch } from "react-redux";
@@ -34,8 +35,7 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
     null
   );
   const [postEdited, setPostEdited] = useState<PostDataInterface | null>(null);
-  const [isUsernameAvailable, setIsUsernameAvailable] =
-    useState<boolean>(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean>(true);
   const [usernameInputPopupOpen, setUsernameInputPopupOpen] =
     useState<boolean>(false);
 
@@ -48,7 +48,7 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
   }, [user]);
 
   useEffect(() => {
-    if(user){
+    if (user) {
       if (!isUsernameAvailable) {
         setUsernameInputPopupOpen(true);
       } else {
@@ -198,6 +198,11 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
                   />
                 </div>
               ))}
+              {isLoading && (
+                <div className="w-full px-2">
+                  <PostCardLoading />
+                </div>
+              )}
               <PostDialogBox
                 open={open}
                 handleOpen={handleOpen}
@@ -206,8 +211,15 @@ const HomeLarge = ({ user, socket }: { user: User; socket: Socket }) => {
               />
             </div>
             {isLastPage && <div> No posts...</div>}
-            <div id="sentinel" style={{ height: "1px" }} className="mt-10">
-              {!isLastPage && <img src={loader} className="w-20 h-20" />}
+            <div id="sentinel" style={{ height: "1px" }} className="w-full mb-4">
+              {!isLastPage && (
+                <div>
+                  <img
+                    src={loader}
+                    className="w-20 h-20 mx-auto mt-2 lg:mt-4"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </main>

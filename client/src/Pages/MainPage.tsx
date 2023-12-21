@@ -1,10 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import HomePage from "./HomePage";
-import ChatPage from "./ChatPage";
+import { ChatPage, HomePage, PeoplePage } from "../lazyComponents";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreType } from "../Redux/Store";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { ChatInterface, MessageInterface } from "../Types/chat";
 import common, { TOAST_ACTION } from "../Constants/common";
@@ -21,7 +20,7 @@ import { fetchNotifications } from "../API/Message";
 import { toast } from "react-toastify";
 import { User } from "../Types/loginUser";
 import { Button } from "@material-tailwind/react";
-import PeoplePage from "./PeoplePage";
+import HomePageLoading from "../Components/Skeletons/HomePageLoading";
 
 let socket: Socket, selectedChatCompare: ChatInterface;
 
@@ -39,9 +38,10 @@ const MainPage = () => {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
 
   useEffect(() => {
-    if(section !== "home" && section !== "message" && section !== "people") navigate("/error");
-  },[navigate, section])
-  
+    if (section !== "home" && section !== "message" && section !== "people")
+      navigate("/error");
+  }, [navigate, section]);
+
   //people section is only available in mobile and medium screens
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -189,13 +189,21 @@ const MainPage = () => {
           exit={{ scale: 0.6, opacity: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
-          {section === "home" && <HomePage socket={socket} />}
+          {section === "home" && (
+            <Suspense fallback={<HomePageLoading />}>
+              <HomePage socket={socket} />
+            </Suspense>
+          )}
           {section === "message" && (
-            <ChatPage socket={socket} socketConnected={socketConnected} />
+            <Suspense fallback={<div>Loading</div>}>
+              <ChatPage socket={socket} socketConnected={socketConnected} />
+            </Suspense>
           )}
           {section === "people" && (
             <div className="block lg:hidden">
-              <PeoplePage socket={socket} />
+              <Suspense fallback={<div>Loading</div>}>
+                <PeoplePage socket={socket} />
+              </Suspense>
             </div>
           )}
         </motion.div>

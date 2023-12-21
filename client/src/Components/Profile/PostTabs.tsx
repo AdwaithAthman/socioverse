@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 
 //importing types
 import { StoreType } from "../../Redux/Store";
+import PostCardLoading from "../Skeletons/PostCardLoading";
 
 export interface LikePostId {
   postId: string;
@@ -57,10 +58,10 @@ function PostTabs({ userId }: { userId?: string }) {
 
   useEffect(() => {
     setIsLastPostPage(false);
-  },[userId])
+  }, [userId]);
 
   useEffect(() => {
-    if (myPostPage === 1 && (userId === myUserId)) {
+    if (myPostPage === 1 && userId === myUserId) {
       setIsPostLoading(true);
       loadInitialMyPosts();
       setIsPostLoading(false);
@@ -140,24 +141,24 @@ function PostTabs({ userId }: { userId?: string }) {
   }, [currentTab]);
 
   const loadInitialMyPosts = async () => {
-      const result = await getUserPosts(myPostPage);
-      setMyPosts(result.posts);
-      setMyPostPage(myPostPage + 1);
-      if(result.posts.length < 3){
-        setIsLastPostPage(true);
-      }
+    const result = await getUserPosts(myPostPage);
+    setMyPosts(result.posts);
+    setMyPostPage(myPostPage + 1);
+    if (result.posts.length < 3) {
+      setIsLastPostPage(true);
+    }
   };
 
   const loadInitialOtherPosts = async () => {
-    if (userId && userId !== myUserId){
+    if (userId && userId !== myUserId) {
       const result = await getOtherUserPosts(userId, myPostPage);
-        setOtherUserPosts(result.posts);
-        setOtherUserPostPage(otherUserPostPage+ 1);
-        if(result.posts.length < 3){
-          setIsLastPostPage(true);
-        }
+      setOtherUserPosts(result.posts);
+      setOtherUserPostPage(otherUserPostPage + 1);
+      if (result.posts.length < 3) {
+        setIsLastPostPage(true);
+      }
     }
-  }
+  };
 
   const handleTabHeaderClick = async (value: string) => {
     setIsPostLoading(true);
@@ -211,46 +212,47 @@ function PostTabs({ userId }: { userId?: string }) {
       async (entries) => {
         if (entries[0].isIntersecting && !isPostLoading && !isLastPostPage) {
           setIsPostLoading(true);
-          if(userId === myUserId){
-          if (currentTab === "myPosts") {
-            const newPostResult = await getUserPosts(myPostPage);
-            if (newPostResult.posts.length === 0) {
+          if (userId === myUserId) {
+            if (currentTab === "myPosts") {
+              const newPostResult = await getUserPosts(myPostPage);
+              if (newPostResult.posts.length === 0) {
+                setIsPostLoading(false);
+                setIsLastPostPage(true);
+                return;
+              }
+              setMyPosts([...myPosts, ...newPostResult.posts]);
+              setMyPostPage(myPostPage + 1);
+            } else if (currentTab === "saved") {
+              const newPostResult = await getUserSavedPosts(savedPostPage);
+              if (newPostResult.posts.length === 0) {
+                setIsPostLoading(false);
+                setIsLastPostPage(true);
+                return;
+              }
+              setSavedPosts([...savedPosts, ...newPostResult.posts]);
+              setSavedPostPage(savedPostPage + 1);
+            } else if (currentTab === "liked") {
+              const newPostResult = await getUserLikedPosts(likedPostPage);
+              if (newPostResult.posts.length === 0) {
+                setIsPostLoading(false);
+                setIsLastPostPage(true);
+                return;
+              }
+              setLikedPosts([...likedPosts, ...newPostResult.posts]);
+              setLikedPostPage(likedPostPage + 1);
+            }
+          } else {
+            const newPostResult =
+              userId && (await getOtherUserPosts(userId, otherUserPostPage));
+            if (newPostResult && newPostResult.posts.length === 0) {
               setIsPostLoading(false);
               setIsLastPostPage(true);
               return;
             }
-            setMyPosts([...myPosts, ...newPostResult.posts]);
-            setMyPostPage(myPostPage + 1);
-          } else if (currentTab === "saved") {
-            const newPostResult = await getUserSavedPosts(savedPostPage);
-            if (newPostResult.posts.length === 0) {
-              setIsPostLoading(false);
-              setIsLastPostPage(true);
-              return;
-            }
-            setSavedPosts([...savedPosts, ...newPostResult.posts]);
-            setSavedPostPage(savedPostPage + 1);
-          } else if (currentTab === "liked") {
-            const newPostResult = await getUserLikedPosts(likedPostPage);
-            if (newPostResult.posts.length === 0) {
-              setIsPostLoading(false);
-              setIsLastPostPage(true);
-              return;
-            }
-            setLikedPosts([...likedPosts, ...newPostResult.posts]);
-            setLikedPostPage(likedPostPage + 1);
+            newPostResult &&
+              setOtherUserPosts([...otherUserPosts, ...newPostResult.posts]);
+            setOtherUserPostPage(otherUserPostPage + 1);
           }
-        }
-        else{
-          const newPostResult = userId && await getOtherUserPosts(userId, otherUserPostPage);
-          if (newPostResult && newPostResult.posts.length === 0) {
-            setIsPostLoading(false);
-            setIsLastPostPage(true);
-            return;
-          }
-          newPostResult && setOtherUserPosts([...otherUserPosts, ...newPostResult.posts]);
-          setOtherUserPostPage(otherUserPostPage + 1);
-        }
           setIsPostLoading(false);
         }
       },
@@ -269,7 +271,14 @@ function PostTabs({ userId }: { userId?: string }) {
         observer1.unobserve(sentinelRef.current);
       }
     };
-  }, [isPostLoading, myPostPage, isLastPostPage, currentTab, userId, otherUserPostPage]);
+  }, [
+    isPostLoading,
+    myPostPage,
+    isLastPostPage,
+    currentTab,
+    userId,
+    otherUserPostPage,
+  ]);
 
   return (
     <Tabs id="custom-animation" value="myPosts">
@@ -317,6 +326,11 @@ function PostTabs({ userId }: { userId?: string }) {
                       />
                     </>
                   ))}
+                  {!isLastPostPage && (
+                    <div className="w-full px-2 mt-5">
+                      <PostCardLoading />
+                    </div>
+                  )}
                   {isLastPostPage && (
                     <div className="text-center mt-5"> No posts...</div>
                   )}

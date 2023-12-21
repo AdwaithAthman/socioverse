@@ -1,14 +1,14 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Suspense } from "react";
 
 //imports from Pages
 import App from "./App";
 import AuthenticationPage from "./Pages/AuthenticationPage";
 import MainPage from "./Pages/MainPage";
-import ProfilePage from "./Pages/ProfilePage";
 import ErrorPage from "./Pages/ErrorPage";
 import AdminLoginPage from "./Pages/AdminLoginPage";
 import AdminPage from "./Pages/AdminPage";
-import SharedPostPage from "./Pages/SharedPostPage";
+
 
 //imports from Components
 import Settings from "./Components/Profile/SubSections/Settings";
@@ -19,6 +19,11 @@ import ReportedList from "./Components/Admin/ReportedList";
 import ReportedCommentsList from "./Components/Admin/ReportedList/ReportedCommentsList";
 import ReportedRepliesList from "./Components/Admin/ReportedList/ReportedRepliesList";
 import Dashboard from "./Components/Admin/Dashboard";
+
+//lazy loading components
+import { ProfilePage, SharedPostPage } from "./lazyComponents";
+
+
 
 export const appRouter = createBrowserRouter([
   {
@@ -36,7 +41,11 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "profile/:userId",
-        element: <ProfilePage />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProfilePage />
+          </Suspense>
+        ),
         children: [
           {
             path: "settings",
@@ -54,7 +63,11 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "share/:postId",
-        element: <SharedPostPage />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SharedPostPage />
+          </Suspense>
+        )
       },
     ],
   },

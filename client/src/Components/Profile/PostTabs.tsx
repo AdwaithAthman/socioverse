@@ -327,7 +327,7 @@ function PostTabs({ userId }: { userId?: string }) {
                     ref={sentinelRef}
                   >
                     {!isLastPostPage && (
-                      <img src={loader} className="w-20 h-20" />
+                      <img src={loader} className="w-20 h-20 mx-auto" />
                     )}
                   </div>
                 </div>

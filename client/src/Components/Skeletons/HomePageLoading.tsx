@@ -1,4 +1,3 @@
-import ChatLoading from "./ChatLoading";
 import PostCardLoading from "./PostCardLoading";
 
 const HomePageLoading = () => {

@@ -9,7 +9,6 @@ import ErrorPage from "./Pages/ErrorPage";
 import AdminLoginPage from "./Pages/AdminLoginPage";
 import AdminPage from "./Pages/AdminPage";
 
-
 //imports from Components
 import Settings from "./Components/Profile/SubSections/Settings";
 import EditProfile from "./Components/Profile/SubSections/EditProfile";
@@ -19,11 +18,11 @@ import ReportedList from "./Components/Admin/ReportedList";
 import ReportedCommentsList from "./Components/Admin/ReportedList/ReportedCommentsList";
 import ReportedRepliesList from "./Components/Admin/ReportedList/ReportedRepliesList";
 import Dashboard from "./Components/Admin/Dashboard";
+import loader from "./assets/Loader.svg";
+import PostCardLoading from "./Components/Skeletons/PostCardLoading";
 
 //lazy loading components
 import { ProfilePage, SharedPostPage } from "./lazyComponents";
-
-
 
 export const appRouter = createBrowserRouter([
   {
@@ -32,7 +31,7 @@ export const appRouter = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/" ,
+        path: "/",
         element: <Navigate to="/home" />,
       },
       {
@@ -42,7 +41,13 @@ export const appRouter = createBrowserRouter([
       {
         path: "profile/:userId",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-[80vh] w-full">
+                <img src={loader} className="w-20 h-20 mx-auto mt-2 lg:mt-4" />
+              </div>
+            }
+          >
             <ProfilePage />
           </Suspense>
         ),
@@ -58,16 +63,24 @@ export const appRouter = createBrowserRouter([
           {
             path: "*",
             element: <Navigate to="/error" />,
-          }
+          },
         ],
       },
       {
         path: "share/:postId",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="mt-5 md:mt-8 w-full md:mx-2 ">
+                <div className="max-w-[21rem] md:max-w-[30rem] mx-auto">
+                  <PostCardLoading />
+                </div>
+              </div>
+            }
+          >
             <SharedPostPage />
           </Suspense>
-        )
+        ),
       },
     ],
   },
@@ -135,5 +148,5 @@ export const appRouter = createBrowserRouter([
   {
     path: "*",
     element: <Navigate to="/error" />,
-  }
+  },
 ]);

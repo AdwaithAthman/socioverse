@@ -1,11 +1,9 @@
 import { ToastOptions } from "react-toastify";
 
 const CONSTANTS_COMMON = {
-  // API_BASE_URL: import.meta.env.VITE_API_BASE_URL!,
-  // CLIENT_BASE_URL: import.meta.env.VITE_CLIENT_BASE_URL!,
-  API_BASE_URL: "https://socioverse.online",
-  CLIENT_BASE_URL: "https://socioverse.online",
-  DEFAULT_IMG: import.meta.env.VITE_DEFAULT_IMG!,
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  CLIENT_BASE_URL: import.meta.env.VITE_CLIENT_BASE_URL,
+  DEFAULT_IMG: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   ADMIN_LOGIN_SVG: "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381015/socioverse%20stock/AdminLoginSvg_ain9jo.svg",
   AUTHENTICATION_SVG: "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381022/socioverse%20stock/AuthenticationSvg_iirmb2.svg",
   CHAT_SVG: "https://res.cloudinary.com/dkxyfsxso/image/upload/v1702381151/socioverse%20stock/ChatSvg_acpykg.svg",
@@ -32,5 +30,3 @@ export const TOAST_ACTION: ToastOptions = {
 
 export default CONSTANTS_COMMON;
 
-// API_BASE_URL: "https://socioverse.online",
-//   CLIENT_BASE_URL: "https://socioverse.online",

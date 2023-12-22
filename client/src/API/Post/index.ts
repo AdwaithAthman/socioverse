@@ -142,45 +142,59 @@ export const editPost = async (
   return response.data;
 };
 
-export const updateComment = async(
+export const updateComment = async (
   commentId: string,
   comment: string
 ): Promise<EditCommentResponse> => {
   const response = await axiosUserInstance.put<EditCommentResponse>(
-    `${END_POINTS.EDIT_COMMENT}/${commentId}`, { comment : comment }
+    `${END_POINTS.EDIT_COMMENT}/${commentId}`,
+    { comment: comment }
   );
   return response.data;
-}
+};
 
-export const deleteComment = async(commentId: string): Promise<DeleteCommentResponse> => {
+export const deleteComment = async (
+  commentId: string
+): Promise<DeleteCommentResponse> => {
   const response = await axiosUserInstance.delete<DeleteCommentResponse>(
     `${END_POINTS.DELETE_COMMENT}/${commentId}`
   );
   return response.data;
-}
+};
 
-export const deleteReply = async(replyId: string, commentId: string): Promise<DeleteCommentResponse> => {
+export const deleteReply = async (
+  replyId: string,
+  commentId: string
+): Promise<DeleteCommentResponse> => {
   const response = await axiosUserInstance.delete<DeleteCommentResponse>(
     `${END_POINTS.DELETE_REPLY}?replyId=${replyId}&commentId=${commentId}`
   );
   return response.data;
-}
+};
 
-export const reportComment = async(commentId: string): Promise<DeleteCommentResponse> => {
+export const reportComment = async (
+  commentId: string
+): Promise<DeleteCommentResponse> => {
   const response = await axiosUserInstance.post<DeleteCommentResponse>(
     `${END_POINTS.REPORT_COMMENT}/${commentId}`
   );
   return response.data;
-}
+};
 
-export const reportReply = async(replyId: string, commentId: string): Promise<DeleteCommentResponse> => {
+export const reportReply = async (
+  replyId: string,
+  commentId: string
+): Promise<DeleteCommentResponse> => {
   const response = await axiosUserInstance.post<DeleteCommentResponse>(
     `${END_POINTS.REPORT_REPLY}?replyId=${replyId}&commentId=${commentId}`
   );
   return response.data;
-}
+};
 
-export const searchPosts = async(searchQuery: string, page: number): Promise<GetSearchPostsInterface> => {
+export const searchPosts = async (
+  searchQuery: string,
+  page: number
+): Promise<GetSearchPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;
   const encodedSearchQuery = encodeURIComponent(searchQuery);
@@ -188,61 +202,81 @@ export const searchPosts = async(searchQuery: string, page: number): Promise<Get
     `${END_POINTS.SEARCH_POSTS}?searchQuery=${encodedSearchQuery}&skip=${skip}&limit=${pageSize}`
   );
   return response.data;
-}
+};
 
-export const likeComment = async(commentId: string, action: string): Promise<LikeCommentResponse> => {
+export const likeComment = async (
+  commentId: string,
+  action: string
+): Promise<LikeCommentResponse> => {
   const response = await axiosUserInstance.post<LikeCommentResponse>(
-    `${END_POINTS.LIKE_COMMENT}`, { commentId, action }
+    `${END_POINTS.LIKE_COMMENT}`,
+    { commentId, action }
   );
   return response.data;
-}
+};
 
-export const likeReply = async (replyId: string, commentId: string, action: string): Promise<LikeCommentResponse> => { 
+export const likeReply = async (
+  replyId: string,
+  commentId: string,
+  action: string
+): Promise<LikeCommentResponse> => {
   const response = await axiosUserInstance.post<LikeCommentResponse>(
-    `${END_POINTS.LIKE_REPLY}`, { replyId, commentId, action }
+    `${END_POINTS.LIKE_REPLY}`,
+    { replyId, commentId, action }
   );
   return response.data;
-}
+};
 
-export const getUserPosts = async (page: number): Promise<GetUserPostsInterface> => {
+export const getUserPosts = async (
+  page: number
+): Promise<GetUserPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;
   const response = await axiosUserInstance.get<GetUserPostsInterface>(
     `${END_POINTS.GET_USER_POSTS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
-}
+};
 
-export const getOtherUserPosts = async (userId: string, page: number): Promise<GetUserPostsInterface> => {
+export const getOtherUserPosts = async (
+  userId: string,
+  page: number
+): Promise<GetUserPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;
   const response = await axiosUserInstance.get<GetUserPostsInterface>(
     `${END_POINTS.GET_OTHER_USER_POSTS}/${userId}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
-}
+};
 
-export const getUserLikedPosts = async (page: number): Promise<GetUserPostsInterface> => {
+export const getUserLikedPosts = async (
+  page: number
+): Promise<GetUserPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;
   const response = await axiosUserInstance.get<GetUserPostsInterface>(
     `${END_POINTS.GET_USER_LIKED_POSTS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
-}
+};
 
-export const getUserSavedPosts = async (page: number): Promise<GetUserPostsInterface> => {
+export const getUserSavedPosts = async (
+  page: number
+): Promise<GetUserPostsInterface> => {
   const pageSize = 3;
   const skip: number = (page - 1) * pageSize;
   const response = await axiosUserInstance.get<GetUserPostsInterface>(
     `${END_POINTS.GET_USER_SAVED_POSTS}?skip=${skip}&limit=${pageSize}`
   );
   return response.data;
-}
+};
 
-export const getLikedUsers = async (postId: string): Promise<GetLikedUsersInterface> => {
+export const getLikedUsers = async (
+  postId: string
+): Promise<GetLikedUsersInterface> => {
   const response = await axiosUserInstance.get<GetLikedUsersInterface>(
     `${END_POINTS.GET_LIKED_USERS}/${postId}`
   );
   return response.data;
-}
+};

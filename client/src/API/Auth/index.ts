@@ -1,4 +1,6 @@
-import axiosUserInstance, { axiosRefreshInstance } from "../AxiosInstance/axiosUserInstance";
+import axiosUserInstance, {
+  axiosRefreshInstance,
+} from "../AxiosInstance/axiosUserInstance";
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types
@@ -70,7 +72,10 @@ export const logoutUser = async (): Promise<LogoutResponse> => {
   return response.data;
 };
 
-export const sendOtp = async (email: string, text: string): Promise<SendOtpResponse> => {
+export const sendOtp = async (
+  email: string,
+  text: string
+): Promise<SendOtpResponse> => {
   const response = await axiosUserInstance.post<SendOtpResponse>(
     END_POINTS.SEND_OTP,
     { email, text }
@@ -78,7 +83,11 @@ export const sendOtp = async (email: string, text: string): Promise<SendOtpRespo
   return response.data;
 };
 
-export const verifyOtp = async (email: string, otp: string, text: string): Promise<VerifyOtpResponse> => {
+export const verifyOtp = async (
+  email: string,
+  otp: string,
+  text: string
+): Promise<VerifyOtpResponse> => {
   const response = await axiosUserInstance.post<VerifyOtpResponse>(
     END_POINTS.VERIFY_OTP,
     { email, otp, text }
@@ -86,11 +95,16 @@ export const verifyOtp = async (email: string, otp: string, text: string): Promi
   return response.data;
 };
 
-export const resetPassword = async ({ email, password} : { email: string, password: string }): Promise<ResetPasswordResponse> => {
+export const resetPassword = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<ResetPasswordResponse> => {
   const response = await axiosUserInstance.post<ResetPasswordResponse>(
     END_POINTS.RESET_PASSWORD,
     { email, password }
   );
   return response.data;
-}
-
+};

@@ -44,7 +44,7 @@ export const uploadProfilePhoto = async (
     }
   );
   return response.data;
-}
+};
 
 export const getUserInfo = async (): Promise<GetUserInfoResponse> => {
   const response = await axiosUserInstance.get<GetUserInfoResponse>(
@@ -53,12 +53,14 @@ export const getUserInfo = async (): Promise<GetUserInfoResponse> => {
   return response.data;
 };
 
-export const getOtherUserInfo = async(id: string): Promise<GetOtherUserInfoResponse> => {
+export const getOtherUserInfo = async (
+  id: string
+): Promise<GetOtherUserInfoResponse> => {
   const response = await axiosUserInstance.get<GetOtherUserInfoResponse>(
     `${END_POINTS.GET_OTHER_USER_INFO}/${id}`
-  )
+  );
   return response.data;
-}
+};
 
 export const deleteCoverPhoto = async (): Promise<DeleteCoverPhotoResponse> => {
   const response = await axiosUserInstance.delete<DeleteCoverPhotoResponse>(
@@ -67,12 +69,13 @@ export const deleteCoverPhoto = async (): Promise<DeleteCoverPhotoResponse> => {
   return response.data;
 };
 
-export const deleteProfilePhoto = async (): Promise<DeleteProfilePhotoResponse> => {
-  const response = await axiosUserInstance.delete<DeleteProfilePhotoResponse>(
-    END_POINTS.DELETE_PROFILE_PHOTO
-  );
-  return response.data;
-};
+export const deleteProfilePhoto =
+  async (): Promise<DeleteProfilePhotoResponse> => {
+    const response = await axiosUserInstance.delete<DeleteProfilePhotoResponse>(
+      END_POINTS.DELETE_PROFILE_PHOTO
+    );
+    return response.data;
+  };
 
 export const changePassword = async (password: {
   oldPassword: string;
@@ -96,18 +99,22 @@ export const editProfile = async (
   return response.data;
 };
 
-export const searchUsers = async (searchQuery: string): Promise<GetSearchUsersInterface> => {
+export const searchUsers = async (
+  searchQuery: string
+): Promise<GetSearchUsersInterface> => {
   const encodedSearchQuery = encodeURIComponent(searchQuery);
   const response = await axiosUserInstance.get<GetSearchUsersInterface>(
     `${END_POINTS.SEARCH_USERS}?searchQuery=${encodedSearchQuery}`
   );
   return response.data;
-}
+};
 
-export const addUsername = async (username: string): Promise<AddUsernameResponse> => {
+export const addUsername = async (
+  username: string
+): Promise<AddUsernameResponse> => {
   const response = await axiosUserInstance.patch<AddUsernameResponse>(
     END_POINTS.ADD_USERNAME,
     { username }
-  )
+  );
   return response.data;
-}
+};

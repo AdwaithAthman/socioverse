@@ -2,10 +2,10 @@ import axiosUserInstance from "../AxiosInstance/axiosUserInstance";
 import END_POINTS from "../../Constants/endpoints";
 
 //importing types
-import { 
-    SendMessageResponse,
-    GetAllMessagesFromChatResponse,
- } from "../../Types/message";
+import {
+  SendMessageResponse,
+  GetAllMessagesFromChatResponse,
+} from "../../Types/message";
 import { FetchNotificationsResponse } from "../../Types/userProfile";
 
 export const sendMessage = async (
@@ -23,7 +23,7 @@ export const sendMessage = async (
 };
 
 export const sendMessageWithImg = async (
-  formData: FormData,
+  formData: FormData
 ): Promise<SendMessageResponse> => {
   const response = await axiosUserInstance.post<SendMessageResponse>(
     END_POINTS.SEND_MESSAGE_WITH_IMG,
@@ -35,7 +35,7 @@ export const sendMessageWithImg = async (
     }
   );
   return response.data;
-}
+};
 
 export const getAllMessagesFromChat = async (
   chatId: string
@@ -46,11 +46,13 @@ export const getAllMessagesFromChat = async (
   return response.data;
 };
 
-export const fetchNotifications = async(
+export const fetchNotifications = async (
   notificationIds: string[]
 ): Promise<FetchNotificationsResponse> => {
   const response = await axiosUserInstance.get<FetchNotificationsResponse>(
-    `${END_POINTS.FETCH_NOTIFICATIONS}?Ids=${encodeURIComponent(JSON.stringify(notificationIds))}`
+    `${END_POINTS.FETCH_NOTIFICATIONS}?Ids=${encodeURIComponent(
+      JSON.stringify(notificationIds)
+    )}`
   );
   return response.data;
-} 
+};

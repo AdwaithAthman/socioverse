@@ -11,11 +11,7 @@ const UserCard = ({ user }: { user: User }) => {
       <div className="s) => setLimt-3 flex items-center space-x-2">
         <img
           className="inline-block h-12 w-12 rounded-full"
-          src={
-            user.dp
-              ? user.dp
-              : common.DEFAULT_IMG
-          }
+          src={user.dp ? user.dp : common.DEFAULT_IMG}
           alt="user dp"
         />
         <span className="flex flex-col">

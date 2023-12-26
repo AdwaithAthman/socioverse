@@ -1,4 +1,4 @@
-import { RedisClient } from "../../../../app";
+import { RedisClient } from "../../../app";
 
 const DEFAULT_EXPIRATION = 1800;
 

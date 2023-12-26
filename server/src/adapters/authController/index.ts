@@ -6,7 +6,7 @@ import { UserDbInterface } from "../../application/repositories/userDbRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/userRepositoryMongoDB";
 import { OtpDbInterface } from "../../application/repositories/otpDbRepository";
 import { OtpRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/otpRepositoryMongoDB";
-import redisRepository from "../../frameworks/database/redis/repositories/redisRepository";
+import redisRepository from "../../frameworks/database/redis/redisRepository";
 import { redisClient } from "../../app";
 import { MailSenderService } from "../../frameworks/services/mailSenderService";
 import { MailSenderServiceInterface } from "../../application/services/mailSenderServiceInterface";

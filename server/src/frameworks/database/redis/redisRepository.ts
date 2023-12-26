@@ -50,4 +50,4 @@ const redisRepository = (redisClient: RedisClient) => {
   };
 };
 
-export default redisRepository;
+export type RedisRepository = typeof redisRepository;

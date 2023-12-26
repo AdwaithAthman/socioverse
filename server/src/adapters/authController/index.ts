@@ -17,7 +17,6 @@ import {
   userLogin,
   userLoginUsingGoogle,
   accessTokenRefresh,
-  usernameAvailable,
   handleLogoutUser,
   handleSendOtp,
   handleOtpVerification,
@@ -44,7 +43,7 @@ const authController = (
   const mailSenderService = mailSenderServiceInterface(mailSenderServiceImpl());
 
   const redisRepositoryImpl = redisRepository(redisClient);
-  const { setAsync, sIsMemberAsync, sAddAsync, getAsync } = redisRepositoryImpl;
+  // const { setAsync, sIsMemberAsync, sAddAsync, getAsync } = redisRepositoryImpl;
 
   const registerUser = asyncHandler(async (req: Request, res: Response) => {
     const user: UserInterface = req.body;
@@ -140,34 +139,6 @@ const authController = (
     })
   });
 
-  // const verifyTokenForAuth = asyncHandler(async (req: Request, res: Response) => {
-  //     const { token } = req.params;
-  //     const isTokenValid = await tokenVerification(token, authService);
-  //     if (isTokenValid) {
-  //         res.json({
-  //             status: "success",
-  //             message: "user verified",
-  //             userId: isTokenValid
-  //         })
-  //     }
-  // })
-
-  const checkUsernameAvailability = asyncHandler(
-    async (req: Request, res: Response) => {
-      const { username } = req.params;
-      const isUsernameAvailableInDatabase = !(await usernameAvailable(
-        username,
-        dbUserRepository,
-      ));
-      if (isUsernameAvailableInDatabase) {
-        await sAddAsync("allUsernames", username);
-        res.json({ status: "fail", available: false });
-      } else {
-        res.json({ status: "success", available: true });
-      }
-    }
-  );
-
   const verifyOtpForEmailVerification = asyncHandler( async(req: Request, res: Response) => {
     const { email, otp, text }: {email: string, otp: string, text: string} = req.body;
     const isOtpValid = await handleOtpVerification(email, otp, text, dbOtpRepository, dbUserRepository);
@@ -194,7 +165,6 @@ const authController = (
     sendOtpForEmailVerification,
     verifyOtpForEmailVerification,
     resetPassword,
-    checkUsernameAvailability,
   };
 };
 

@@ -8,7 +8,6 @@ import { otpRepositoryMongoDB } from "../../database/mongoDB/repositories/otpRep
 import { otpDbRepository } from "../../../application/repositories/otpDbRepository";
 import { mailSenderService } from "../../services/mailSenderService";
 import { mailSenderServiceInterface } from "../../../application/services/mailSenderServiceInterface";
-import checkUsernameAvailabilityMiddleware from "../middlewares/redisCheckUsernameAvailability";
 
 //middleware
 import requestLimiter from "../middlewares/requestLimiter";
@@ -36,10 +35,7 @@ const authRouter = () => {
    router.delete('/logout', authMiddleware, controller.logoutUser)
    router.post('/send_otp', controller.sendOtpForEmailVerification);
    router.post('/verify_otp', controller.verifyOtpForEmailVerification);
-   router.post('/resetPassword', controller.resetPassword)
-   // router.get('/verify_token/:token', controller.verifyTokenForAuth);
-   router.get('/checkUsernameAvailability/:username', checkUsernameAvailabilityMiddleware, controller.checkUsernameAvailability)
-
+   router.post('/resetPassword', controller.resetPassword);
 
    return router
 }

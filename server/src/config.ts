@@ -17,6 +17,13 @@ MAIL_USERNAME: process.env.MAIL_USERNAME as string,
 MAIL_PASSWORD: process.env.MAIL_PASSWORD as string,
 ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
 ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
+REDIS_URL: {
+    password: process.env.REDIS_PASSWORD as string,
+    socket: {
+        host: process.env.REDIS_HOST as string,
+        port: parseInt(process.env.REDIS_PORT as string) as number
+    }
+}
 }
 
 export default configKeys;

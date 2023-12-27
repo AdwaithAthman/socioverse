@@ -18,7 +18,51 @@ Socioverse empowers you to:
 ![Preview](https://res.cloudinary.com/dkxyfsxso/image/upload/v1703687117/socioverse%20stock/Screenshot_from_2023-12-27_19-54-53_muacdg.png)
 
 ## Installation
+Follow these instructions to set up your development environment, which you need to do before you start contributing code to this project.
 
+1. Clone the repository:
+
+   ```shell
+   git clone https://github.com/AdwaithAthman/socioverse.git
+   ```
+2. Set up the required environment variables. Rename the `.env.example` file to `.env` and provide the necessary values for your environment.
+   
+## Manual Installation
+
+3. Navigate to the project directory:
+
+   ```shell
+   cd socioverse
+   ```
+4. Navigate to client directory and server directory separately
+
+   ```shell
+   cd client
+   cd server
+   ```
+  
+5. Install the dependencies separately(install in both client and server)
+
+   ```shell
+   npm install 
+   ```
+6. Start the development server:
+
+ - server side
+   ```shell
+   npm run dev
+   ```
+ - client side
+   ```shell
+   npm run dev 
+   ```
+
+## Docker Installation
+
+3. Using Docker compose:
+   ```shell
+   docker-compose up
+   ```
 
 ## Technologies Used
 
@@ -40,6 +84,32 @@ Socioverse empowers you to:
 | Deployed                               | AWS                                     |
 | Reverse Proxy                          | Nginx                                   |
 | CD                                     | GitHub-Actions                          |
+
+## Contributing
+
+Contributions are always welcome! There are multiple ways you can contribute:
+
+### Reporting Bugs
+
+If you encounter any bugs or issues, please [open a new issue](https://github.com/AdwaithAthman/socioverse/issues/new) in this repository. 
+Be sure to include a title and clear description, as much relevant information as possible, and a code sample or an executable test case demonstrating the expected behavior that is not occurring.
+
+### Suggesting Enhancements
+
+If you have a suggestion that could make this project better, please [open a new issue](https://github.com/AdwaithAthman/socioverse/issues/new) in this repository. 
+Be sure to include a title and clear description, as much relevant information as possible, and a "Steps to Reproduce" section which indicates the steps which reproduce the new behavior.
+
+### Code Contributions
+
+If you'd like to contribute code (e.g., by fixing a bug, implementing a new feature, etc.), please follow these steps:
+
+1. Fork this repository.
+2. Create a branch: `git checkout -b your-feature`
+3. Make your changes and commit them: `git commit -m 'Add your feature'`
+4. Push your changes to your forked repository: `git push origin your-feature`
+5. Open a pull request from your branch in the forked repository to the original repository.
+
+Thank you for your contributions!
 
 ## Contact
 

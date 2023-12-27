@@ -1,5 +1,6 @@
 import AppError from "../../../utils/appError";
 import { UserDbInterface } from "../../repositories/userDbRepository";
+import { RedisDbInterface } from "../../repositories/redisDbRepository";
 
 //importing from types
 import { HttpStatus } from "../../../types/httpStatus";
@@ -7,10 +8,15 @@ import { HttpStatus } from "../../../types/httpStatus";
 export const handleFollowUser = async (
   userId: string,
   friendId: string,
-  dbUserRepository: ReturnType<UserDbInterface>
+  dbUserRepository: ReturnType<UserDbInterface>,
+  redisRepository: ReturnType<RedisDbInterface>
 ) => {
   try {
     await dbUserRepository.followUser(userId, friendId);
+    await redisRepository.deleteCache(`userInfo:${userId}`);
+    await redisRepository.deleteCache(`userInfo:${friendId}`);
+    await redisRepository.deleteCache(`following:${userId}`);
+    await redisRepository.deleteCache(`followers:${friendId}`);
   } catch (err) {
     throw new AppError(
       "Error following user!",
@@ -22,10 +28,15 @@ export const handleFollowUser = async (
 export const handleUnfollowUser = async (
   userId: string,
   friendId: string,
-  dbUserRepository: ReturnType<UserDbInterface>
+  dbUserRepository: ReturnType<UserDbInterface>,
+  redisRepository: ReturnType<RedisDbInterface>
 ) => {
   try {
     await dbUserRepository.unfollowUser(userId, friendId);
+    await redisRepository.deleteCache(`userInfo:${userId}`);
+    await redisRepository.deleteCache(`userInfo:${friendId}`);
+    await redisRepository.deleteCache(`following:${userId}`);
+    await redisRepository.deleteCache(`followers:${friendId}`);
   } catch (err) {
     throw new AppError(
       "Error unfollowing user!",
@@ -66,11 +77,18 @@ export const handleRestOfAllUsers = async (
 
 export const handleGetFollowers = async (
   userId: string,
-  dbUserRepository: ReturnType<UserDbInterface>
+  dbUserRepository: ReturnType<UserDbInterface>,
+  redisRepository: ReturnType<RedisDbInterface>
 ) => {
   try {
-    const followers = await dbUserRepository.getFollowers(userId);
-    return followers;
+    const followersList = await redisRepository.setCache(
+      `followers:${userId}`,
+      async () => {
+        const followers = await dbUserRepository.getFollowers(userId);
+        return followers;
+      }
+    );
+    return followersList;
   } catch (error) {
     throw new AppError(
       "Error fetching followers!",
@@ -81,11 +99,18 @@ export const handleGetFollowers = async (
 
 export const handleGetFollowing = async (
   userId: string,
-  dbUserRepository: ReturnType<UserDbInterface>
+  dbUserRepository: ReturnType<UserDbInterface>,
+  redisRepository: ReturnType<RedisDbInterface>
 ) => {
   try {
-    const following = await dbUserRepository.getFollowing(userId);
-    return following;
+    const followingList = await redisRepository.setCache(
+      `following:${userId}`,
+      async () => {
+        const following = await dbUserRepository.getFollowing(userId);
+        return following;
+      }
+    );
+    return followingList;
   } catch (error) {
     throw new AppError(
       "Error fetching followers!",
@@ -98,18 +123,21 @@ export const handleGetSuggestions = async (
   userId: string,
   dbUserRepository: ReturnType<UserDbInterface>
 ) => {
-  try{
+  try {
     const suggestions = await dbUserRepository.getSuggestions(userId);
-    const uniqueSuggestions = Array.from(suggestions.reduce((map, obj) => map.set(obj._id.toString(), obj), new Map()).values())
+    const uniqueSuggestions = Array.from(
+      suggestions
+        .reduce((map, obj) => map.set(obj._id.toString(), obj), new Map())
+        .values()
+    );
     return uniqueSuggestions;
-  }
-  catch (error) {
+  } catch (error) {
     throw new AppError(
       "Error fetching suggestions!",
       HttpStatus.INTERNAL_SERVER_ERROR
     );
   }
-}
+};
 
 export const handleAddNotification = async (
   userId: string,
@@ -140,4 +168,3 @@ export const handleDeleteNotification = async (
     );
   }
 };
-

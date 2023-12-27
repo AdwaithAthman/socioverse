@@ -2,6 +2,8 @@ import express from "express";
 import { userRepositoryMongoDB } from "../../database/mongoDB/repositories/userRepositoryMongoDB";
 import { userDbRepository } from "../../../application/repositories/userDbRepository";
 import userController from "../../../adapters/userController";
+import { redisRepository } from "../../database/redis/redisRepository";
+import { redisDbRepository } from "../../../application/repositories/redisDbRepository";
 
 //Middleware
 import authMiddleware from "../middlewares/authMiddleware";
@@ -12,6 +14,8 @@ const userRouter = () => {
     const controller = userController(
         userRepositoryMongoDB,
         userDbRepository,
+        redisRepository,
+        redisDbRepository
     )
 
     //routes

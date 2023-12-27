@@ -10,6 +10,7 @@ import { AuthService } from "../../frameworks/services/authService";
 import { AuthServiceInterface } from "../../application/services/authServiceInterface";
 import { ProfileInterface } from "../../types/profileInterface";
 import { RedisRepository } from "../../frameworks/database/redis/redisRepository";
+import { RedisDbInterface } from "../../application/repositories/redisDbRepository";
 
 //use-cases import
 import {
@@ -23,7 +24,6 @@ import {
   handleSearchUsers,
   handleAddUsername,
 } from "../../application/use-cases/profile/userProfile";
-import { RedisDbInterface } from "../../application/repositories/redisDbRepository";
 
 const profileController = (
   cloudinaryServiceImpl: CloudinaryService,

@@ -4,6 +4,8 @@ import asyncHandler from "express-async-handler";
 //importing types
 import { UserDbInterface } from "../../application/repositories/userDbRepository";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/userRepositoryMongoDB";
+import { RedisRepository } from "../../frameworks/database/redis/redisRepository";
+import { RedisDbInterface } from "../../application/repositories/redisDbRepository";
 
 //use-cases import
 import {
@@ -20,13 +22,16 @@ import {
 
 const userController = (
   userDbRepositoryImpl: UserRepositoryMongoDB,
-  userDbRepositoryInterface: UserDbInterface
+  userDbRepositoryInterface: UserDbInterface,
+  redisRepositoryImpl: RedisRepository,
+  redisRepositoryInterface: RedisDbInterface,
 ) => {
   const dbUserRepository = userDbRepositoryInterface(userDbRepositoryImpl());
-
+  const redisRepository = redisRepositoryInterface(redisRepositoryImpl());
+  
   const followUser = asyncHandler(async (req: Request, res: Response) => {
     const { userId, friendId }: { userId: string; friendId: string } = req.body;
-    await handleFollowUser(userId, friendId, dbUserRepository);
+    await handleFollowUser(userId, friendId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "successfully followed user",
@@ -35,7 +40,7 @@ const userController = (
 
   const unfollowUser = asyncHandler(async (req: Request, res: Response) => {
     const { userId, friendId }: { userId: string; friendId: string } = req.body;
-    await handleUnfollowUser(userId, friendId, dbUserRepository);
+    await handleUnfollowUser(userId, friendId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "successfully unfollowed user",
@@ -66,7 +71,7 @@ const userController = (
 
   const getFollowers = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.params as unknown as { userId: string };
-    const followers = await handleGetFollowers(userId, dbUserRepository);
+    const followers = await handleGetFollowers(userId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "followers fetched",
@@ -76,7 +81,7 @@ const userController = (
 
   const getFollowing = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.params as unknown as { userId: string };
-    const following = await handleGetFollowing(userId, dbUserRepository);
+    const following = await handleGetFollowing(userId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "followers fetched",

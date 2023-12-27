@@ -6,8 +6,6 @@ import { UserDbInterface } from "../../application/repositories/userDbRepository
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/userRepositoryMongoDB";
 import { OtpDbInterface } from "../../application/repositories/otpDbRepository";
 import { OtpRepositoryMongoDB } from "../../frameworks/database/mongoDB/repositories/otpRepositoryMongoDB";
-import redisRepository from "../../frameworks/database/redis/redisRepository";
-import { redisClient } from "../../app";
 import { MailSenderService } from "../../frameworks/services/mailSenderService";
 import { MailSenderServiceInterface } from "../../application/services/mailSenderServiceInterface";
 
@@ -41,9 +39,6 @@ const authController = (
   const dbOtpRepository = otpDbRepositoryInterface(otpDbRepositoryImpl());
   const authService = authServiceInterface(authServiceImpl());
   const mailSenderService = mailSenderServiceInterface(mailSenderServiceImpl());
-
-  const redisRepositoryImpl = redisRepository(redisClient);
-  // const { setAsync, sIsMemberAsync, sAddAsync, getAsync } = redisRepositoryImpl;
 
   const registerUser = asyncHandler(async (req: Request, res: Response) => {
     const user: UserInterface = req.body;

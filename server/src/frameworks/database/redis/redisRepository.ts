@@ -1,8 +1,9 @@
-import { RedisClient } from "../../../app";
+import { redisClient } from "../../../app";
 
 const DEFAULT_EXPIRATION = 1800;
 
-const redisRepository = (redisClient: RedisClient) => {
+export const redisRepository = () => {
+
   const stringCache = async (key: string, cb: Function) => {
     const cachedData = await redisClient.get(key);
     if (cachedData != null) return JSON.parse(cachedData);
@@ -25,12 +26,14 @@ const redisRepository = (redisClient: RedisClient) => {
   const hashCache = async (key: string, cb: Function) => {
     const cachedData = await redisClient.hGetAll(key);
     if (Object.keys(cachedData).length > 0) {
+      console.log("from cache")
       Object.keys(cachedData).forEach((field) => {
         cachedData[field] = JSON.parse(cachedData[field]);
       });
       return cachedData;
     }
     const freshData = await cb();
+    console.log('no cache')
     for (const field of Object.keys(freshData)) {
       redisClient.hSet(key, field, JSON.stringify(freshData[field]));
     }

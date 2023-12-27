@@ -9,6 +9,7 @@ import { UserRepositoryMongoDB } from "../../frameworks/database/mongoDB/reposit
 import { AuthService } from "../../frameworks/services/authService";
 import { AuthServiceInterface } from "../../application/services/authServiceInterface";
 import { ProfileInterface } from "../../types/profileInterface";
+import { RedisRepository } from "../../frameworks/database/redis/redisRepository";
 
 //use-cases import
 import {
@@ -22,6 +23,7 @@ import {
   handleSearchUsers,
   handleAddUsername,
 } from "../../application/use-cases/profile/userProfile";
+import { RedisDbInterface } from "../../application/repositories/redisDbRepository";
 
 const profileController = (
   cloudinaryServiceImpl: CloudinaryService,
@@ -29,11 +31,14 @@ const profileController = (
   userDbRepositoryImpl: UserRepositoryMongoDB,
   userDbRepositoryInterface: UserDbInterface,
   authServiceImpl: AuthService,
-  authServiceInterface: AuthServiceInterface
+  authServiceInterface: AuthServiceInterface,
+  redisRepositoryImpl: RedisRepository,
+  redisRepositoryInterface: RedisDbInterface,
 ) => {
   const dbUserRepository = userDbRepositoryInterface(userDbRepositoryImpl());
   const cloudinaryService = cloudinaryServiceInterface(cloudinaryServiceImpl());
   const authService = authServiceInterface(authServiceImpl());
+  const redisRepository = redisRepositoryInterface(redisRepositoryImpl());
 
   const uploadCoverPhoto = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
@@ -49,7 +54,8 @@ const profileController = (
       buffer,
       mimetype,
       cloudinaryService,
-      dbUserRepository
+      dbUserRepository,
+      redisRepository
     );
     res.json({
       status: "success",
@@ -73,7 +79,8 @@ const profileController = (
       buffer,
       mimetype,
       cloudinaryService,
-      dbUserRepository
+      dbUserRepository,
+      redisRepository
     );
     res.json({
       status: "success",
@@ -85,7 +92,7 @@ const profileController = (
 
   const getUserInfo = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
-    const user = await handleUserInfo(userId, dbUserRepository);
+    const user = await handleUserInfo(userId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "user info fetched",
@@ -95,7 +102,7 @@ const profileController = (
 
   const getOtherUserInfo = asyncHandler(async (req: Request, res: Response) => {
     const id: string = req.params.id;
-    const otherUser = await handleUserInfo(id, dbUserRepository);
+    const otherUser = await handleUserInfo(id, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "user info fetched",
@@ -105,7 +112,7 @@ const profileController = (
 
   const deleteCoverPhoto = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
-    await handleCoverPhotoDeletion(userId, dbUserRepository);
+    await handleCoverPhotoDeletion(userId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "cover photo deleted",
@@ -114,7 +121,7 @@ const profileController = (
 
   const deleteProfilePhoto = asyncHandler(async (req: Request, res: Response) => {
     const { userId }: { userId: string } = req.body;
-    await handleProfilePhotoDeletion(userId, dbUserRepository);
+    await handleProfilePhotoDeletion(userId, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "Profile photo deleted",
@@ -142,7 +149,7 @@ const profileController = (
 
   const editProfile = asyncHandler(async (req: Request, res: Response) => {
     const profileInfo: ProfileInterface = req.body;
-    const user = await handleUpdateProfile(profileInfo, dbUserRepository);
+    const user = await handleUpdateProfile(profileInfo, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "user info fetched",
@@ -162,7 +169,7 @@ const profileController = (
 
   const addUsername = asyncHandler(async (req: Request, res: Response) => {
     const { userId, username }: { userId: string; username: string } = req.body;
-    const user = await handleAddUsername(userId, username, dbUserRepository);
+    const user = await handleAddUsername(userId, username, dbUserRepository, redisRepository);
     res.json({
       status: "success",
       message: "Username added successfully",

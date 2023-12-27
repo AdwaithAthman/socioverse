@@ -3,10 +3,11 @@ import { cloudinaryService } from "../../services/cloudinaryService";
 import { cloudinaryServiceInterface } from "../../../application/services/cloudinaryServiceInterface";
 import { userRepositoryMongoDB } from "../../database/mongoDB/repositories/userRepositoryMongoDB";
 import { userDbRepository } from "../../../application/repositories/userDbRepository";
-import checkUsernameAvailabilityMiddleware from "../middlewares/redisCheckUsernameAvailability";
 import profileController from "../../../adapters/profileController";
 import { authService } from "../../services/authService";
 import { authServiceInterface } from "../../../application/services/authServiceInterface";
+import { redisRepository } from "../../database/redis/redisRepository";
+import { redisDbRepository } from "../../../application/repositories/redisDbRepository";
 
 //Middleware
 import authMiddleware from "../middlewares/authMiddleware";
@@ -21,7 +22,9 @@ const profileRouter = () => {
         userRepositoryMongoDB,
         userDbRepository,
         authService,
-        authServiceInterface
+        authServiceInterface,
+        redisRepository,
+        redisDbRepository
     )
 
     //routes

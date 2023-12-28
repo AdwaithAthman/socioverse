@@ -19,9 +19,9 @@ export const userRepositoryMongoDB = () => {
     }
   };
 
-  const getAllUsers = async () => {
+  const getAllUsers = async (skip: number, limit: number) => {
     try {
-      const users = await User.find();
+      const users = await User.find().skip(skip).limit(limit);
       return users;
     } catch (error) {
       console.log(error);

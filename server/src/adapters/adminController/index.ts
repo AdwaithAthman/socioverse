@@ -93,7 +93,11 @@ const adminController = (
   );
 
   const getUsers = asyncHandler(async (req: Request, res: Response) => {
-    const users = await handleGetUsers(dbUserRepository);
+    const { skip, limit } = req.query as unknown as {
+      skip: number;
+      limit: number;
+    };
+    const users = await handleGetUsers(dbUserRepository, skip, limit);
     res.json({
       status: "success",
       message: "users fetched",

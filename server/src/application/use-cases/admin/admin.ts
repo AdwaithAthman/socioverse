@@ -54,10 +54,12 @@ export const handleRefreshAdminAccessToken = async (
 }
 
 export const handleGetUsers = async (
-    dbUserRepository: ReturnType<UserDbInterface>
+    dbUserRepository: ReturnType<UserDbInterface>,
+    skip: number,
+    limit: number,
 ) => {
     try {
-        const users = await dbUserRepository.getAllUsers();
+        const users = await dbUserRepository.getAllUsers(Number(skip), Number(limit));
         return users;
     }
     catch (err) {

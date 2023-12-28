@@ -77,7 +77,7 @@ Follow these instructions to set up your development environment, which you need
 | Caching                                | Redis                                   |
 | Version control                        | Git                                     |
 | Image storage                          | Cloudinary                              |
-| Messaging Service                      | Socket io                               |
+| Real-time Chat Service                 | Socket io                               |
 | Mailing Service                        | Node Mailer                             |
 | Video Service                          | Agora                                   |
 | Containerization                       | Docker                                  | 

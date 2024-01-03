@@ -113,7 +113,8 @@ const ProfileHeader = ({
           err.response.status >= 400 &&
           err.response.status <= 500
         ) {
-          navigate("/error");
+          // const errorMessage = err.response.data.message;
+          // toast.error(errorMessage, TOAST_ACTION);
         }
       }
     }

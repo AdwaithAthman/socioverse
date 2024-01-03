@@ -17,25 +17,28 @@ export const redisRepository = () => {
     if (cachedData.length > 0)
       return cachedData.map((data) => JSON.parse(data));
     const freshData = await cb();
-    const serializedData = freshData.map((data: any) => JSON.stringify(data));
-    redisClient.sAdd(key, serializedData);
-    redisClient.expire(key, DEFAULT_EXPIRATION);
+    if (freshData.length > 0) {
+      const serializedData = freshData.map((data: any) => JSON.stringify(data));
+      redisClient.sAdd(key, serializedData);
+      redisClient.expire(key, DEFAULT_EXPIRATION);
+    }
     return freshData;
   };
+
 
   const hashCache = async (key: string, cb: Function) => {
     const cachedData = await redisClient.hGetAll(key);
     if (Object.keys(cachedData).length > 0) {
-      console.log("from cache")
       Object.keys(cachedData).forEach((field) => {
         cachedData[field] = JSON.parse(cachedData[field]);
       });
       return cachedData;
     }
     const freshData = await cb();
-    console.log('no cache')
     for (const field of Object.keys(freshData)) {
-      redisClient.hSet(key, field, JSON.stringify(freshData[field]));
+      if (freshData[field] !== undefined) {
+        redisClient.hSet(key, field, JSON.stringify(freshData[field]));
+      }
     }
     redisClient.expire(key, DEFAULT_EXPIRATION);
     return freshData;

@@ -12,6 +12,8 @@ import { addUsername } from "../../API/Profile";
 import { TOAST_ACTION } from "../../Constants/common";
 import { isAxiosError } from "axios";
 import { AxiosErrorData } from "../../Types/axiosErrorData";
+import { updateUsername } from "../../Redux/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const UsernameInputPopup = ({
   handleUsernameInputPopup,
@@ -22,6 +24,7 @@ const UsernameInputPopup = ({
   usernameInputPopupOpen: boolean;
   setIsUsernameAvailable: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const dispatch = useDispatch();
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -40,6 +43,7 @@ const UsernameInputPopup = ({
       try {
         const response = await addUsername(value.username);
         if (response.status === "success") {
+          dispatch(updateUsername(value.username));
           setIsUsernameAvailable(true);
           toast.success("Username added successfully", {
             ...TOAST_ACTION,

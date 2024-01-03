@@ -39,10 +39,14 @@ const authSlice = createSlice({
                 state.user?.following?.push(action.payload);
             }
         },
+        updateUsername: (state, action) => {
+            state.user && (state.user.username = action.payload);
+        },
+
     },
 })
 
-export const { setCredentials, logout, removeFollower, addFollower } = authSlice.actions;
+export const { setCredentials, logout, removeFollower, addFollower, updateUsername } = authSlice.actions;
 export default authSlice.reducer;
 
 

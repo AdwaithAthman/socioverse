@@ -12,6 +12,7 @@ import {
   followUser,
   unfollowUser,
   getSuggestions,
+  getRestOfAllUsers,
 } from "../../API/User";
 import { ToastContainer, toast } from "react-toastify";
 import common, { TOAST_ACTION } from "../../Constants/common";
@@ -69,6 +70,12 @@ function AsideTwo({
       setTempFollowingList(userInfoRedux.following);
     }
   }, [userInfoRedux]);
+
+  useEffect(() => {
+    if (allUserProfiles.length === 0){
+      getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
+    }
+  } , [allUserProfiles])
 
   const handleFollowingButton = (friendId: string, name: string) => {
     followUser(friendId).then(() => {

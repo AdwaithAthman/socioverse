@@ -20,6 +20,7 @@ import {
   followUser,
   getFollowers,
   getFollowing,
+  getRestOfAllUsers,
   getSuggestions,
   unfollowUser,
 } from "../../API/User";
@@ -56,6 +57,12 @@ const People = ({ socket }: { socket: Socket }) => {
       setTempFollowingList(user.following);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (suggested.length === 0){
+      getRestOfAllUsers().then((res) => setSuggested(res.users));
+    }
+  } , [suggested])
 
   const data = [
     {

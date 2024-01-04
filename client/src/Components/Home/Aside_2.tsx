@@ -62,7 +62,14 @@ function AsideTwo({
     };
 
     fetchUser();
-    getSuggestions().then((res) => setAllUserProfiles(res.suggestions));
+    getSuggestions().then((res) => {
+      if (res.suggestions.length === 0){
+        getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
+      }
+      else{
+        setAllUserProfiles(res.suggestions);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -70,12 +77,6 @@ function AsideTwo({
       setTempFollowingList(userInfoRedux.following);
     }
   }, [userInfoRedux]);
-
-  useEffect(() => {
-    if (allUserProfiles.length === 0){
-      getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
-    }
-  } , [allUserProfiles])
 
   const handleFollowingButton = (friendId: string, name: string) => {
     followUser(friendId).then(() => {
@@ -105,7 +106,14 @@ function AsideTwo({
   };
 
   const handleViewMore = () => {
-    getSuggestions().then((res) => setAllUserProfiles(res.suggestions));
+    getSuggestions().then((res) => {
+      if (res.suggestions.length === 0){
+        getRestOfAllUsers().then((res) => setAllUserProfiles(res.users));
+      }
+      else{
+        setAllUserProfiles(res.suggestions);
+      }
+    });
   };
 
   return (

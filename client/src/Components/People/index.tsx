@@ -39,7 +39,7 @@ const People = ({ socket }: { socket: Socket }) => {
   const [tempFollowingList, setTempFollowingList] = useState<string[]>();
 
   useEffect(() => {
-    if(user){
+    if (user) {
       getFollowing(user._id as string).then((data) => {
         setFollowing(data.following);
       });
@@ -47,7 +47,11 @@ const People = ({ socket }: { socket: Socket }) => {
         setFollowers(data.followers);
       });
       getSuggestions().then((data) => {
-        setSuggested(data.suggestions);
+        if (data.suggestions.length === 0) {
+          getRestOfAllUsers().then((res) => setSuggested(res.users));
+        } else {
+          setSuggested(data.suggestions);
+        }
       });
     }
   }, [user, dispatch]);
@@ -57,12 +61,6 @@ const People = ({ socket }: { socket: Socket }) => {
       setTempFollowingList(user.following);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (suggested.length === 0){
-      getRestOfAllUsers().then((res) => setSuggested(res.users));
-    }
-  } , [suggested])
 
   const data = [
     {
@@ -118,7 +116,7 @@ const People = ({ socket }: { socket: Socket }) => {
       toast.success(`Following ${name}`, TOAST_ACTION);
     });
     !tempFollowingList?.includes(friendId) &&
-    setTempFollowingList([...(tempFollowingList as string[]), friendId]);
+      setTempFollowingList([...(tempFollowingList as string[]), friendId]);
     dispatch(addFollower(friendId));
   };
 
@@ -146,7 +144,10 @@ const People = ({ socket }: { socket: Socket }) => {
               {typeof desc === "string" ? (
                 <div className="flex flex-col items-center justify-center mt-4">
                   <div className="w-80 mx-auto">
-                    <img src={common.NO_DATA_AVAILABLE_SVG} alt="no data available" />
+                    <img
+                      src={common.NO_DATA_AVAILABLE_SVG}
+                      alt="no data available"
+                    />
                   </div>
                   <h1>{desc}</h1>
                 </div>
@@ -199,8 +200,13 @@ const People = ({ socket }: { socket: Socket }) => {
                             <MdVideoCall className="text-xl text-socioverse-500  group-hover:text-green-500" />
                           </div>
                         </div>
-                      ) : ((tempFollowingList?.includes(userProfile._id as string)) || (user &&
-                        userProfile.followers?.includes(user._id as string))) ? (
+                      ) : tempFollowingList?.includes(
+                          userProfile._id as string
+                        ) ||
+                        (user &&
+                          userProfile.followers?.includes(
+                            user._id as string
+                          )) ? (
                         <div
                           className="flex justify-center items-center w-8 h-8 transition duration-300 ease-in-out bg-blue-gray-500 rounded-full cursor-pointer border-2 border-blue-gray-700 hover:border-red-700 hover:bg-white hover:border-3 group"
                           onClick={() =>

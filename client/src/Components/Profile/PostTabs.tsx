@@ -57,6 +57,13 @@ function PostTabs({ userId }: { userId?: string }) {
   const sentinelRef = useRef(null);
 
   useEffect(() => {
+    if(userId){
+      setOtherUserPostPage(1);
+      setOtherUserPosts([]);
+    }
+  }, [userId])
+
+  useEffect(() => {
     setIsLastPostPage(false);
   }, [userId]);
 
@@ -74,7 +81,7 @@ function PostTabs({ userId }: { userId?: string }) {
       loadInitialOtherPosts();
       setIsPostLoading(false);
     }
-  }, [otherUserPostPage]);
+  }, [otherUserPostPage, userId, myUserId]);
 
   useEffect(() => {
     if (deletedPostId) {
@@ -198,7 +205,7 @@ function PostTabs({ userId }: { userId?: string }) {
 
   const dataOfOtherUser = [
     {
-      label: "My Posts",
+      label: "Posts",
       value: "myPosts",
       desc:
         otherUserPosts.length > 0

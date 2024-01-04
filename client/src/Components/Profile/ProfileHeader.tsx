@@ -101,9 +101,13 @@ const ProfileHeader = ({
       setOtherUserInfo(otherUser);
       if (otherUser?.coverPhoto) {
         setCoverPhotoImg(otherUser.coverPhoto);
+      } else {
+        setCoverPhotoImg(null);
       }
       if (otherUser?.dp) {
         setDp(otherUser.dp);
+      } else {
+        setDp(null);
       }
     } catch (error) {
       if (isAxiosError(error)) {

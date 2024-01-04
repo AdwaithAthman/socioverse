@@ -231,6 +231,7 @@ const ProfileHeader = ({
     if (response.status === "success") {
       toast.dismiss();
       toast.success("DP deleted successfully", TOAST_ACTION);
+      setDp(null);
     } else {
       toast.dismiss();
       toast.error("Error deleting the DP", TOAST_ACTION);

@@ -33,6 +33,7 @@ const MyChats = ({ userId, socket }: { userId: string; socket: Socket }) => {
   const [openCreateGroupDialog, SetOpenCreateGroupDialog] =
     useState<boolean>(false);
   const handleCreateGroupDialog = () => SetOpenCreateGroupDialog((cur) => !cur);
+  const [loadingChat, setLoadingChat] = useState<boolean>(true);
 
   useEffect(() => {
     fetchUserChats();
@@ -56,6 +57,8 @@ const MyChats = ({ userId, socket }: { userId: string; socket: Socket }) => {
     } catch (err) {
       toast.dismiss();
       toast.error("Error fetching chats", TOAST_ACTION);
+    } finally {
+      setLoadingChat(false);
     }
   };
 
@@ -87,13 +90,21 @@ const MyChats = ({ userId, socket }: { userId: string; socket: Socket }) => {
         </header>
         <div className="flex flex-col gap-4 h-full overflow-y-scroll no-scrollbar ">
           {chats.length === 0 ? (
-            <div className="overflow-y-hidden flex flex-col gap-4 w-full">
-              {Array(6)
-                .fill(0)
-                .map((_, index) => (
-                  <ChatLoading key={index} />
-                ))}
-            </div>
+            loadingChat ? (
+              <div className="overflow-y-hidden flex flex-col gap-4 w-full">
+                {Array(6)
+                  .fill(0)
+                  .map((_, index) => (
+                    <ChatLoading key={index} />
+                  ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-4 h-full">
+                <div className="font-medium mb-6 border-2 p-4 rounded-lg bg-socioverse-50 border-socioverse-500">
+                  Search for the user you want to chat
+                </div>
+              </div>
+            )
           ) : (
             chats.map((chat) => (
               <div

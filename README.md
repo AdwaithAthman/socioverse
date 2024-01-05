@@ -3,6 +3,8 @@ Socioverse is a full-fledged social media platform built with the passion for co
 Developed using the powerful MERN stack (MongoDB, Express.js, React.js, and Node.js)
 <br>
 <a href="https://socioverse.online"><strong>Link</strong></a>
+<a href="https://www.linkedin.com/posts/adwaith-athman_mernstack-typescript-cleanarchitecture-activity-7149040033834893312-DWeu?utm_source=share&utm_medium=member_desktop">
+<strong>Demo</strong></a>
 
 ![Logo](https://res.cloudinary.com/dkxyfsxso/image/upload/v1703683721/socioverse%20stock/Screenshot_from_2023-12-27_18-55-27_hayip0.png)
 
